@@ -1,0 +1,14 @@
+﻿Product          : Bridge.jQuery
+Release Date     : 2015-10-16
+Current Version  : 1.0.0-beta
+
+
+
+--------------------------------------------------------------------------
+
+        Copyright 2008-2015 Object.NET, Inc., All rights reserved.
+                  
+                        Object.NET, Inc.
+                        +1(888)775-5888
+                        hello@object.net
+                           object.net

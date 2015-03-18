@@ -1,0 +1,10 @@
+.logo {
+    background-image: url("../images/bridge_100x100.png");
+    background-repeat: no-repeat;
+    background-size: 50px;
+    background-position: 10px 25px;
+}
+
+    .logo h1 {
+        padding-left: 50px;
+    }

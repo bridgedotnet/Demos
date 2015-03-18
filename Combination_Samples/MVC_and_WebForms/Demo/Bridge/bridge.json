@@ -1,0 +1,5 @@
+{
+    output: "Bridge\\output",
+    beforeBuild: "Bridge\\Builder\\clean.bat",
+    afterBuild: "Bridge\\Builder\\deploy.bat"
+}
