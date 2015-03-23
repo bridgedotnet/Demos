@@ -1,5 +1,8 @@
 {
-    output: "Bridge\\output",
-    beforeBuild: "Bridge\\Builder\\clean.bat",
-    afterBuild: "Bridge\\Builder\\deploy.bat"
+    output: "bridge\\output",
+    beforeBuild: "bridge\\build\\clean.bat",
+    afterBuild: "bridge\\build\\deploy.bat"
+
+    // More options available at: 
+    // http://bridge.net/kb/global-configuration
 }

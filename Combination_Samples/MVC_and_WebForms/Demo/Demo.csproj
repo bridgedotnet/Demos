@@ -11,7 +11,7 @@
     <AssemblyName>Demo</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>36f40b0a</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>9724968a</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,29 +38,29 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Bridge\bridge.json" />
-    <None Include="Bridge\Builder\clean.bat" />
-    <None Include="Bridge\Builder\deploy.bat" />
+    <None Include="bridge\bridge.json" />
+    <None Include="bridge\build\clean.bat" />
+    <None Include="bridge\build\deploy.bat" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="App_Readme\Bridge.NET\LICENSE.txt" />
+    <Content Include="App_Readme\Bridge.NET\README.Bootstrap.txt" />
+    <Content Include="App_Readme\Bridge.NET\README.jQuery.txt" />
     <Content Include="App_Readme\Bridge.NET\README.txt" />
-    <Content Include="Bridge\Builder\Bridge.Builder.dll" />
-    <Content Include="Bridge\output\readme.txt" />
+    <Content Include="bridge\output\readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Bridge.Bootstrap3, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Bridge">
+      <HintPath>..\packages\Bridge.1.0.0-beta\lib\Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="Bridge.Bootstrap3">
       <HintPath>..\packages\Bridge.Bootstrap.1.0.0-beta\lib\Bridge.Bootstrap3.dll</HintPath>
     </Reference>
-    <Reference Include="Bridge.Html5, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Bridge.Html5">
       <HintPath>..\packages\Bridge.1.0.0-beta\lib\Bridge.Html5.dll</HintPath>
     </Reference>
-    <Reference Include="Bridge.jQuery2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Bridge.jQuery2">
       <HintPath>..\packages\Bridge.jQuery.1.0.0-beta\lib\Bridge.jQuery2.dll</HintPath>
     </Reference>
   </ItemGroup>

@@ -1,5 +1,5 @@
-﻿Product          : Bridge.NET
-Release Date     : 2015-03-16
+﻿Project          : Bridge
+Release Date     : 2015-03-23
 Current Version  : 1.0.0-beta
 
 The foundation of Bridge.NET is a C# to JavaScript source-to-source compiler, 
@@ -30,13 +30,12 @@ I. SYSTEM REQUIREMENTS
 II. INSTALLATION INSTRUCTIONS
 --------------------------------------------------------------------------
 
-Getting Started
+The easiest way to install Bridge.NET into your C# Class Library project
+is using NuGet:
 
-There is a few ways to start with Bridge.NET.
+1. Run the command: install-package Bridge -pre
+2. Or, use the NuGet Package Manager and search for "Bridge.NET"
 
-Install Bridge.NET.vsix and create a project via one of installed project templates.
-Create an empty Class Library project, remove all References and run this NuGet command:
-    Install-Package Bridge.NET
 
 --------------------------------------------------------------------------
 III. REVISIONS + BREAKING CHANGES
@@ -65,9 +64,9 @@ VII. CREDITS
     
 --------------------------------------------------------------------------
 
-        Copyright 2008-2015 Object.NET, Inc., All rights reserved.
+    Copyright 2008-2015 Object.NET, Inc., All rights reserved.
                   
-                        Object.NET, Inc.
-                        +1(888)775-5888
-                        hello@object.net
-                           object.net
+                      Object.NET, Inc.
+                      +1(888)775-5888
+                      hello@object.net
+                         object.net

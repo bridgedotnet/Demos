@@ -181,3 +181,8 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+# JavaScript files that are generated automatically on build
+/Combination_Samples/MVC_and_WebForms/Demo/bridge/output/*.js
+/Combination_Samples/MVC_and_WebForms/Demo.MVC/resources/js/*.js
+/Combination_Samples/MVC_and_WebForms/Demo.WebForms/resources/js/*.js
