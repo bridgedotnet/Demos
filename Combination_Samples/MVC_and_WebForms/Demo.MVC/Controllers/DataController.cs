@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Demo.MVC.Controllers
 {
@@ -7,7 +9,10 @@ namespace Demo.MVC.Controllers
     {
         public string GetServerTime()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now);
+            return JsonConvert.SerializeObject(DateTime.Now, new IsoDateTimeConverter
+            {
+                DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss"
+            });
         }
 
         public string LongRunningProcess()

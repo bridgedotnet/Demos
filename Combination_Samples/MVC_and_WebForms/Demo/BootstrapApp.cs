@@ -339,9 +339,9 @@ namespace Demo
                         }
 
                         var val = JSON.Parse<string>((string)data);
-                        var dateTime = DateTime.Parse(val);
+                        var dateTime = DateTime.ParseExact(val, "yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
-                        jQuery.Select("#dateTimeInput").Val(dateTime.ToString("yyyy-MM-dd hh:mm:ss"));
+                        jQuery.Select("#dateTimeInput").Val(dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
                     }
                 }
                 );
