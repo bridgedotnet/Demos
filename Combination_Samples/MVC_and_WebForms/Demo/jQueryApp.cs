@@ -148,9 +148,9 @@ namespace Demo
                 {
                     Url = Config.GET_SERVER_TIME_URL,
                     Cache = false,
-                    Success = delegate(object obj, string str, jqXHR jqXHR)
+                    Success = delegate(object data, string textStatus, jqXHR request)
                     {
-                        var val = JSON.Parse<string>((string)obj);
+                        var val = JSON.Parse<string>((string)data);
                         var dateTime = DateTime.Parse(val);
 
                         jQuery.Select("#dateTimeInput").Val(dateTime.ToString("yyyy-MM-dd hh:mm:ss"));
