@@ -1,5 +1,5 @@
 ﻿Project          : Bridge
-Release Date     : 2015-03-23
+Release Date     : 2015-03-24
 Current Version  : 1.0.0-beta
 
 The foundation of Bridge.NET is a C# to JavaScript source-to-source compiler, 

@@ -11,7 +11,7 @@
     <AssemblyName>Demo</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>9724968a</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>200db4c1</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,9 +38,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bridge\bridge.json" />
-    <None Include="bridge\build\clean.bat" />
-    <None Include="bridge\build\deploy.bat" />
+    <None Include="Bridge\bridge.json" />
+    <None Include="Bridge\build\clean.bat" />
+    <None Include="Bridge\build\deploy.bat" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -51,17 +51,21 @@
     <Content Include="bridge\output\readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Bridge">
+    <Reference Include="Bridge, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Bridge.1.0.0-beta\lib\Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="Bridge.Bootstrap3">
-      <HintPath>..\packages\Bridge.Bootstrap.1.0.0-beta\lib\Bridge.Bootstrap3.dll</HintPath>
+    <Reference Include="Bridge.Bootstrap3, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Bridge.Bootstrap.3.0.0-beta\lib\Bridge.Bootstrap3.dll</HintPath>
     </Reference>
-    <Reference Include="Bridge.Html5">
+    <Reference Include="Bridge.Html5, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Bridge.1.0.0-beta\lib\Bridge.Html5.dll</HintPath>
     </Reference>
-    <Reference Include="Bridge.jQuery2">
-      <HintPath>..\packages\Bridge.jQuery.1.0.0-beta\lib\Bridge.jQuery2.dll</HintPath>
+    <Reference Include="Bridge.jQuery2, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Bridge.jQuery.2.0.0-beta\lib\Bridge.jQuery2.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
