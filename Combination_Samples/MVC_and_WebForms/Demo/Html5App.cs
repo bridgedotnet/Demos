@@ -7,7 +7,7 @@ namespace Demo
     [FileName("Html5App.js")]
     public class Html5App
     {
-        [DOMContentLoaded]
+        [Ready]
         public static void Main()
         {
             Document.Body.Style.Padding = "20px";

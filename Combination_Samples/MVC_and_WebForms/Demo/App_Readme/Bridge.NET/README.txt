@@ -1,6 +1,10 @@
 ﻿Project          : Bridge
-Release Date     : 2015-03-24
-Current Version  : 1.0.0-beta
+Release Date     : 2015-03-30
+Current Version  : 1.0.0
+
+Use Bridge.NET to build platform independent applications for mobile, web 
+and desktop. Run on iOS, Windows, Mac, Linux and billions of other devices 
+with JavaScript support.
 
 The foundation of Bridge.NET is a C# to JavaScript source-to-source compiler, 
 also known as a Cross Compiler or Transpiler. Using Bridge.NET you write your 
@@ -30,18 +34,39 @@ I. SYSTEM REQUIREMENTS
 II. INSTALLATION INSTRUCTIONS
 --------------------------------------------------------------------------
 
-The easiest way to install Bridge.NET into your C# Class Library project
-is using NuGet:
+The Getting Started Knowledge Base article is a great place to start:
+    http://bridge.net/kb/getting-started
 
-1. Run the command: install-package Bridge -pre
-2. Or, use the NuGet Package Manager and search for "Bridge.NET"
+
+Or, jump right in and download the Visual Studio template installer from 
+the Download page:
+    http://bridge.net/download/
+
+
+Another equally fast installation option is using NuGet to install 
+directly into a new C# Class Library project. Use any of the following 
+commands on the Package Manager Console to quickly install all the 
+necessary pieces and setup your project for Bridge.
+
+
+    PM> Install-Package Bridge
+
+
+jQuery and Bootstrap packages are also available to install as per your 
+project requirements:
+
+    PM> Install-Package Bridge.jQuery
+
+    PM> Install-Package Bridge.Bootstrap
 
 
 --------------------------------------------------------------------------
 III. REVISIONS + BREAKING CHANGES
 --------------------------------------------------------------------------
 
-Initial Release. No BREAKING CHANGES. 
+Initial Release. No BREAKING CHANGES.
+
+
 --------------------------------------------------------------------------
 VII. CREDITS
 --------------------------------------------------------------------------
