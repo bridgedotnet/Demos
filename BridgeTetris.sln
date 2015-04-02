@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeTetris", "BridgeTetris\BridgeTetris.csproj", "{7476C94D-D1E6-4605-91FF-601DA72E56BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TetrisWeb", "TetrisWeb\TetrisWeb.csproj", "{C61C0F9A-6011-4090-BB79-7B56194167DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7476C94D-D1E6-4605-91FF-601DA72E56BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7476C94D-D1E6-4605-91FF-601DA72E56BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7476C94D-D1E6-4605-91FF-601DA72E56BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7476C94D-D1E6-4605-91FF-601DA72E56BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C61C0F9A-6011-4090-BB79-7B56194167DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C61C0F9A-6011-4090-BB79-7B56194167DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C61C0F9A-6011-4090-BB79-7B56194167DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C61C0F9A-6011-4090-BB79-7B56194167DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
