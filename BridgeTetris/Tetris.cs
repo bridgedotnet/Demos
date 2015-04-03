@@ -1,4 +1,33 @@
-﻿using Bridge;
+﻿/*
+ * DISCLAIMER: This code was ported from JavaScript version made avalable by Jake Gordon on:
+ * Website/howto: http://codeincomplete.com/posts/2011/10/10/javascript_tetris/
+ * Github: https://github.com/jakesgordon/javascript-tetris/blob/master/index.html
+ *
+ * License for this code replicates original code license by obligation, and is as follows:
+
+Copyright (c) 2011, 2012, 2013 Jake Gordon and contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+ *
+ */
+using Bridge;
 using Bridge.Html5;
 using System;
 using System.Collections.Generic;
@@ -7,7 +36,6 @@ namespace BridgeTetris
 {
     public class Tetris
     {
-        [Ready]
         public static void loadPlayArea()
         {
             var menuDiv = new DivElement
@@ -27,7 +55,7 @@ namespace BridgeTetris
                 Id = "upcoming"
             };
             menuDiv.AppendChild(insideParagraph(nextPieceCanvas));
-            
+
             var scorePara = new List<Node>();
             scorePara.Add(new LabelElement
             {
@@ -58,10 +86,10 @@ namespace BridgeTetris
             Document.Body.AppendChild(insideParagraph(pieceSlideCanvas));
         }
 
-        protected static Node insideParagraph(List<Node> elementList)
+        private static Node insideParagraph(List<Node> elementList)
         {
             var paraElem = new ParagraphElement();
-            
+
             foreach (var el in elementList)
             {
                 paraElem.AppendChild(el);
@@ -70,44 +98,45 @@ namespace BridgeTetris
             return paraElem;
         }
 
-        protected static Node insideParagraph(Node element)
+        private static Node insideParagraph(Node element)
         {
             return insideParagraph(new List<Node> { element });
         }
 
         #region base helper methods
-        protected static Element get(string id)
+
+        private static Element get(string id)
         {
             return Document.GetElementById(id);
         }
 
-        protected static void hide(string id)
+        private static void hide(string id)
         {
             get(id).Style.Visibility = Visibility.Hidden;
         }
 
-        protected static void show(string id)
+        private static void show(string id)
         {
             //get(id).Style.Visibility = null; this does not work!
             get(id).Style.Visibility = Visibility.Visible;
         }
 
-        protected static void html(string id, string html)
+        private static void html(string id, string html)
         {
             get(id).InnerHTML = html;
         }
 
-        protected static double timestamp()
+        private static double timestamp()
         {
             return new Date().GetTime();
         }
 
-        protected static double random(int min, int max)
+        private static double random(int min, int max)
         {
             return (min + (Math.Random() * (max - min)));
         }
 
-        //protected static double randomChoice() // Not used!? Can't guess types if not used..
+        //private static double randomChoice() // Not used!? Can't guess types if not used..
 
         #region See what to do here later (this is optional)
 
@@ -121,7 +150,7 @@ namespace BridgeTetris
             // callback function
         }
 
-        protected static void callBackReqAnimFrame(Func<Func<string, Node>, Node> callback)
+        private static void callBackReqAnimFrame(Func<Func<string, Node>, Node> callback)
         {
             Window.SetTimeout(callback, 1000 / 60);
         }
@@ -131,102 +160,112 @@ namespace BridgeTetris
         #endregion
 
         #region game constants
-        protected static Object KEY = new
+
+        private static class KEY
         {
-            ESC = 27,
-            SPACE = 32,
-            LEFT = 37,
-            UP = 38,
-            RIGHT = 39,
-            DOWN = 40
+            public const short
+                ESC   = 27,
+                SPACE = 32,
+                LEFT  = 37,
+                UP    = 38,
+                RIGHT = 39,
+                DOWN  = 40;
+        }
+
+        private static class DIR
+        {
+            public const short
+                UP    = 0,
+                RIGHT = 1,
+                DOWN  = 2,
+                LEFT  = 3,
+                MIN   = 0,
+                MAX   = 3;
         };
 
-        protected static Object DIR = new
-        {
-            UP = 0,
-            RIGHT = 1,
-            DOWN = 2,
-            LEFT = 3,
-            MIN = 0,
-            MAX = 3
-        };
+        // private start = new Stats() -- optional, included on another .js!
 
-        // protected start = new Stats() -- optional, included on another .js!
+        // FIXME Should allow returning canvasElement without casting??
+        private static CanvasElement canvas = get("canvas").As<CanvasElement>();
+        private static CanvasElement ucanvas = get("upcoming").As<CanvasElement>();
 
-        protected static Element canvas = get("canvas");
-
-
-        protected static Element ucanvas = get("upcoming");
-
-        // FIXME: canvas has no getContext on Bridge :(
-        //protected static wat ctx = canvas.GetContext('2d');
-        //protected static wat uctx = ucanvas.GetContext('2d');
+        // FIXME: it could do casting automatically!
+        private static CanvasRenderingContext2D ctx = canvas.GetContext("2d").As<CanvasRenderingContext2D>();
+        private static CanvasRenderingContext2D uctx = ucanvas.GetContext("2d").As<CanvasRenderingContext2D>();
 
         // how long before piece drops by 1 row (seconds)
-        protected static Object speed = new { start = 0.6, decrement = 0.005, min = 0.1 };
+        private static class speed
+        {
+            public const float
+                start = 0.6f,
+                decrement = 0.005f,
+                min = 0.1f;
+        };
 
-        protected static int nx = 10, // width of tetris court (in blocks)
-                             ny = 20, // height of tetris court (in blocks)
-                             nu = 5;  // width/heigth of upcoming preview (in blocks)
+        private static int nx = 10, // width of tetris court (in blocks)
+                           ny = 20, // height of tetris court (in blocks)
+                           nu = 5;  // width/heigth of upcoming preview (in blocks)
+
         #endregion
 
         #region tetris elements' abstraction classes
-        protected class TetrisCourt
+        private class Piece
         {
-            public bool[,] court;
-            public TetrisCourt()
-            {
-                court = new bool[nx, ny];
-            }
+            public PieceType type { get; set; }
+            public short dir { get; set; }
+            public int x { get; set; }
+            public int y { get; set; }
         }
-        protected class Piece
+
+        private class PieceType
         {
             public int size { get; set; }
             public string color { get; set; }
-            public Dictionary<short, int> blocks { get; set; }
-            public Piece(int sz, List<int> shape, string clr)
+            public int[] blocks { get; set; }
+
+            public PieceType(int sz, int[] shape, string clr)
             {
                 size = sz;
                 color = clr;
-                if (shape.Count < 1)
+
+                if (shape.Length < 1)
                 {
-                    shape.Add(0xCC00); // 2x2 square
+                    shape[0] = 0xCC00; // 2x2 square
                 }
-                if (shape.Count < 4)
+
+                if (shape.Length < 4)
                 {
-                    for (int i = shape.Count - 1; i < 4; i++) {
+                    for (int i = shape.Length - 1; i < 4; i++) {
                         shape[i] = shape[i - 1];
                     }
                 }
-                blocks = new Dictionary<short, int>
-                {
-                    { 0, shape[0] },
-                    { 90, shape[1] },
-                    { 180, shape[2] },
-                    { 270, shape[3] }
-                };
+
+                blocks = shape;
             }
         }
+
         #endregion
 
         #region game variables (initialized during reset)
-        protected static int dx, // pixel width of a tetris block
-                             dy, // pixel height of a tetris block
-                             dt, // time since starting the game
-                         vscore, // the currently displayed score (catches up to score in small chunks like slot machine)
-                           rows; // number of completed rows in the current game
 
+        private static int dx, // pixel width of a tetris block
+                           dy, // pixel height of a tetris block
+                        score, // the current score
+                       vscore, // the currently displayed score (catches up to score in small chunks like slot machine)
+                         rows; // number of completed rows in the current game
 
         // 2 dimensional array (nx*ny) representing tetris court - either empty block or occupied by a 'piece'
-        protected static TetrisCourt blocks = new TetrisCourt();
+        private static PieceType[,] blocks = new PieceType[nx,ny];
 
-        protected static List<int> actions; // queue of user actions (inputs)
+        private static int[] actions = new int[0]; // queue of user actions (inputs)
 
-        protected static Piece current, // the current piece
-                                  next; // the next piece
+        private static Piece current, // the current piece
+                             next;    // the next piece
 
-        protected static bool playing; // true|false - game is in progress
-        protected static double step; // how long before current piece drops by 1 row
+        private static bool playing; // true|false - game is in progress
+        private static double dt,    // time since starting the game
+                            step;    // how long before current piece drops by 1 row
+
         #endregion
 
         #region tetris pieces
@@ -234,7 +273,7 @@ namespace BridgeTetris
          * blocks: each element represents a rotation of the piece (0, 90, 180, 270)
          *         each element is a 16bit integer where the 16 bits represent
          *         a 4x4 set of blocks, e.g. j.blocks[0] = 0x44C0
-         *         
+         *
          *   0100 = 0x4 << 3 = 0x4000
          *   0100 = 0x4 << 2 = 0x0400
          *   1100 = 0xC << 1 = 0x00C0
@@ -243,14 +282,14 @@ namespace BridgeTetris
          *                     0x44C0
          */
 
-        protected static Piece
-            i = new Piece(4, new List<int> { 0x0F00, 0x2222, 0x00F0, 0x4444 }, "cyan"),
-            j = new Piece(3, new List<int> { 0x44C0, 0x8E00, 0x6440, 0x0E20 }, "blue"),
-            l = new Piece(3, new List<int> { 0x4460, 0x0E80, 0xC440, 0x2E00 }, "orange"),
-            o = new Piece(2, new List<int> { 0xCC00, 0xCC00, 0xCC00, 0xCC00 }, "yellow"),
-            s = new Piece(3, new List<int> { 0x06C0, 0x8C40, 0x6C00, 0x4620 }, "green"),
-            t = new Piece(3, new List<int> { 0x0E40, 0x4C40, 0x4E00, 0x4640 }, "purple"),
-            z = new Piece(3, new List<int> { 0x0C60, 0x4C80, 0xC600, 0x2640 }, "red");
+        private static PieceType
+            i = new PieceType(4, new int[] { 0x0F00, 0x2222, 0x00F0, 0x4444 }, "cyan"),
+            j = new PieceType(3, new int[] { 0x44C0, 0x8E00, 0x6440, 0x0E20 }, "blue"),
+            l = new PieceType(3, new int[] { 0x4460, 0x0E80, 0xC440, 0x2E00 }, "orange"),
+            o = new PieceType(2, new int[] { 0xCC00, 0xCC00, 0xCC00, 0xCC00 }, "yellow"),
+            s = new PieceType(3, new int[] { 0x06C0, 0x8C40, 0x6C00, 0x4620 }, "green"),
+            t = new PieceType(3, new int[] { 0x0E40, 0x4C40, 0x4E00, 0x4640 }, "purple"),
+            z = new PieceType(3, new int[] { 0x0C60, 0x4C80, 0xC600, 0x2640 }, "red");
         #endregion
 
         /// <summary>
@@ -262,12 +301,12 @@ namespace BridgeTetris
         /// <param name="y"></param>
         /// <param name="dir"></param>
         /// <param name="fn"></param>
-        protected static bool eachblock(Piece type, int x, int y, short dir, Func<int, int, bool> fn)
+        private static PieceType eachblock(PieceType type, int x, int y, short dir, Func<int, int, PieceType> fn)
         {
             int row = 0,
                 col = 0,
                 blocks = type.blocks[dir];
-            var result = true; // FIXME: 'result' logic must be ensured to work like on JS
+            PieceType result = null; // FIXME: 'result' logic must be ensured to work like on JS
 
             for (int bit = 0x8000; bit > 0; bit = bit >> 1)
             {
@@ -286,72 +325,535 @@ namespace BridgeTetris
             return result; // FIXME: 'result' logic must be ensured to work like on JS
         }
 
-        // this is the function delegated to eachblock from occupied:
-        protected static bool pieceCanFit(int x, int y)
+        private static void eachblock(PieceType type, int x, int y, short dir, Action<int, int, PieceType> fn)
         {
-            return (x < 0 || x >= nx || y < 0 || y >= ny || getBlock(x, y)) ? true : false;
+            int row = 0,
+                col = 0,
+                blocks = type.blocks[dir];
+
+            for (int bit = 0x8000; bit > 0; bit = bit >> 1)
+            {
+                if ((blocks & bit) > 0)
+                {
+                    fn(x + col, y + row, type);
+                }
+                if (++col == 4)
+                {
+                    col = 0;
+                    ++row;
+                }
+            }
+        }
+
+        // this is the function delegated to eachblock from occupied:
+        private static PieceType pieceCanFit(int x, int y)
+        {
+            if (x < 0 || x >= nx || y < 0 || y >= ny)
+            {
+                return getBlock(x, y);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // check if a piece can fit into a position in the grid
-        protected static bool occupied(Piece type, int x, int y, short dir)
+        private static bool occupied(PieceType type, int x, int y, short dir)
         {
             var result = false; // FIXME: 'result' logic must be ensured to work like on JS
-            Func<int, int, bool> pCF = pieceCanFit;
-            result = eachblock(type, x, y, dir, pCF); // FIXME: 'result' logic must be ensured to work like on JS
+            Func<int, int, PieceType> pCF = pieceCanFit;
+            result = (eachblock(type, x, y, dir, pCF) == null); // FIXME: 'result' logic must be ensured to work like on JS
             return result; // FIXME: maybe just return eachblock result??
         }
 
-        protected static bool unoccupied(Piece type, int x, int y, short dir)
+        private static bool unoccupied(PieceType type, int x, int y, short dir)
         {
             return !occupied(type, x, y, dir);
         }
 
         // start with 4 instances of each piece and
         // pick randomly until the 'bag is empty'
-        protected static List<Piece> pieces = new List<Piece>();
+        //private static List<Piece> pieces = new List<Piece>();
+        private static PieceType[] pieces;
 
-        protected class PieceLambda // FIXME: this should be Piece, Piece above might be PieceDefinition
-        { 
-            public Piece type { get; set; }
-            public short dir { get; set; }
-            public int x { get; set; }
-            public int y { get; set; }
-        }
-        protected static PieceLambda randomPiece()
+        private static Piece randomPiece()
         {
-            if (pieces.Count < 1)
-            {
-                foreach (var piece in new[] { i, j, l, o, s, t, z })
-                {
-                    for (var pi = 1; pi <= 4; pi++)
-                    {
-                        pieces.Add(piece);
-                    }
-                }
-            }
-            
-            // FIXMEFIXMEFIXME: IENumerable.Splice is not returning anything!?
-            //  seems it should return a list so the first element could be chosen as line 164.
-            //var type = pieces.Splice((int)random(0, pieces.Count - 1), 1);
-            return new PieceLambda
+            pieces = new PieceType[] { i,i,i,i, j,j,j,j, l,l,l,l, o,o,o,o, s,s,s,s, t,t,t,t, z,z,z,z };
+            var type = (PieceType)pieces.Splice((int)random(0, pieces.Length - 1), 1)[0]; // This does not cast as Piece?
+
+            return new Piece
             {
                 dir = DIR.UP,
                 type = type,
-                x = Math.Round(random(0, nx - type.size)),
+                x = (int)Math.Round(random(0, nx - type.size)),
                 y = 0
             };
         }
+
         #region GAME LOOP
+
+        public static void run()
+        {
+            //showStats(); // initialize FPS counter (defined in external .js)
+            addEvents();
+        }
+
+        /*FIXME: this is not really the game and uses external javascript, so let's work on this later
+         * private static void showStats()
+        {
+            Bridge.Script.Write("stats.domElement.id = 'stats'");
+            get('menu').AppendChild('stats.domElement');
+        }*/
+
+        private static void addEvents()
+        {
+            Document.AddEventListener(EventType.KeyDown, keydown, false);
+        }
+
+        public static void resize(Event evnt) // 'event' is a reserved keyword
+        {
+            // set canvas logical size equal to its physical size
+            canvas.Width = canvas.ClientWidth;
+            canvas.Height = canvas.ClientHeight;
+
+            ucanvas.Width = ucanvas.ClientWidth;
+            ucanvas.Height = ucanvas.ClientHeight;
+
+            // pixel size of a single tetris block
+            dx = canvas.ClientWidth / nx;
+            dy = canvas.ClientHeight / ny;
+
+            invalidate();
+            invalidateNext();
+        }
+
+        public static void keydown(Event ev)
+        {
+            var handled = false;
+            var kev = ev.As<KeyboardEvent>();
+            if (playing)
+            {
+                switch (kev.KeyCode)
+                {
+                    case KEY.LEFT:
+                        actions.Push(DIR.LEFT);
+                        handled = true;
+                        break;
+                    case KEY.RIGHT:
+                        actions.Push(DIR.RIGHT);
+                        handled = true;
+                        break;
+                    case KEY.UP:
+                        actions.Push(DIR.UP);
+                        handled = true;
+                        break;
+                }
+            }
+            else
+            {
+                if (kev.KeyCode == KEY.SPACE)
+                {
+                    play();
+                    handled = true;
+                }
+            }
+
+            if (handled)
+            {
+                ev.PreventDefault(); // prevent arrow keys from scrolling the page (supported in ie9+ and all other browsers)
+            }
+        }
+
         #endregion
 
         #region GAME LOGIC
-        private static bool getBlock(int x, int y)
+
+        private static void play()
         {
-            throw new NotImplementedException();
+            hide("start");
+            reset();
+            playing = true;
         }
-        #endregion
-        public static void play()
+
+        private static void lose()
         {
+            show("start");
+            setVisualScore();
+            playing = false;
+        }
+
+        private static void setVisualScore(int? n = null)
+        {
+            vscore = n ?? score;
+            invalidateScore();
+        }
+
+        private static void setScore(int n)
+        {
+            score = n;
+            setVisualScore(n);
+        }
+
+        private static void addScore(int n)
+        {
+            score += n;
+        }
+
+        private static void clearScore()
+        {
+            setScore(0);
+        }
+
+        private static void clearRows()
+        {
+            setRows(0);
+        }
+
+        private static void setRows(int n)
+        {
+            rows = n;
+            step = Math.Max(speed.min, speed.start - (speed.decrement * rows));
+            invalidateRows();
+        }
+
+        private static void addRows(int n)
+        {
+            setRows(rows + n);
+        }
+
+        private static PieceType getBlock(int x, int y)
+        {
+            return (x >= 0 && x < nx && blocks.Length > (x+1)*nx) ? blocks[x,y] : null;
+        }
+
+        private static void setBlock(int x, int y, PieceType type)
+        {
+            // FIXME: understand what this does and ensure whether it is needed or not!
+            //        seems to be just a js trick to ensure the array has been allocated
+            //blocks[x] = blocks[x] || null; // does not make much sense!
+            // maybe the test below does what this would: (disallow allocating blocks outside court longitudinally)
+            if (x >= 0 && x < nx)
+            {
+                blocks[x, y] = type;
+            }
+            invalidate();
+        }
+
+        private static void clearBlocks()
+        {
+            blocks = new PieceType[nx, ny];
+        }
+
+        private static void clearActions()
+        {
+            actions = new int[0];
+        }
+
+        private static void setCurrentPiece(Piece piece)
+        {
+            current = piece ?? randomPiece();
+            invalidate();
+        }
+
+        private static void setNextPiece(Piece piece = null)
+        {
+            next = piece ?? randomPiece();
+            invalidateNext();
+        }
+
+        private static void reset()
+        {
+            dt = 0;
+            clearActions();
+            clearBlocks();
+            clearRows();
+            clearScore();
+            setCurrentPiece(next);
+            setNextPiece();
+        }
+
+        private static void update(double idt)
+        {
+            if (playing)
+            {
+                if (vscore < score)
+                {
+                    setVisualScore(vscore + 1);
+                }
+
+                handle(actions.Shift().As<int>()); // FIXME: Shift() should already return the type of the actions array.
+
+                dt = dt + idt;
+                if (dt > step)
+                {
+                    dt = dt - step;
+                    drop();
+                }
+            }
+        }
+
+        private static void handle(int action)
+        {
+            switch (action)
+            {
+                case DIR.LEFT:
+                case DIR.RIGHT:
+                    move(action);
+                    break;
+
+                case DIR.UP:
+                    rotate();
+                    break;
+
+                case DIR.DOWN:
+                    drop();
+                    break;
+            }
+        }
+
+        private static bool move(int dir)
+        {
+            var x = current.x;
+            var y = current.y;
+
+            switch (dir)
+            {
+                case DIR.RIGHT:
+                    x++;
+                    break;
+                case DIR.LEFT:
+                    x--;
+                    break;
+                case DIR.DOWN:
+                    y++;
+                    break;
+            }
+
+            if (unoccupied(current.type, x, y, current.dir))
+            {
+                current.x = x;
+                current.y = y;
+                invalidate();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        private static void rotate()
+        {
+            var newdir = (current.dir == DIR.MAX) ? DIR.MIN : (short)(current.dir + 1);
+
+            if (unoccupied(current.type, current.x, current.y, newdir))
+            {
+                current.dir = newdir;
+                invalidate();
+            }
+        }
+
+        private static void drop()
+        {
+            if (!move(DIR.DOWN))
+            {
+                addScore(10);
+                dropPiece();
+                removeLines();
+                setCurrentPiece(next);
+                setNextPiece(randomPiece());
+                clearActions();
+                if (occupied(current.type, current.x, current.y, current.dir))
+                {
+                    lose();
+                }
+            }
+        }
+
+        private static void dropPiece()
+        {
+            Action<int, int, PieceType> setIt = setBlock;
+            eachblock(current.type, current.x, current.y, current.dir, setIt);
+        }
+
+        private static void removeLines()
+        {
+            int n = 0;
+            bool complete = false;
+
+            for (var y = ny; y > 0; --y)
+            {
+                complete = true;
+
+                for (var x = 0; x < nx; ++x)
+                {
+                    if (getBlock(x, y) == null)
+                    {
+                        complete = false;
+                    }
+                }
+
+                if (complete)
+                {
+                    removeLine(y);
+                    y++; // recheck same line
+                    n++;
+                }
+            }
+
+            if (n > 0)
+            {
+                addRows(n);
+                addScore(100 * (int)Math.Pow(2, n - 1)); // 1:100, 2:200, 3:400, 4:800
+            }
+        }
+
+        private static void removeLine(int n)
+        {
+            for (var y = n; y >= 0; --y)
+            {
+                for (var x = 0; x < nx; ++x)
+                {
+                    setBlock(x, y, (y == 0) ? null : getBlock(x, y - 1));
+                }
+            }
+        }
+
+        #endregion
+
+        #region RENDERING
+
+        private static class invalid
+        {
+            public static bool
+                court = false,
+                next = false,
+                score = false,
+                rows = false;
+        }
+
+        private static void invalidate()
+        {
+            invalid.court = true;
+        }
+
+        private static void invalidateNext()
+        {
+            invalid.next = true;
+        }
+
+        private static void invalidateScore()
+        {
+            invalid.score = true;
+        }
+
+        private static void invalidateRows()
+        {
+            invalid.rows = true;
+        }
+
+        private static void draw()
+        {
+            ctx.Save(); // FIXME: CanvasRenderingContext2D has no 'save' method!? Javascript does!! (IE11 at least)
+            ctx.LineWidth = 1; // FIXME: no LineWidth as well...
+            ctx.Rranslate(0.5, 0.5); // FIXME: Is this type implemented at all?
+            drawCourt();
+            drawNext();
+            drawScore();
+            drawRows();
+            ctx.Restore(); // FIXME: this also works on this type from JavaScript
+        }
+
+        private static void drawCourt()
+        {
+            if (invalid.court)
+            {
+                ctx.ClearRect(0, 0, canvas.Width, canvas.Height);
+                if (playing)
+                {
+                    drawPiece(ctx, current.type, current.x, current.y, current.dir);
+                }
+
+                PieceType block;
+
+                for (int y = 0; y < ny; y++)
+                {
+                    for (int x = 0; x < nx; x++)
+                    {
+                        block = getBlock(x, y);
+                        if (block != null)
+                        {
+                            drawBlock(ctx, x, y, block.color);
+                        }
+                    }
+                }
+
+                ctx.strokeRect(0, 0, (nx * dx) - 1, (ny * dy) - 1); // court boundary
+                invalid.court = false;
+            }
+        }
+
+        private static void drawNext()
+        {
+            if (invalid.next)
+            {
+                var padding = (nu - next.type.size) / 2; // half-arsed attempt at centering next piece display
+
+                uctx.Save();
+                uctx.Translate(0.5, 0.5);
+                uctx.ClearRect(0, 0, nu * dx, nu * dy);
+
+                drawPiece(uctx, next.type, padding, padding, next.dir);
+
+                uctx.StrokeStyle = "black";
+                uctx.StrokeRect(0, 0, (nu * dx) - 1, (nu * dy) - 1);
+                uctx.Restore();
+
+                invalid.next = false;
+            }
+        }
+
+        private static void drawScore()
+        {
+            if (invalid.score)
+            {
+                html("score", ("00000" + Math.Floor(vscore)).Slice(-5));
+                invalid.score = false;
+            }
+        }
+
+        private static void drawRows()
+        {
+            if (invalid.rows)
+            {
+                html("rows", rows.ToString());
+                invalid.rows = false;
+            }
+        }
+
+        private static void drawPiece(CanvasRenderingContext2D ctx, PieceType type, int x, int y, short dir)
+        {
+            Action<int, int, string> drB = drawBlock;
+            eachblock(type, x, y, dir, drawBlock); // FIXME: ANOTHER overload just for this!? not fair!
+        }
+
+        private static void drawBlock(CanvasRenderingContext2D ctx, int x, int y, string color)
+        {
+            // FIXME: Needless to say, CanvasRenderingContext2D seems to have no method/attribute implemented.
+            ctx.FillStyle = color;
+            ctx.FillRect(x * dx, y * dy, dx, dy);
+            ctx.StrokeRect(x * dx, y * dy, dx, dy);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Load the class upon page load. When DOM content is ready, actually.
+        /// </summary>
+        [Ready]
+        public static void Main()
+        {
+            loadPlayArea(); // load page's placeholders
+            run();          // effectively start the game engine (will listen for 'spacebar' to begin game)
         }
     }
 }
