@@ -117,8 +117,8 @@ namespace BridgeTetris
 
         private static void show(string id)
         {
-            //get(id).Style.Visibility = null; this does not work!
-            get(id).Style.Visibility = Visibility.Visible;
+            //get(id).Style.Visibility = null; // FIXME: this does not work!
+            get(id).Style.Visibility = Visibility.Inherit;
         }
 
         private static void html(string id, string html)
@@ -301,20 +301,18 @@ namespace BridgeTetris
         /// <param name="y"></param>
         /// <param name="dir"></param>
         /// <param name="fn"></param>
-        private static PieceType eachblock(PieceType type, int x, int y, short dir, Func<int, int, PieceType> fn)
+        private static Tuple<int, int>[] eachblock(PieceType type, int x, int y, short dir)
         {
             int row = 0,
                 col = 0,
                 blocks = type.blocks[dir];
-            PieceType result = null; // FIXME: 'result' logic must be ensured to work like on JS
+            Tuple<int, int>[] result = new Tuple<int, int>[0]; // FIXME: 'result' logic must be ensured to work like on JS
 
             for (int bit = 0x8000; bit > 0; bit = bit >> 1)
             {
                 if ((blocks & bit) > 0)
                 {
-                    // FIXME: 'result' logic must be ensured to work like on JS
-                    //        return on first false is enough?
-                    result = fn(x + col, y + row); // fixme> action or func? (returns nothing or something?)
+                    result.Push(new Tuple<int, int>(x + col, y + row));
                 }
                 if (++col == 4)
                 {
@@ -322,49 +320,27 @@ namespace BridgeTetris
                     ++row;
                 }
             }
-            return result; // FIXME: 'result' logic must be ensured to work like on JS
-        }
-
-        private static void eachblock(PieceType type, int x, int y, short dir, Action<int, int, PieceType> fn)
-        {
-            int row = 0,
-                col = 0,
-                blocks = type.blocks[dir];
-
-            for (int bit = 0x8000; bit > 0; bit = bit >> 1)
-            {
-                if ((blocks & bit) > 0)
-                {
-                    fn(x + col, y + row, type);
-                }
-                if (++col == 4)
-                {
-                    col = 0;
-                    ++row;
-                }
-            }
+            return result;
         }
 
         // this is the function delegated to eachblock from occupied:
-        private static PieceType pieceCanFit(int x, int y)
+        private static bool pieceCanFit(int x, int y)
         {
-            if (x < 0 || x >= nx || y < 0 || y >= ny)
-            {
-                return getBlock(x, y);
-            }
-            else
-            {
-                return null;
-            }
+            return (x < 0 || x >= nx || y < 0 || y >= ny || getBlock(x, y) != null);
         }
 
         // check if a piece can fit into a position in the grid
         private static bool occupied(PieceType type, int x, int y, short dir)
         {
-            var result = false; // FIXME: 'result' logic must be ensured to work like on JS
-            Func<int, int, PieceType> pCF = pieceCanFit;
-            result = (eachblock(type, x, y, dir, pCF) == null); // FIXME: 'result' logic must be ensured to work like on JS
-            return result; // FIXME: maybe just return eachblock result??
+            var matchingCells = eachblock(type, x, y, dir); // FIXME: 'result' logic must be ensured to work like on JS
+            foreach (var tuple in matchingCells)
+            {
+                if (pieceCanFit(tuple.Item1, tuple.Item2))
+                {
+                    return true;
+                }
+            }
+            return false; // FIXME: maybe just return eachblock result??
         }
 
         private static bool unoccupied(PieceType type, int x, int y, short dir)
@@ -524,7 +500,14 @@ namespace BridgeTetris
 
         private static PieceType getBlock(int x, int y)
         {
-            return (x >= 0 && x < nx && blocks.Length > (x+1)*nx) ? blocks[x,y] : null;
+            PieceType retval = null;
+
+            if (x >= 0 && x < nx && blocks.Length > ((x + 1) * nx))
+            {
+                retval = blocks[x, y];
+            }
+
+            return retval;
         }
 
         private static void setBlock(int x, int y, PieceType type)
@@ -672,7 +655,12 @@ namespace BridgeTetris
         private static void dropPiece()
         {
             Action<int, int, PieceType> setIt = setBlock;
-            eachblock(current.type, current.x, current.y, current.dir, setIt);
+            var matchingCells = eachblock(current.type, current.x, current.y, current.dir);
+
+            foreach (var tuple in matchingCells)
+            {
+                setBlock(tuple.Item1, tuple.Item2, current.type);
+            }
         }
 
         private static void removeLines()
@@ -753,21 +741,38 @@ namespace BridgeTetris
 
         private static void draw()
         {
-            ctx.Save(); // FIXME: CanvasRenderingContext2D has no 'save' method!? Javascript does!! (IE11 at least)
-            ctx.LineWidth = 1; // FIXME: no LineWidth as well...
-            ctx.Rranslate(0.5, 0.5); // FIXME: Is this type implemented at all?
+            //ctx.Save(); // FIXME: CanvasRenderingContext2D has no 'save' method!? Javascript does!! (IE11 at least)
+            //ctx.LineWidth = 1; // FIXME: no LineWidth as well...
+            //ctx.Translate(0.5, 0.5); // for crisp 1px black lines
+
+            #region REMOVEME
+            // Hardcoded, for now:
+            var lctx = ctx;
+            Bridge.Script.Write("lctx.save()");
+            Bridge.Script.Write("lctx.lineWidth = 1");
+            Bridge.Script.Write("lctx.translate(0.5, 0.5)"); // for crisp 1px black lines
+            #endregion
+
             drawCourt();
             drawNext();
             drawScore();
             drawRows();
-            ctx.Restore(); // FIXME: this also works on this type from JavaScript
+
+            //ctx.Restore(); // FIXME: this also works on this type from JavaScript
+            Bridge.Script.Write("lctx.restore()"); // REMOVEME
         }
 
         private static void drawCourt()
         {
             if (invalid.court)
             {
-                ctx.ClearRect(0, 0, canvas.Width, canvas.Height);
+                //ctx.ClearRect(0, 0, canvas.Width, canvas.Height);
+
+                #region REMOVEME
+                var lctx = ctx;
+                Bridge.Script.Write("lctx.clearRect(0, 0, canvas.Width, canvas.Height)");
+                #endregion
+
                 if (playing)
                 {
                     drawPiece(ctx, current.type, current.x, current.y, current.dir);
@@ -787,7 +792,9 @@ namespace BridgeTetris
                     }
                 }
 
-                ctx.strokeRect(0, 0, (nx * dx) - 1, (ny * dy) - 1); // court boundary
+                //ctx.StrokeRect(0, 0, (nx * dx) - 1, (ny * dy) - 1); // court boundary
+                Bridge.Script.Write("lctx.strokeRect(0, 0, (nx * dx) - 1, (ny * dy) - 1)"); // REMOVEME
+
                 invalid.court = false;
             }
         }
@@ -798,15 +805,28 @@ namespace BridgeTetris
             {
                 var padding = (nu - next.type.size) / 2; // half-arsed attempt at centering next piece display
 
-                uctx.Save();
-                uctx.Translate(0.5, 0.5);
-                uctx.ClearRect(0, 0, nu * dx, nu * dy);
+                //uctx.Save();
+                //uctx.Translate(0.5, 0.5);
+                //uctx.ClearRect(0, 0, nu * dx, nu * dy);
+
+                #region REMOVEME
+                var luctx = uctx;
+                Bridge.Script.Write("luctx.save()");
+                Bridge.Script.Write("luctx.translate(0.5, 0.5)");
+                Bridge.Script.Write("luctx.clearRect(0, 0, nu * dx, nu * dy)");
+                #endregion
 
                 drawPiece(uctx, next.type, padding, padding, next.dir);
 
-                uctx.StrokeStyle = "black";
-                uctx.StrokeRect(0, 0, (nu * dx) - 1, (nu * dy) - 1);
-                uctx.Restore();
+                //uctx.StrokeStyle = "black";
+                //uctx.StrokeRect(0, 0, (nu * dx) - 1, (nu * dy) - 1);
+                //uctx.Restore();
+
+                #region REMOVEME
+                Bridge.Script.Write("luctx.strokeStyle = \"black\"");
+                Bridge.Script.Write("luctx.strokeRect(0, 0, (nu * dx) - 1, (nu * dy) - 1)");
+                Bridge.Script.Write("luctx.restore()");
+                #endregion
 
                 invalid.next = false;
             }
@@ -832,16 +852,30 @@ namespace BridgeTetris
 
         private static void drawPiece(CanvasRenderingContext2D ctx, PieceType type, int x, int y, short dir)
         {
-            Action<int, int, string> drB = drawBlock;
-            eachblock(type, x, y, dir, drawBlock); // FIXME: ANOTHER overload just for this!? not fair!
+            var matchingCells = eachblock(type, x, y, dir);
+
+            foreach (var tuple in matchingCells)
+            {
+                drawBlock(ctx, tuple.Item1, tuple.Item2, type.color);
+            }
         }
 
         private static void drawBlock(CanvasRenderingContext2D ctx, int x, int y, string color)
         {
             // FIXME: Needless to say, CanvasRenderingContext2D seems to have no method/attribute implemented.
-            ctx.FillStyle = color;
-            ctx.FillRect(x * dx, y * dy, dx, dy);
-            ctx.StrokeRect(x * dx, y * dy, dx, dy);
+            //ctx.FillStyle = color;
+            //ctx.FillRect(x * dx, y * dy, dx, dy);
+            //ctx.StrokeRect(x * dx, y * dy, dx, dy);
+
+            #region REMOVEME
+            // For now, hardcoded commands:
+            var ldx = dx;
+            var ldy = dy;
+
+            Bridge.Script.Write("ctx.FillStyle = color");
+            Bridge.Script.Write("ctx.FillRect(x * ldx, y * ldy, ldx, ldy)");
+            Bridge.Script.Write("ctx.StrokeRect(x * ldx, y * ldy, ldx, ldy)");
+            #endregion
         }
 
         #endregion
