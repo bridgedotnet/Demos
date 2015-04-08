@@ -1,4 +1,4 @@
-Version 1.0.0
+Version 1.1.0
 
 Copyright 2008-2015 Object.NET, Inc.
 

@@ -70,6 +70,8 @@
     <Content Include="js\bridge.min.js" />
     <Content Include="js\bridgeTetris.js" />
     <Content Include="js\bridgeTetris.min.js" />
+    <Content Include="js\tetrisClasses.js" />
+    <Content Include="js\tetrisClasses.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
