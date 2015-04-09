@@ -1,0 +1,35 @@
+{
+  "version": "0.1",
+  "type": "privileged",
+  "name": "Weatherman",
+  "description": "A Bridge.NET weather application for Firefox OS",
+  "launch_path": "/index.html",
+  "icons": {
+    "16": "/app-icons/icon-16.png",
+    "48": "/app-icons/icon-48.png",
+    "128": "/app-icons/icon-128.png"
+  },
+  "developer": {
+    "name": "Bridge.NET"
+  },
+  "permissions": {
+    "geolocation": {
+      "description": "Needed for showing weather forecast for your current location"
+    },
+    "systemXHR": {
+      "description": "Needed to fetch weather forecast data"
+    }
+  },
+  "locales": {
+    "ru": {
+      "description": "Приложение Bridge.NET погода Firefox OS"
+    },
+    "el": {
+      "description": "Μια Bridge.NET εφαρμογή πρόγνωσης καιρού για το Firefox OS"
+    },
+    "tr": {
+      "description": "Firefox OS için bir Bridge.NET hava uygulaması"
+    }
+  },
+  "default_locale": "en"
+}
