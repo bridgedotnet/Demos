@@ -230,8 +230,8 @@ namespace BridgeTetris
 
             public PieceType(int pieceSize, int[] pieceShape, string pieceColor)
             {
-                Size = pieceSize;
-                Color = pieceColor;
+                this.Size = pieceSize;
+                this.Color = pieceColor;
 
                 if (pieceShape.Length < 1)
                 {
@@ -246,7 +246,7 @@ namespace BridgeTetris
                     }
                 }
 
-                Blocks = pieceShape;
+                this.Blocks = pieceShape;
             }
         }
 
