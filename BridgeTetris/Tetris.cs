@@ -294,13 +294,83 @@ namespace BridgeTetris
          */
 
         private static PieceType
-            i = new PieceType(4, new int[] { 0x0F00, 0x2222, 0x00F0, 0x4444 }, "cyan"),
-            j = new PieceType(3, new int[] { 0x44C0, 0x8E00, 0x6440, 0x0E20 }, "blue"),
-            l = new PieceType(3, new int[] { 0x4460, 0x0E80, 0xC440, 0x2E00 }, "orange"),
-            o = new PieceType(2, new int[] { 0xCC00, 0xCC00, 0xCC00, 0xCC00 }, "yellow"),
-            s = new PieceType(3, new int[] { 0x06C0, 0x8C40, 0x6C00, 0x4620 }, "green"),
-            t = new PieceType(3, new int[] { 0x0E40, 0x4C40, 0x4E00, 0x4640 }, "purple"),
-            z = new PieceType(3, new int[] { 0x0C60, 0x4C80, 0xC600, 0x2640 }, "red");
+            i = new PieceType(
+                4,
+                new int[]
+                {
+                    0x0F00,
+                    0x2222,
+                    0x00F0,
+                    0x4444
+                },
+                "cyan"),
+
+            j = new PieceType(
+                3,
+                new int[]
+                {
+                    0x44C0,
+                    0x8E00,
+                    0x6440,
+                    0x0E20
+                },
+                "blue"),
+
+            l = new PieceType(
+                3,
+                new int[]
+                {
+                    0x4460,
+                    0x0E80,
+                    0xC440,
+                    0x2E00
+                },
+                "orange"),
+
+            o = new PieceType(
+                2,
+                new int[]
+                {
+                    0xCC00,
+                    0xCC00,
+                    0xCC00,
+                    0xCC00
+                },
+                "yellow"),
+
+            s = new PieceType(
+                3,
+                new int[]
+                {
+                    0x06C0,
+                    0x8C40,
+                    0x6C00,
+                    0x4620
+                },
+                "green"),
+
+            t = new PieceType(
+                3,
+                new int[]
+                {
+                    0x0E40,
+                    0x4C40,
+                    0x4E00,
+                    0x4640
+                },
+                "purple"),
+
+            z = new PieceType(
+                3,
+                new int[]
+                {
+                    0x0C60,
+                    0x4C80,
+                    0xC600,
+                    0x2640
+                },
+                "red");
+
         #endregion
 
         /// <summary>
@@ -370,7 +440,43 @@ namespace BridgeTetris
 
         private static Piece RandomPiece()
         {
-            pieces = new PieceType[] { i, i, i, i, j, j, j, j, l, l, l, l, o, o, o, o, s, s, s, s, t, t, t, t, z, z, z, z };
+            pieces = new PieceType[]
+            {
+                i,
+                i,
+                i,
+                i,
+
+                j,
+                j,
+                j,
+                j,
+
+                l,
+                l,
+                l,
+                l,
+
+                o,
+                o,
+                o,
+                o,
+
+                s,
+                s,
+                s,
+                s,
+
+                t,
+                t,
+                t,
+                t,
+
+                z,
+                z,
+                z,
+                z
+            };
 
             // FIXME: This shouldn't need to be cast as Piece again
             var type = (PieceType)pieces.Splice((int)Random(0, pieces.Length - 1), 1)[0];
@@ -550,8 +656,9 @@ namespace BridgeTetris
         {
             PieceType retval = null;
 
-            if (x >= 0 && x < nx && blocks.Length > ((x + 1) * nx)
-                && y > 0 && y < ny)
+            if (x >= 0 && x < nx &&
+                blocks.Length > ((x + 1) * nx) &&
+                y > 0 && y < ny)
             {
                 retval = blocks[x, y];
             }
