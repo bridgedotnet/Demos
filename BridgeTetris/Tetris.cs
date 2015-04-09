@@ -354,6 +354,7 @@ namespace BridgeTetris
                     ++row;
                 }
             }
+
             return result;
         }
 
@@ -374,6 +375,7 @@ namespace BridgeTetris
                     return true;
                 }
             }
+
             return false; // FIXME: maybe just return eachblock result??
         }
 
@@ -689,6 +691,7 @@ namespace BridgeTetris
                 current.X = x;
                 current.Y = y;
                 Invalidate();
+
                 return true;
             }
             else
