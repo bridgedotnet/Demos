@@ -48,12 +48,14 @@ namespace BridgeTetris
                 Href = "javascript:BridgeTetris.Tetris.play()",
                 InnerHTML = "Press Space to Play."
             };
+
             menuDiv.AppendChild(InsideParagraph(pressStartTitle, "start"));
 
             var nextPieceCanvas = new CanvasElement
             {
                 Id = "upcoming"
             };
+
             menuDiv.AppendChild(InsideParagraph(nextPieceCanvas));
 
             var scorePara = new List<Node>();
@@ -67,6 +69,7 @@ namespace BridgeTetris
                 Id = "score",
                 InnerHTML = "00000"
             });
+
             menuDiv.AppendChild(InsideParagraph(scorePara));
 
             var rowsPara = new List<Node>();
@@ -80,6 +83,7 @@ namespace BridgeTetris
                 Id = "rows",
                 InnerHTML = "0"
             });
+
             menuDiv.AppendChild(InsideParagraph(rowsPara));
 
             var tetrisCourtCanvas = new CanvasElement
@@ -340,6 +344,7 @@ namespace BridgeTetris
             int row = 0,
                 col = 0,
                 blocks = type.Blocks[dir];
+
             Tuple<int, int>[] result = new Tuple<int, int>[0]; // FIXME: 'result' logic must be ensured to work like on JS
 
             for (int bit = 0x8000; bit > 0; bit = bit >> 1)
@@ -348,6 +353,7 @@ namespace BridgeTetris
                 {
                     result.Push(new Tuple<int, int>(x + col, y + row));
                 }
+
                 if (++col == 4)
                 {
                     col = 0;
@@ -368,6 +374,7 @@ namespace BridgeTetris
         private static bool Occupied(PieceType type, int x, int y, short dir)
         {
             var matchingCells = Eachblock(type, x, y, dir); // FIXME: 'result' logic must be ensured to work like on JS
+
             foreach (var tuple in matchingCells)
             {
                 if (PieceCanFit(tuple.Item1, tuple.Item2))
@@ -392,6 +399,7 @@ namespace BridgeTetris
         private static Piece RandomPiece()
         {
             pieces = new PieceType[] { i, i, i, i, j, j, j, j, l, l, l, l, o, o, o, o, s, s, s, s, t, t, t, t, z, z, z, z };
+
             var type = (PieceType)pieces.Splice((int)Random(0, pieces.Length - 1), 1)[0]; // This does not cast as Piece?
 
             return new Piece
@@ -467,6 +475,7 @@ namespace BridgeTetris
         {
             var handled = false;
             var kev = ev.As<KeyboardEvent>();
+
             if (playing)
             {
                 switch (kev.KeyCode)
@@ -561,7 +570,9 @@ namespace BridgeTetris
             var rowCount = rows;
 
             rows = n;
+
             step = Math.Max(speedMin, speedStart - (speedDec * rowCount));
+
             InvalidateRows();
         }
 
@@ -593,6 +604,7 @@ namespace BridgeTetris
             {
                 blocks[x, y] = type;
             }
+
             Invalidate();
         }
 
@@ -621,10 +633,12 @@ namespace BridgeTetris
         private static void Reset()
         {
             dt = 0;
+            
             ClearActions();
             ClearBlocks();
             ClearRows();
             ClearScore();
+            
             SetCurrentPiece(next);
             SetNextPiece();
         }
@@ -641,6 +655,7 @@ namespace BridgeTetris
                 Handle(actions.Shift().As<int>()); // FIXME: Shift() should already return the type of the actions array.
 
                 dt = dt + idt;
+
                 if (dt > step)
                 {
                     dt = dt - step;
@@ -678,9 +693,11 @@ namespace BridgeTetris
                 case DIR.RIGHT:
                     x++;
                     break;
+
                 case DIR.LEFT:
                     x--;
                     break;
+
                 case DIR.DOWN:
                     y++;
                     break;
@@ -703,6 +720,7 @@ namespace BridgeTetris
         private static void Rotate()
         {
             short newdir;
+
             if (current.Dir == DIR.MAX)
             {
                 newdir = DIR.MIN;
@@ -724,11 +742,15 @@ namespace BridgeTetris
             if (!Move(DIR.DOWN))
             {
                 AddScore(10);
+
                 DropPiece();
                 RemoveLines();
+
                 SetCurrentPiece(next);
                 SetNextPiece(RandomPiece());
+
                 ClearActions();
+
                 if (Occupied(current.Type, current.X, current.Y, current.Dir))
                 {
                     Lose();
@@ -854,6 +876,7 @@ namespace BridgeTetris
                     for (int x = 0; x < nx; x++)
                     {
                         block = GetBlock(x, y);
+
                         if (block != null)
                         {
                             DrawBlock(ctx, x, y, block.Color);
@@ -874,6 +897,7 @@ namespace BridgeTetris
                 var padding = (nu - next.Type.Size) / 2; // half-arsed attempt at centering next piece display
 
                 uctx.Save();
+
                 uctx.Translate(0.5, 0.5);
                 uctx.ClearRect(0, 0, nu * dx, nu * dy);
 
@@ -881,6 +905,7 @@ namespace BridgeTetris
 
                 uctx.StrokeStyle = "black";
                 uctx.StrokeRect(0, 0, (nu * dx) - 1, (nu * dy) - 1);
+
                 uctx.Restore();
 
                 invalid.Next = false;
@@ -931,7 +956,9 @@ namespace BridgeTetris
         public static void LoadGame()
         {
             LoadPlayArea(); // load page's placeholders
+
             LoadCanvasContext();
+
             Run();          // effectively start the game engine (will listen for 'spacebar' to begin game)
         }
     }
