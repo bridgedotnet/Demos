@@ -128,7 +128,7 @@ namespace BridgeTetris
 
         #region base helper methods
 
-        // FIXME: Useless, as we have to prepend full class path anyway. Left just for reference to original code.
+        // Note: This was a shorthand for GetElementById in the original code.
         private static Element Get(string id)
         {
             return Document.GetElementById(id);
@@ -141,7 +141,6 @@ namespace BridgeTetris
 
         private static void Show(string id)
         {
-            //get(id).Style.Visibility = null; // FIXME: this does not work!
             Get(id).Style.Visibility = Visibility.Inherit;
         }
 
@@ -159,30 +158,6 @@ namespace BridgeTetris
         {
             return (min + (Math.Random() * (max - min)));
         }
-
-        //private static double randomChoice() // Not used!? Can't guess types if not used..
-
-        #region See what to do here later (this is optional)
-
-        private static void fixReqAnimFrame() // unnecessary on bridge.net?
-        {
-            Script.Write(@"if (!window.requestAnimationFrame) { // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-                window.requestAnimationFrame = window.webkitRequestAnimationFrame ||
-                                               window.mozRequestAnimationFrame    ||
-                                               window.oRequestAnimationFrame      ||
-                                               window.msRequestAnimationFrame     ||
-                                               function(callback, element) {
-                                                   window.setTimeout(callback, 1000 / 60);
-                                               }
-            }");
-        }
-
-        private static void callBackReqAnimFrame(Func<Func<string, Node>, Node> callback)
-        {
-            Window.SetTimeout(callback, 1000 / 60);
-        }
-
-        #endregion
 
         #endregion
 
@@ -209,8 +184,6 @@ namespace BridgeTetris
                 MIN = 0,
                 MAX = 3;
         };
-
-        // private start = new Stats() -- optional, included on another .js!
 
         private static CanvasElement canvas;
         private static CanvasElement ucanvas;
@@ -345,7 +318,7 @@ namespace BridgeTetris
                 col = 0,
                 blocks = type.Blocks[dir];
 
-            Tuple<int, int>[] result = new Tuple<int, int>[0]; // FIXME: 'result' logic must be ensured to work like on JS
+            Tuple<int, int>[] result = new Tuple<int, int>[0];
 
             for (int bit = 0x8000; bit > 0; bit = bit >> 1)
             {
@@ -373,7 +346,7 @@ namespace BridgeTetris
         // check if a piece can fit into a position in the grid
         private static bool Occupied(PieceType type, int x, int y, short dir)
         {
-            var matchingCells = Eachblock(type, x, y, dir); // FIXME: 'result' logic must be ensured to work like on JS
+            var matchingCells = Eachblock(type, x, y, dir);
 
             foreach (var tuple in matchingCells)
             {
@@ -383,7 +356,7 @@ namespace BridgeTetris
                 }
             }
 
-            return false; // FIXME: maybe just return eachblock result??
+            return false;
         }
 
         private static bool Unoccupied(PieceType type, int x, int y, short dir)
@@ -393,14 +366,14 @@ namespace BridgeTetris
 
         // start with 4 instances of each piece and
         // pick randomly until the 'bag is empty'
-        //private static List<Piece> pieces = new List<Piece>();
         private static PieceType[] pieces;
 
         private static Piece RandomPiece()
         {
             pieces = new PieceType[] { i, i, i, i, j, j, j, j, l, l, l, l, o, o, o, o, s, s, s, s, t, t, t, t, z, z, z, z };
 
-            var type = (PieceType)pieces.Splice((int)Random(0, pieces.Length - 1), 1)[0]; // This does not cast as Piece?
+            // FIXME: This shouldn't need to be cast as Piece again
+            var type = (PieceType)pieces.Splice((int)Random(0, pieces.Length - 1), 1)[0];
 
             return new Piece
             {
@@ -415,8 +388,6 @@ namespace BridgeTetris
 
         private static void Run()
         {
-            //showStats(); // initialize FPS counter (defined in external .js)
-
             LoadCanvasContext();
 
             AddEvents();
@@ -428,8 +399,6 @@ namespace BridgeTetris
             Frame();  // start the first frame
         }
 
-        // FIXME: Frame() has a 'double' argument cause callback on Window.RequestAnimationFrame() can only
-        //        be Action<double>
         private static void Frame()
         {
             now = Timestamp();
@@ -444,20 +413,13 @@ namespace BridgeTetris
             Window.RequestAnimationFrame(af => Frame());
         }
 
-        /*TODO: this is not really the game and uses external javascript, so let's work on this later
-         * private static void showStats()
-        {
-            Bridge.Script.Write("stats.domElement.id = 'stats'");
-            get('menu').AppendChild('stats.domElement');
-        }*/
-
         private static void AddEvents()
         {
             Document.AddEventListener(EventType.KeyDown, KeyDown, false);
             Document.AddEventListener(EventType.Resize, Resize, false);
         }
 
-        public static void Resize(Event evnt = null) // 'event' is a reserved keyword
+        public static void Resize(Event evnt = null)
         {
             // set canvas logical size equal to its physical size
             canvas.Width = canvas.ClientWidth;
@@ -589,7 +551,7 @@ namespace BridgeTetris
             PieceType retval = null;
 
             if (x >= 0 && x < nx && blocks.Length > ((x + 1) * nx)
-                && y > 0 && y < ny) // FIXME: JavaScript logic removes requirements to check against y-axis here.
+                && y > 0 && y < ny)
             {
                 retval = blocks[x, y];
             }
@@ -599,10 +561,6 @@ namespace BridgeTetris
 
         private static void SetBlock(int x, int y, PieceType type)
         {
-            // FIXME: understand what this does and ensure whether it is needed or not!
-            //        seems to be just a js trick to ensure the array has been allocated
-            //blocks[x] = blocks[x] || null; // does not make much sense!
-            // maybe the test below does what this would: (disallow allocating blocks outside court longitudinally)
             if (x >= 0 && x < nx)
             {
                 blocks[x, y] = type;
