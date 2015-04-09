@@ -242,22 +242,22 @@ namespace BridgeTetris
         #region tetris elements' abstraction classes
         private class Piece
         {
-            public PieceType type { get; set; }
-            public short dir { get; set; }
-            public int x { get; set; }
-            public int y { get; set; }
+            public PieceType Type { get; set; }
+            public short Dir { get; set; }
+            public int X { get; set; }
+            public int Y { get; set; }
         }
 
         private class PieceType
         {
-            public int size { get; set; }
-            public string color { get; set; }
-            public int[] blocks { get; set; }
+            public int Size { get; set; }
+            public string Color { get; set; }
+            public int[] Blocks { get; set; }
 
             public PieceType(int sz, int[] shape, string clr)
             {
-                size = sz;
-                color = clr;
+                Size = sz;
+                Color = clr;
 
                 if (shape.Length < 1)
                 {
@@ -272,7 +272,7 @@ namespace BridgeTetris
                     }
                 }
 
-                blocks = shape;
+                Blocks = shape;
             }
         }
 
@@ -339,7 +339,7 @@ namespace BridgeTetris
         {
             int row = 0,
                 col = 0,
-                blocks = type.blocks[dir];
+                blocks = type.Blocks[dir];
             Tuple<int, int>[] result = new Tuple<int, int>[0]; // FIXME: 'result' logic must be ensured to work like on JS
 
             for (int bit = 0x8000; bit > 0; bit = bit >> 1)
@@ -394,10 +394,10 @@ namespace BridgeTetris
 
             return new Piece
             {
-                dir = DIR.UP,
-                type = type,
-                x = (int)Math.Round(Random(0, nx - type.size)),
-                y = 0
+                Dir = DIR.UP,
+                Type = type,
+                X = (int)Math.Round(Random(0, nx - type.Size)),
+                Y = 0
             };
         }
 
@@ -668,8 +668,8 @@ namespace BridgeTetris
 
         private static bool Move(int dir)
         {
-            var x = current.x;
-            var y = current.y;
+            var x = current.X;
+            var y = current.Y;
 
             switch (dir)
             {
@@ -684,10 +684,10 @@ namespace BridgeTetris
                     break;
             }
 
-            if (Unoccupied(current.type, x, y, current.dir))
+            if (Unoccupied(current.Type, x, y, current.Dir))
             {
-                current.x = x;
-                current.y = y;
+                current.X = x;
+                current.Y = y;
                 Invalidate();
                 return true;
             }
@@ -700,18 +700,18 @@ namespace BridgeTetris
         private static void Rotate()
         {
             short newdir;
-            if (current.dir == DIR.MAX)
+            if (current.Dir == DIR.MAX)
             {
                 newdir = DIR.MIN;
             }
             else
             {
-                newdir = (short)(current.dir + 1);
+                newdir = (short)(current.Dir + 1);
             }
 
-            if (Unoccupied(current.type, current.x, current.y, newdir))
+            if (Unoccupied(current.Type, current.X, current.Y, newdir))
             {
-                current.dir = newdir;
+                current.Dir = newdir;
                 Invalidate();
             }
         }
@@ -726,7 +726,7 @@ namespace BridgeTetris
                 SetCurrentPiece(next);
                 SetNextPiece(RandomPiece());
                 ClearActions();
-                if (Occupied(current.type, current.x, current.y, current.dir))
+                if (Occupied(current.Type, current.X, current.Y, current.Dir))
                 {
                     Lose();
                 }
@@ -735,11 +735,11 @@ namespace BridgeTetris
 
         private static void DropPiece()
         {
-            var matchingCells = Eachblock(current.type, current.x, current.y, current.dir);
+            var matchingCells = Eachblock(current.Type, current.X, current.Y, current.Dir);
 
             foreach (var tuple in matchingCells)
             {
-                SetBlock(tuple.Item1, tuple.Item2, current.type);
+                SetBlock(tuple.Item1, tuple.Item2, current.Type);
             }
         }
 
@@ -793,30 +793,30 @@ namespace BridgeTetris
         private static class invalid
         {
             public static bool
-                court = false,
-                next = false,
-                score = false,
-                rows = false;
+                Court = false,
+                Next = false,
+                Score = false,
+                Rows = false;
         }
 
         private static void Invalidate()
         {
-            invalid.court = true;
+            invalid.Court = true;
         }
 
         private static void InvalidateNext()
         {
-            invalid.next = true;
+            invalid.Next = true;
         }
 
         private static void InvalidateScore()
         {
-            invalid.score = true;
+            invalid.Score = true;
         }
 
         private static void InvalidateRows()
         {
-            invalid.rows = true;
+            invalid.Rows = true;
         }
 
         private static void Draw()
@@ -835,13 +835,13 @@ namespace BridgeTetris
 
         private static void DrawCourt()
         {
-            if (invalid.court)
+            if (invalid.Court)
             {
                 ctx.ClearRect(0, 0, canvas.Width, canvas.Height);
 
                 if (playing)
                 {
-                    DrawPiece(ctx, current.type, current.x, current.y, current.dir);
+                    DrawPiece(ctx, current.Type, current.X, current.Y, current.Dir);
                 }
 
                 PieceType block;
@@ -853,52 +853,52 @@ namespace BridgeTetris
                         block = GetBlock(x, y);
                         if (block != null)
                         {
-                            DrawBlock(ctx, x, y, block.color);
+                            DrawBlock(ctx, x, y, block.Color);
                         }
                     }
                 }
 
                 ctx.StrokeRect(0, 0, (nx * dx) - 1, (ny * dy) - 1); // court boundary
 
-                invalid.court = false;
+                invalid.Court = false;
             }
         }
 
         private static void DrawNext()
         {
-            if (invalid.next)
+            if (invalid.Next)
             {
-                var padding = (nu - next.type.size) / 2; // half-arsed attempt at centering next piece display
+                var padding = (nu - next.Type.Size) / 2; // half-arsed attempt at centering next piece display
 
                 uctx.Save();
                 uctx.Translate(0.5, 0.5);
                 uctx.ClearRect(0, 0, nu * dx, nu * dy);
 
-                DrawPiece(uctx, next.type, padding, padding, next.dir);
+                DrawPiece(uctx, next.Type, padding, padding, next.Dir);
 
                 uctx.StrokeStyle = "black";
                 uctx.StrokeRect(0, 0, (nu * dx) - 1, (nu * dy) - 1);
                 uctx.Restore();
 
-                invalid.next = false;
+                invalid.Next = false;
             }
         }
 
         private static void DrawScore()
         {
-            if (invalid.score)
+            if (invalid.Score)
             {
                 Html("score", ("00000" + Math.Floor(vscore)).Slice(-5));
-                invalid.score = false;
+                invalid.Score = false;
             }
         }
 
         private static void DrawRows()
         {
-            if (invalid.rows)
+            if (invalid.Rows)
             {
                 Html("rows", rows.ToString());
-                invalid.rows = false;
+                invalid.Rows = false;
             }
         }
 
@@ -908,7 +908,7 @@ namespace BridgeTetris
 
             foreach (var tuple in matchingCells)
             {
-                DrawBlock(ctx, tuple.Item1, tuple.Item2, type.color);
+                DrawBlock(ctx, tuple.Item1, tuple.Item2, type.Color);
             }
         }
 
