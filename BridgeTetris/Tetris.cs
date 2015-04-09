@@ -416,6 +416,9 @@ namespace BridgeTetris
         private static void Run()
         {
             //showStats(); // initialize FPS counter (defined in external .js)
+
+            LoadCanvasContext();
+
             AddEvents();
 
             var last = now = Timestamp();
@@ -956,8 +959,6 @@ namespace BridgeTetris
         public static void LoadGame()
         {
             LoadPlayArea(); // load page's placeholders
-
-            LoadCanvasContext();
 
             Run();          // effectively start the game engine (will listen for 'spacebar' to begin game)
         }
