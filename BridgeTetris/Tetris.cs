@@ -165,24 +165,22 @@ namespace BridgeTetris
 
         private static class Key
         {
-            public const short
-                Escape = 27,
-                Spacebar = 32,
-                LeftArrow = 37,
-                UpArrow = 38,
-                RightArrow = 39,
-                DownArrow = 40;
+            public const short Escape = 27;
+            public const short Spacebar = 32;
+            public const short LeftArrow = 37;
+            public const short UpArrow = 38;
+            public const short RightArrow = 39;
+            public const short DownArrow = 40;
         }
 
         private static class Direction
         {
-            public const short
-                ToUp = 0,
-                ToRight = 1,
-                ToDown = 2,
-                Toleft = 3,
-                First = 0,
-                Last = 3;
+            public const short ToUp = 0;
+            public const short ToRight = 1;
+            public const short ToDown = 2;
+            public const short Toleft = 3;
+            public const short First = 0;
+            public const short Last = 3;
         };
 
         private static CanvasElement canvas;
@@ -204,15 +202,14 @@ namespace BridgeTetris
         // how long before piece drops by 1 row (seconds)
         private static class Speed
         {
-            public const float
-                start = 0.6f,
-                decrement = 0.005f,
-                lowerBoundary = 0.1f;
+            public const float start = 0.6f;
+            public const float decrement = 0.005f;
+            public const float lowerBoundary = 0.1f;
         };
 
-        private static int tetrisCourtWidth = 10, // width of tetris court (in blocks)
-                           tetrisCourtHeight = 20, // height of tetris court (in blocks)
-                           upcomingPreviewDimensions = 5;  // width/heigth of upcoming preview (in blocks)
+        private static int tetrisCourtWidth = 10;         // width of tetris court (in blocks)
+        private static int tetrisCourtHeight = 20;        // height of tetris court (in blocks)
+        private static int upcomingPreviewDimensions = 5; // width/heigth of upcoming preview (in blocks)
 
         #endregion
 
@@ -257,25 +254,27 @@ namespace BridgeTetris
 
         #region game variables (initialized during reset)
 
-        private static int horizontalPixelDimension, // pixel width of a tetris block
-                             verticalPixelDimension, // pixel height of a tetris block
-                                       currentScore, // the current score
-                      incrementalInstantaneousScore, // the currently displayed score (catches up to score in small chunks like slot machine)
-                                 completedRowsCount; // number of completed rows in the current game
+        private static int horizontalPixelDimension; // pixel width of a tetris block
+        private static int verticalPixelDimension; // pixel height of a tetris block
+
+        private static int currentScore; // the current score
+        private static int incrementalInstantaneousScore; // the currently displayed score (catches up to score in small chunks like slot machine)
+        
+        private static int completedRowsCount; // number of completed rows in the current game
 
         // 2 dimensional array (nx*ny) representing tetris court - either empty block or occupied by a 'piece'
         private static PieceType[,] tetrisCourt = new PieceType[tetrisCourtWidth, tetrisCourtHeight];
 
         private static int[] userActionsQueue = new int[0]; // queue of user actions (inputs)
 
-        private static Piece currentPiece, // the current piece
-                                nextPiece; // the next piece
+        private static Piece currentPiece; // the current piece
+        private static Piece nextPiece; // the next piece
 
-        private static bool gamePlaying;   // true|false - game is in progress
-        private static double playingTime, // time since starting the game
-                     pieceAdvanceInterval, // how long before current piece drops by 1 row
-                         currentTimeStamp, // current timestamp (used on frame())
-                        previousTimeStamp; // last timestamp (used on frame())
+        private static bool isGamePlaying;   // true|false - game is in progress
+        private static double playingTime; // time since starting the game
+        private static double pieceAdvanceInterval; // how long before current piece drops by 1 row
+        private static double currentTimeStamp; // current timestamp (used on frame())
+        private static double previousTimeStamp; // last timestamp (used on frame())
 
         #endregion
 
@@ -293,8 +292,7 @@ namespace BridgeTetris
          *                     0x44C0
          */
 
-        private static PieceType
-            iBlock = new PieceType(
+        private static PieceType iBlock = new PieceType(
                 4,
                 new int[]
                 {
@@ -303,9 +301,9 @@ namespace BridgeTetris
                     0x00F0, // [ ]
                     0x4444  // [ ]
                 },
-                "cyan"),
+                "cyan");
 
-            jBlock = new PieceType(
+        private static PieceType jBlock = new PieceType(
                 3,
                 new int[]
                 {
@@ -314,9 +312,9 @@ namespace BridgeTetris
                     0x6440, // [ ][ ]
                     0x0E20  //
                 },
-                "blue"),
+                "blue");
 
-            lBlock = new PieceType(
+        private static PieceType lBlock = new PieceType(
                 3,
                 new int[]
                 {
@@ -325,9 +323,9 @@ namespace BridgeTetris
                     0xC440, // [ ][ ]
                     0x2E00  //
                 },
-                "orange"),
+                "orange");
 
-            oBlock = new PieceType(
+        private static PieceType oBlock = new PieceType(
                 2,
                 new int[]
                 {
@@ -336,9 +334,9 @@ namespace BridgeTetris
                     0xCC00, // [ ][ ]
                     0xCC00  //
                 },
-                "yellow"),
+                "yellow");
 
-            sBlock = new PieceType(
+        private static PieceType sBlock = new PieceType(
                 3,
                 new int[]
                 {
@@ -347,9 +345,9 @@ namespace BridgeTetris
                     0x6C00, // [ ][ ]
                     0x4620  //
                 },
-                "green"),
+                "green");
 
-            tBlock = new PieceType(
+        private static PieceType tBlock = new PieceType(
                 3,
                 new int[]
                 {
@@ -358,9 +356,9 @@ namespace BridgeTetris
                     0x4E00, //    [ ]
                     0x4640  //
                 },
-                "purple"),
+                "purple");
 
-            zBlock = new PieceType(
+        private static PieceType zBlock = new PieceType(
                 3,
                 new int[]
                 {
@@ -384,9 +382,9 @@ namespace BridgeTetris
         /// <param name="fn"></param>
         private static Tuple<int, int>[] Eachblock(PieceType pieceType, int horizontalPositon, int verticalPosition, short direction)
         {
-            int row = 0,
-                column = 0,
-                blocks = pieceType.Blocks[direction];
+            int row = 0;
+            int column = 0;
+            int blocks = pieceType.Blocks[direction];
 
             Tuple<int, int>[] result = new Tuple<int, int>[0];
 
@@ -549,7 +547,7 @@ namespace BridgeTetris
             var isKeyStrokeHandled = false;
             var keyboardEventInformation = eventInformation.As<KeyboardEvent>();
 
-            if (gamePlaying)
+            if (isGamePlaying)
             {
                 switch (keyboardEventInformation.KeyCode)
                 {
@@ -598,14 +596,14 @@ namespace BridgeTetris
         {
             Hide("start");
             Reset();
-            gamePlaying = true;
+            isGamePlaying = true;
         }
 
         private static void Lose()
         {
             Show("start");
             SetVisualScore();
-            gamePlaying = false;
+            isGamePlaying = false;
         }
 
         private static void SetVisualScore(int? scoreValue = null)
@@ -715,7 +713,7 @@ namespace BridgeTetris
 
         private static void Update(double timeDelta)
         {
-            if (gamePlaying)
+            if (isGamePlaying)
             {
                 if (incrementalInstantaneousScore < currentScore)
                 {
@@ -889,11 +887,10 @@ namespace BridgeTetris
 
         private static class invalid
         {
-            public static bool
-                Court = false,
-                Next = false,
-                Score = false,
-                Rows = false;
+            public static bool Court = false;
+            public static bool Next = false;
+            public static bool Score = false;
+            public static bool Rows = false;
         }
 
         private static void Invalidate()
@@ -936,9 +933,10 @@ namespace BridgeTetris
             {
                 canvasContext.ClearRect(0, 0, canvas.Width, canvas.Height);
 
-                if (gamePlaying)
+                if (isGamePlaying)
                 {
-                    DrawPiece(canvasContext, currentPiece.Type, currentPiece.HorizontalPosition, currentPiece.VerticalPosition, currentPiece.Orientation);
+                    DrawPiece(canvasContext, currentPiece.Type, currentPiece.HorizontalPosition,
+                              currentPiece.VerticalPosition, currentPiece.Orientation);
                 }
 
                 PieceType block;
@@ -956,7 +954,8 @@ namespace BridgeTetris
                     }
                 }
 
-                canvasContext.StrokeRect(0, 0, (tetrisCourtWidth * horizontalPixelDimension) - 1, (tetrisCourtHeight * verticalPixelDimension) - 1); // court boundary
+                canvasContext.StrokeRect(0, 0, (tetrisCourtWidth * horizontalPixelDimension) - 1,
+                                         (tetrisCourtHeight * verticalPixelDimension) - 1); // court boundary
 
                 invalid.Court = false;
             }
