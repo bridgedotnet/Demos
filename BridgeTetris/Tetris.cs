@@ -227,27 +227,6 @@ namespace BridgeTetris
             public int Size { get; set; }
             public string Color { get; set; }
             public int[] Blocks { get; set; }
-
-            public PieceType(int pieceSize, int[] pieceShape, string pieceColor)
-            {
-                this.Size = pieceSize;
-                this.Color = pieceColor;
-
-                if (pieceShape.Length < 1)
-                {
-                    pieceShape[0] = 0xCC00; // 2x2 square
-                }
-
-                if (pieceShape.Length < 4)
-                {
-                    for (int i = pieceShape.Length - 1; i < 4; i++)
-                    {
-                        pieceShape[i] = pieceShape[i - 1];
-                    }
-                }
-
-                this.Blocks = pieceShape;
-            }
         }
 
         #endregion
@@ -292,82 +271,96 @@ namespace BridgeTetris
          *                     0x44C0
          */
 
-        private static PieceType iBlock = new PieceType(
-                4,
-                new int[]
-                {
-                    0x0F00, // [ ]
-                    0x2222, // [ ]
-                    0x00F0, // [ ]
-                    0x4444  // [ ]
-                },
-                "cyan");
+        private static PieceType iBlock = new PieceType
+        {
+            Size = 4,
+            Blocks = new int[]
+            {
+                0x0F00, // [ ]
+                0x2222, // [ ]
+                0x00F0, // [ ]
+                0x4444  // [ ]
+            },
+            Color = "cyan"
+        };
 
-        private static PieceType jBlock = new PieceType(
-                3,
-                new int[]
-                {
-                    0x44C0, //    [ ]
-                    0x8E00, //    [ ]
-                    0x6440, // [ ][ ]
-                    0x0E20  //
-                },
-                "blue");
+        private static PieceType jBlock = new PieceType
+        {
+            Size = 3,
+            Blocks = new int[]
+            {
+                0x44C0, //    [ ]
+                0x8E00, //    [ ]
+                0x6440, // [ ][ ]
+                0x0E20  //
+            },
+            Color = "blue"
+        };
 
-        private static PieceType lBlock = new PieceType(
-                3,
-                new int[]
-                {
-                    0x4460, // [ ]
-                    0x0E80, // [ ]
-                    0xC440, // [ ][ ]
-                    0x2E00  //
-                },
-                "orange");
+        private static PieceType lBlock = new PieceType
+        {
+            Size = 3,
+            Blocks = new int[]
+            {
+                0x4460, // [ ]
+                0x0E80, // [ ]
+                0xC440, // [ ][ ]
+                0x2E00  //
+            },
+            Color = "orange"
+        };
 
-        private static PieceType oBlock = new PieceType(
-                2,
-                new int[]
-                {
-                    0xCC00, //
-                    0xCC00, // [ ][ ]
-                    0xCC00, // [ ][ ]
-                    0xCC00  //
-                },
-                "yellow");
+        private static PieceType oBlock = new PieceType
+        {
+            Size = 2,
+            Blocks = new int[]
+            {
+                0xCC00, //
+                0xCC00, // [ ][ ]
+                0xCC00, // [ ][ ]
+                0xCC00  //
+            },
+            Color = "yellow"
+        };
 
-        private static PieceType sBlock = new PieceType(
-                3,
-                new int[]
-                {
-                    0x06C0, //
-                    0x8C40, //    [ ][ ]
-                    0x6C00, // [ ][ ]
-                    0x4620  //
-                },
-                "green");
+        private static PieceType sBlock = new PieceType
+        {
+            Size = 3,
+            Blocks = new int[]
+            {
+                0x06C0, //
+                0x8C40, //    [ ][ ]
+                0x6C00, // [ ][ ]
+                0x4620  //
+            },
+            Color = "green"
+        };
 
-        private static PieceType tBlock = new PieceType(
-                3,
-                new int[]
-                {
-                    0x0E40, //
-                    0x4C40, // [ ][ ][ ]
-                    0x4E00, //    [ ]
-                    0x4640  //
-                },
-                "purple");
+        private static PieceType tBlock = new PieceType
+        {
+            Size = 3,
+            Blocks = new int[]
+            {
+                0x0E40, //
+                0x4C40, // [ ][ ][ ]
+                0x4E00, //    [ ]
+                0x4640  //
+            },
+            Color = "purple"
+        };
 
-        private static PieceType zBlock = new PieceType(
-                3,
-                new int[]
-                {
-                    0x0C60, //
-                    0x4C80, // [ ][ ]
-                    0xC600, //    [ ][ ]
-                    0x2640  //
-                },
-                "red");
+        private static PieceType zBlock = new PieceType
+        {
+            Size = 3,
+            Blocks = new int[]
+            {
+                0x0C60, //
+                0x4C80, // [ ][ ]
+                0xC600, //    [ ][ ]
+                0x2640  //
+            },
+            Color = "red"
+        };
 
         #endregion
 
