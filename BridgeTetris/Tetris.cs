@@ -36,7 +36,7 @@ namespace BridgeTetris
 {
     public class Tetris
     {
-        private static void loadPlayArea()
+        private static void LoadPlayArea()
         {
             var menuDiv = new DivElement
             {
@@ -48,13 +48,13 @@ namespace BridgeTetris
                 Href = "javascript:BridgeTetris.Tetris.play()",
                 InnerHTML = "Press Space to Play."
             };
-            menuDiv.AppendChild(insideParagraph(pressStartTitle, "start"));
+            menuDiv.AppendChild(InsideParagraph(pressStartTitle, "start"));
 
             var nextPieceCanvas = new CanvasElement
             {
                 Id = "upcoming"
             };
-            menuDiv.AppendChild(insideParagraph(nextPieceCanvas));
+            menuDiv.AppendChild(InsideParagraph(nextPieceCanvas));
 
             var scorePara = new List<Node>();
             scorePara.Add(new LabelElement
@@ -67,7 +67,7 @@ namespace BridgeTetris
                 Id = "score",
                 InnerHTML = "00000"
             });
-            menuDiv.AppendChild(insideParagraph(scorePara));
+            menuDiv.AppendChild(InsideParagraph(scorePara));
 
             var rowsPara = new List<Node>();
             rowsPara.Add(new LabelElement
@@ -80,7 +80,7 @@ namespace BridgeTetris
                 Id = "rows",
                 InnerHTML = "0"
             });
-            menuDiv.AppendChild(insideParagraph(rowsPara));
+            menuDiv.AppendChild(InsideParagraph(rowsPara));
 
             var tetrisCourtCanvas = new CanvasElement
             {
@@ -100,7 +100,7 @@ namespace BridgeTetris
             Document.Body.AppendChild(tetrisDiv);
         }
 
-        private static Node insideParagraph(List<Node> elementList, string paragraphID = null)
+        private static Node InsideParagraph(List<Node> elementList, string paragraphID = null)
         {
             var paraElem = new ParagraphElement();
 
@@ -117,41 +117,41 @@ namespace BridgeTetris
             return paraElem;
         }
 
-        private static Node insideParagraph(Node element, string paragraphID = null)
+        private static Node InsideParagraph(Node element, string paragraphID = null)
         {
-            return insideParagraph(new List<Node> { element }, paragraphID);
+            return InsideParagraph(new List<Node> { element }, paragraphID);
         }
 
         #region base helper methods
 
         // FIXME: Useless, as we have to prepend full class path anyway. Left just for reference to original code.
-        private static Element get(string id)
+        private static Element Get(string id)
         {
             return Document.GetElementById(id);
         }
 
-        private static void hide(string id)
+        private static void Hide(string id)
         {
-            get(id).Style.Visibility = Visibility.Hidden;
+            Get(id).Style.Visibility = Visibility.Hidden;
         }
 
-        private static void show(string id)
+        private static void Show(string id)
         {
             //get(id).Style.Visibility = null; // FIXME: this does not work!
-            get(id).Style.Visibility = Visibility.Inherit;
+            Get(id).Style.Visibility = Visibility.Inherit;
         }
 
-        private static void html(string id, string html)
+        private static void Html(string id, string html)
         {
-            get(id).InnerHTML = html;
+            Get(id).InnerHTML = html;
         }
 
-        private static double timestamp()
+        private static double Timestamp()
         {
             return new Date().GetTime();
         }
 
-        private static double random(int min, int max)
+        private static double Random(int min, int max)
         {
             return (min + (Math.Random() * (max - min)));
         }
@@ -214,11 +214,11 @@ namespace BridgeTetris
         private static CanvasRenderingContext2D ctx;
         private static CanvasRenderingContext2D uctx;
 
-        private static void loadCanvasContext()
+        private static void LoadCanvasContext()
         {
             // FIXME: Shouldn't it allow returning canvasElement without a cast??
-            canvas = get("canvas").As<CanvasElement>();
-            ucanvas = get("upcoming").As<CanvasElement>();
+            canvas = Get("canvas").As<CanvasElement>();
+            ucanvas = Get("upcoming").As<CanvasElement>();
 
             ctx = canvas.GetContext(CanvasTypes.CanvasContext2DType.CanvasRenderingContext2D);
             uctx = ucanvas.GetContext(CanvasTypes.CanvasContext2DType.CanvasRenderingContext2D);
@@ -335,7 +335,7 @@ namespace BridgeTetris
         /// <param name="y"></param>
         /// <param name="dir"></param>
         /// <param name="fn"></param>
-        private static Tuple<int, int>[] eachblock(PieceType type, int x, int y, short dir)
+        private static Tuple<int, int>[] Eachblock(PieceType type, int x, int y, short dir)
         {
             int row = 0,
                 col = 0,
@@ -358,18 +358,18 @@ namespace BridgeTetris
         }
 
         // this is the function delegated to eachblock from occupied:
-        private static bool pieceCanFit(int x, int y)
+        private static bool PieceCanFit(int x, int y)
         {
-            return (x < 0 || x >= nx || y < 0 || y >= ny || getBlock(x, y) != null);
+            return (x < 0 || x >= nx || y < 0 || y >= ny || GetBlock(x, y) != null);
         }
 
         // check if a piece can fit into a position in the grid
-        private static bool occupied(PieceType type, int x, int y, short dir)
+        private static bool Occupied(PieceType type, int x, int y, short dir)
         {
-            var matchingCells = eachblock(type, x, y, dir); // FIXME: 'result' logic must be ensured to work like on JS
+            var matchingCells = Eachblock(type, x, y, dir); // FIXME: 'result' logic must be ensured to work like on JS
             foreach (var tuple in matchingCells)
             {
-                if (pieceCanFit(tuple.Item1, tuple.Item2))
+                if (PieceCanFit(tuple.Item1, tuple.Item2))
                 {
                     return true;
                 }
@@ -377,9 +377,9 @@ namespace BridgeTetris
             return false; // FIXME: maybe just return eachblock result??
         }
 
-        private static bool unoccupied(PieceType type, int x, int y, short dir)
+        private static bool Unoccupied(PieceType type, int x, int y, short dir)
         {
-            return !occupied(type, x, y, dir);
+            return !Occupied(type, x, y, dir);
         }
 
         // start with 4 instances of each piece and
@@ -387,48 +387,48 @@ namespace BridgeTetris
         //private static List<Piece> pieces = new List<Piece>();
         private static PieceType[] pieces;
 
-        private static Piece randomPiece()
+        private static Piece RandomPiece()
         {
             pieces = new PieceType[] { i, i, i, i, j, j, j, j, l, l, l, l, o, o, o, o, s, s, s, s, t, t, t, t, z, z, z, z };
-            var type = (PieceType)pieces.Splice((int)random(0, pieces.Length - 1), 1)[0]; // This does not cast as Piece?
+            var type = (PieceType)pieces.Splice((int)Random(0, pieces.Length - 1), 1)[0]; // This does not cast as Piece?
 
             return new Piece
             {
                 dir = DIR.UP,
                 type = type,
-                x = (int)Math.Round(random(0, nx - type.size)),
+                x = (int)Math.Round(Random(0, nx - type.size)),
                 y = 0
             };
         }
 
         #region GAME LOOP
 
-        private static void run()
+        private static void Run()
         {
             //showStats(); // initialize FPS counter (defined in external .js)
-            addEvents();
+            AddEvents();
 
-            var last = now = timestamp();
+            var last = now = Timestamp();
 
-            resize(); // setup all our sizing information
-            reset();  // reset the per-game variables
-            frame();  // start the first frame
+            Resize(); // setup all our sizing information
+            Reset();  // reset the per-game variables
+            Frame();  // start the first frame
         }
 
         // FIXME: Frame() has a 'double' argument cause callback on Window.RequestAnimationFrame() can only
         //        be Action<double>
-        private static void frame()
+        private static void Frame()
         {
-            now = timestamp();
+            now = Timestamp();
 
             // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
-            update(Math.Min(1, (now - last) / 1000.0));
+            Update(Math.Min(1, (now - last) / 1000.0));
 
-            draw();
+            Draw();
 
             last = now;
 
-            Window.RequestAnimationFrame(af => frame());
+            Window.RequestAnimationFrame(af => Frame());
         }
 
         /*TODO: this is not really the game and uses external javascript, so let's work on this later
@@ -438,13 +438,13 @@ namespace BridgeTetris
             get('menu').AppendChild('stats.domElement');
         }*/
 
-        private static void addEvents()
+        private static void AddEvents()
         {
-            Document.AddEventListener(EventType.KeyDown, keydown, false);
-            Document.AddEventListener(EventType.Resize, resize, false);
+            Document.AddEventListener(EventType.KeyDown, KeyDown, false);
+            Document.AddEventListener(EventType.Resize, Resize, false);
         }
 
-        public static void resize(Event evnt = null) // 'event' is a reserved keyword
+        public static void Resize(Event evnt = null) // 'event' is a reserved keyword
         {
             // set canvas logical size equal to its physical size
             canvas.Width = canvas.ClientWidth;
@@ -457,11 +457,11 @@ namespace BridgeTetris
             dx = canvas.ClientWidth / nx;
             dy = canvas.ClientHeight / ny;
 
-            invalidate();
-            invalidateNext();
+            Invalidate();
+            InvalidateNext();
         }
 
-        public static void keydown(Event ev)
+        public static void KeyDown(Event ev)
         {
             var handled = false;
             var kev = ev.As<KeyboardEvent>();
@@ -486,7 +486,7 @@ namespace BridgeTetris
                         handled = true;
                         break;
                     case KEY.ESC:
-                        lose();
+                        Lose();
                         handled = true;
                         break;
                 }
@@ -495,7 +495,7 @@ namespace BridgeTetris
             {
                 if (kev.KeyCode == KEY.SPACE)
                 {
-                    play();
+                    Play();
                     handled = true;
                 }
             }
@@ -510,48 +510,48 @@ namespace BridgeTetris
 
         #region GAME LOGIC
 
-        private static void play()
+        private static void Play()
         {
-            hide("start");
-            reset();
+            Hide("start");
+            Reset();
             playing = true;
         }
 
-        private static void lose()
+        private static void Lose()
         {
-            show("start");
-            setVisualScore();
+            Show("start");
+            SetVisualScore();
             playing = false;
         }
 
-        private static void setVisualScore(int? n = null)
+        private static void SetVisualScore(int? n = null)
         {
             vscore = n ?? score;
-            invalidateScore();
+            InvalidateScore();
         }
 
-        private static void setScore(int n)
+        private static void SetScore(int n)
         {
             score = n;
-            setVisualScore(n);
+            SetVisualScore(n);
         }
 
-        private static void addScore(int n)
+        private static void AddScore(int n)
         {
             score += n;
         }
 
-        private static void clearScore()
+        private static void ClearScore()
         {
-            setScore(0);
+            SetScore(0);
         }
 
-        private static void clearRows()
+        private static void ClearRows()
         {
-            setRows(0);
+            SetRows(0);
         }
 
-        private static void setRows(int n)
+        private static void SetRows(int n)
         {
             var speedMin = Speed.min;
             var speedStart = Speed.start;
@@ -560,15 +560,15 @@ namespace BridgeTetris
 
             rows = n;
             step = Math.Max(speedMin, speedStart - (speedDec * rowCount));
-            invalidateRows();
+            InvalidateRows();
         }
 
-        private static void addRows(int n)
+        private static void AddRows(int n)
         {
-            setRows(rows + n);
+            SetRows(rows + n);
         }
 
-        private static PieceType getBlock(int x, int y)
+        private static PieceType GetBlock(int x, int y)
         {
             PieceType retval = null;
 
@@ -581,7 +581,7 @@ namespace BridgeTetris
             return retval;
         }
 
-        private static void setBlock(int x, int y, PieceType type)
+        private static void SetBlock(int x, int y, PieceType type)
         {
             // FIXME: understand what this does and ensure whether it is needed or not!
             //        seems to be just a js trick to ensure the array has been allocated
@@ -591,82 +591,82 @@ namespace BridgeTetris
             {
                 blocks[x, y] = type;
             }
-            invalidate();
+            Invalidate();
         }
 
-        private static void clearBlocks()
+        private static void ClearBlocks()
         {
             blocks = new PieceType[nx, ny];
         }
 
-        private static void clearActions()
+        private static void ClearActions()
         {
             actions = new int[0];
         }
 
-        private static void setCurrentPiece(Piece piece)
+        private static void SetCurrentPiece(Piece piece)
         {
-            current = piece ?? randomPiece();
-            invalidate();
+            current = piece ?? RandomPiece();
+            Invalidate();
         }
 
-        private static void setNextPiece(Piece piece = null)
+        private static void SetNextPiece(Piece piece = null)
         {
-            next = piece ?? randomPiece();
-            invalidateNext();
+            next = piece ?? RandomPiece();
+            InvalidateNext();
         }
 
-        private static void reset()
+        private static void Reset()
         {
             dt = 0;
-            clearActions();
-            clearBlocks();
-            clearRows();
-            clearScore();
-            setCurrentPiece(next);
-            setNextPiece();
+            ClearActions();
+            ClearBlocks();
+            ClearRows();
+            ClearScore();
+            SetCurrentPiece(next);
+            SetNextPiece();
         }
 
-        private static void update(double idt)
+        private static void Update(double idt)
         {
             if (playing)
             {
                 if (vscore < score)
                 {
-                    setVisualScore(vscore + 1);
+                    SetVisualScore(vscore + 1);
                 }
 
-                handle(actions.Shift().As<int>()); // FIXME: Shift() should already return the type of the actions array.
+                Handle(actions.Shift().As<int>()); // FIXME: Shift() should already return the type of the actions array.
 
                 dt = dt + idt;
                 if (dt > step)
                 {
                     dt = dt - step;
-                    drop();
+                    Drop();
                 }
             }
         }
 
-        private static void handle(int action)
+        private static void Handle(int action)
         {
             switch (action)
             {
                 case DIR.LEFT:
                 case DIR.RIGHT:
-                    move(action);
+                    Move(action);
                     break;
 
                 case DIR.UP:
-                    rotate();
+                    Rotate();
                     break;
 
                 case DIR.DOWN:
-                    drop();
+                    Drop();
                     break;
             }
         }
 
-        private static bool move(int dir)
+        private static bool Move(int dir)
         {
             var x = current.x;
             var y = current.y;
@@ -684,11 +684,11 @@ namespace BridgeTetris
                     break;
             }
 
-            if (unoccupied(current.type, x, y, current.dir))
+            if (Unoccupied(current.type, x, y, current.dir))
             {
                 current.x = x;
                 current.y = y;
-                invalidate();
+                Invalidate();
                 return true;
             }
             else
@@ -697,7 +697,7 @@ namespace BridgeTetris
             }
         }
 
-        private static void rotate()
+        private static void Rotate()
         {
             short newdir;
             if (current.dir == DIR.MAX)
@@ -709,41 +709,41 @@ namespace BridgeTetris
                 newdir = (short)(current.dir + 1);
             }
 
-            if (unoccupied(current.type, current.x, current.y, newdir))
+            if (Unoccupied(current.type, current.x, current.y, newdir))
             {
                 current.dir = newdir;
-                invalidate();
+                Invalidate();
             }
         }
 
-        private static void drop()
+        private static void Drop()
         {
-            if (!move(DIR.DOWN))
+            if (!Move(DIR.DOWN))
             {
-                addScore(10);
-                dropPiece();
-                removeLines();
-                setCurrentPiece(next);
-                setNextPiece(randomPiece());
-                clearActions();
-                if (occupied(current.type, current.x, current.y, current.dir))
+                AddScore(10);
+                DropPiece();
+                RemoveLines();
+                SetCurrentPiece(next);
+                SetNextPiece(RandomPiece());
+                ClearActions();
+                if (Occupied(current.type, current.x, current.y, current.dir))
                 {
-                    lose();
+                    Lose();
                 }
             }
         }
 
-        private static void dropPiece()
+        private static void DropPiece()
         {
-            var matchingCells = eachblock(current.type, current.x, current.y, current.dir);
+            var matchingCells = Eachblock(current.type, current.x, current.y, current.dir);
 
             foreach (var tuple in matchingCells)
             {
-                setBlock(tuple.Item1, tuple.Item2, current.type);
+                SetBlock(tuple.Item1, tuple.Item2, current.type);
             }
         }
 
-        private static void removeLines()
+        private static void RemoveLines()
         {
             int n = 0;
             bool complete = false;
@@ -754,7 +754,7 @@ namespace BridgeTetris
 
                 for (var x = 0; x < nx; ++x)
                 {
-                    if (getBlock(x, y) == null)
+                    if (GetBlock(x, y) == null)
                     {
                         complete = false;
                     }
@@ -762,7 +762,7 @@ namespace BridgeTetris
 
                 if (complete)
                 {
-                    removeLine(y);
+                    RemoveLine(y);
                     y++; // recheck same line
                     n++;
                 }
@@ -770,18 +770,18 @@ namespace BridgeTetris
 
             if (n > 0)
             {
-                addRows(n);
-                addScore(100 * (int)Math.Pow(2, n - 1)); // 1:100, 2:200, 3:400, 4:800
+                AddRows(n);
+                AddScore(100 * (int)Math.Pow(2, n - 1)); // 1:100, 2:200, 3:400, 4:800
             }
         }
 
-        private static void removeLine(int n)
+        private static void RemoveLine(int n)
         {
             for (var y = n; y >= 0; --y)
             {
                 for (var x = 0; x < nx; ++x)
                 {
-                    setBlock(x, y, (y == 0) ? null : getBlock(x, y - 1));
+                    SetBlock(x, y, (y == 0) ? null : GetBlock(x, y - 1));
                 }
             }
         }
@@ -799,41 +799,41 @@ namespace BridgeTetris
                 rows = false;
         }
 
-        private static void invalidate()
+        private static void Invalidate()
         {
             invalid.court = true;
         }
 
-        private static void invalidateNext()
+        private static void InvalidateNext()
         {
             invalid.next = true;
         }
 
-        private static void invalidateScore()
+        private static void InvalidateScore()
         {
             invalid.score = true;
         }
 
-        private static void invalidateRows()
+        private static void InvalidateRows()
         {
             invalid.rows = true;
         }
 
-        private static void draw()
+        private static void Draw()
         {
             ctx.Save();
             ctx.LineWidth = 1;
             ctx.Translate(0.5, 0.5); // for crisp 1px black lines
 
-            drawCourt();
-            drawNext();
-            drawScore();
-            drawRows();
+            DrawCourt();
+            DrawNext();
+            DrawScore();
+            DrawRows();
 
             ctx.Restore();
         }
 
-        private static void drawCourt()
+        private static void DrawCourt()
         {
             if (invalid.court)
             {
@@ -841,7 +841,7 @@ namespace BridgeTetris
 
                 if (playing)
                 {
-                    drawPiece(ctx, current.type, current.x, current.y, current.dir);
+                    DrawPiece(ctx, current.type, current.x, current.y, current.dir);
                 }
 
                 PieceType block;
@@ -850,10 +850,10 @@ namespace BridgeTetris
                 {
                     for (int x = 0; x < nx; x++)
                     {
-                        block = getBlock(x, y);
+                        block = GetBlock(x, y);
                         if (block != null)
                         {
-                            drawBlock(ctx, x, y, block.color);
+                            DrawBlock(ctx, x, y, block.color);
                         }
                     }
                 }
@@ -864,7 +864,7 @@ namespace BridgeTetris
             }
         }
 
-        private static void drawNext()
+        private static void DrawNext()
         {
             if (invalid.next)
             {
@@ -874,7 +874,7 @@ namespace BridgeTetris
                 uctx.Translate(0.5, 0.5);
                 uctx.ClearRect(0, 0, nu * dx, nu * dy);
 
-                drawPiece(uctx, next.type, padding, padding, next.dir);
+                DrawPiece(uctx, next.type, padding, padding, next.dir);
 
                 uctx.StrokeStyle = "black";
                 uctx.StrokeRect(0, 0, (nu * dx) - 1, (nu * dy) - 1);
@@ -884,35 +884,35 @@ namespace BridgeTetris
             }
         }
 
-        private static void drawScore()
+        private static void DrawScore()
         {
             if (invalid.score)
             {
-                html("score", ("00000" + Math.Floor(vscore)).Slice(-5));
+                Html("score", ("00000" + Math.Floor(vscore)).Slice(-5));
                 invalid.score = false;
             }
         }
 
-        private static void drawRows()
+        private static void DrawRows()
         {
             if (invalid.rows)
             {
-                html("rows", rows.ToString());
+                Html("rows", rows.ToString());
                 invalid.rows = false;
             }
         }
 
-        private static void drawPiece(CanvasRenderingContext2D ctx, PieceType type, int x, int y, short dir)
+        private static void DrawPiece(CanvasRenderingContext2D ctx, PieceType type, int x, int y, short dir)
         {
-            var matchingCells = eachblock(type, x, y, dir);
+            var matchingCells = Eachblock(type, x, y, dir);
 
             foreach (var tuple in matchingCells)
             {
-                drawBlock(ctx, tuple.Item1, tuple.Item2, type.color);
+                DrawBlock(ctx, tuple.Item1, tuple.Item2, type.color);
             }
         }
 
-        private static void drawBlock(CanvasRenderingContext2D ctx, int x, int y, string color)
+        private static void DrawBlock(CanvasRenderingContext2D ctx, int x, int y, string color)
         {
             ctx.FillStyle = color;
             ctx.FillRect(x * dx, y * dy, dx, dy);
@@ -927,9 +927,9 @@ namespace BridgeTetris
         [Ready]
         public static void LoadGame()
         {
-            loadPlayArea(); // load page's placeholders
-            loadCanvasContext();
-            run();          // effectively start the game engine (will listen for 'spacebar' to begin game)
+            LoadPlayArea(); // load page's placeholders
+            LoadCanvasContext();
+            Run();          // effectively start the game engine (will listen for 'spacebar' to begin game)
         }
     }
 }
