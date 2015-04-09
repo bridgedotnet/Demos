@@ -34,49 +34,6 @@ using System.Collections.Generic;
 
 namespace BridgeTetris
 {
-    [FileName("TetrisClasses")]
-    public class TetrisClasses
-    {
-        #region tetris elements' abstraction classes
-        public class Piece
-        {
-            public PieceType type { get; set; }
-            public short dir { get; set; }
-            public int x { get; set; }
-            public int y { get; set; }
-        }
-
-        public class PieceType
-        {
-            public int size { get; set; }
-            public string color { get; set; }
-            public int[] blocks { get; set; }
-
-            public PieceType(int sz, int[] shape, string clr)
-            {
-                size = sz;
-                color = clr;
-
-                if (shape.Length < 1)
-                {
-                    shape[0] = 0xCC00; // 2x2 square
-                }
-
-                if (shape.Length < 4)
-                {
-                    for (int i = shape.Length - 1; i < 4; i++)
-                    {
-                        shape[i] = shape[i - 1];
-                    }
-                }
-
-                blocks = shape;
-            }
-        }
-
-        #endregion
-    }
-
     public class Tetris
     {
         private static void loadPlayArea()
@@ -282,6 +239,45 @@ namespace BridgeTetris
 
         #endregion
 
+        #region tetris elements' abstraction classes
+        public class Piece
+        {
+            public PieceType type { get; set; }
+            public short dir { get; set; }
+            public int x { get; set; }
+            public int y { get; set; }
+        }
+
+        public class PieceType
+        {
+            public int size { get; set; }
+            public string color { get; set; }
+            public int[] blocks { get; set; }
+
+            public PieceType(int sz, int[] shape, string clr)
+            {
+                size = sz;
+                color = clr;
+
+                if (shape.Length < 1)
+                {
+                    shape[0] = 0xCC00; // 2x2 square
+                }
+
+                if (shape.Length < 4)
+                {
+                    for (int i = shape.Length - 1; i < 4; i++)
+                    {
+                        shape[i] = shape[i - 1];
+                    }
+                }
+
+                blocks = shape;
+            }
+        }
+
+        #endregion
+
         #region game variables (initialized during reset)
 
         private static int dx, // pixel width of a tetris block
@@ -291,11 +287,11 @@ namespace BridgeTetris
                          rows; // number of completed rows in the current game
 
         // 2 dimensional array (nx*ny) representing tetris court - either empty block or occupied by a 'piece'
-        private static TetrisClasses.PieceType[,] blocks = new TetrisClasses.PieceType[nx, ny];
+        private static PieceType[,] blocks = new PieceType[nx, ny];
 
         private static int[] actions = new int[0]; // queue of user actions (inputs)
 
-        private static TetrisClasses.Piece current, // the current piece
+        private static Piece current, // the current piece
                                                     next; // the next piece
 
         private static bool playing; // true|false - game is in progress
@@ -320,14 +316,14 @@ namespace BridgeTetris
          *                     0x44C0
          */
 
-        private static TetrisClasses.PieceType
-            i = new TetrisClasses.PieceType(4, new int[] { 0x0F00, 0x2222, 0x00F0, 0x4444 }, "cyan"),
-            j = new TetrisClasses.PieceType(3, new int[] { 0x44C0, 0x8E00, 0x6440, 0x0E20 }, "blue"),
-            l = new TetrisClasses.PieceType(3, new int[] { 0x4460, 0x0E80, 0xC440, 0x2E00 }, "orange"),
-            o = new TetrisClasses.PieceType(2, new int[] { 0xCC00, 0xCC00, 0xCC00, 0xCC00 }, "yellow"),
-            s = new TetrisClasses.PieceType(3, new int[] { 0x06C0, 0x8C40, 0x6C00, 0x4620 }, "green"),
-            t = new TetrisClasses.PieceType(3, new int[] { 0x0E40, 0x4C40, 0x4E00, 0x4640 }, "purple"),
-            z = new TetrisClasses.PieceType(3, new int[] { 0x0C60, 0x4C80, 0xC600, 0x2640 }, "red");
+        private static PieceType
+            i = new PieceType(4, new int[] { 0x0F00, 0x2222, 0x00F0, 0x4444 }, "cyan"),
+            j = new PieceType(3, new int[] { 0x44C0, 0x8E00, 0x6440, 0x0E20 }, "blue"),
+            l = new PieceType(3, new int[] { 0x4460, 0x0E80, 0xC440, 0x2E00 }, "orange"),
+            o = new PieceType(2, new int[] { 0xCC00, 0xCC00, 0xCC00, 0xCC00 }, "yellow"),
+            s = new PieceType(3, new int[] { 0x06C0, 0x8C40, 0x6C00, 0x4620 }, "green"),
+            t = new PieceType(3, new int[] { 0x0E40, 0x4C40, 0x4E00, 0x4640 }, "purple"),
+            z = new PieceType(3, new int[] { 0x0C60, 0x4C80, 0xC600, 0x2640 }, "red");
         #endregion
 
         /// <summary>
@@ -339,7 +335,7 @@ namespace BridgeTetris
         /// <param name="y"></param>
         /// <param name="dir"></param>
         /// <param name="fn"></param>
-        private static Tuple<int, int>[] eachblock(TetrisClasses.PieceType type, int x, int y, short dir)
+        private static Tuple<int, int>[] eachblock(PieceType type, int x, int y, short dir)
         {
             int row = 0,
                 col = 0,
@@ -368,7 +364,7 @@ namespace BridgeTetris
         }
 
         // check if a piece can fit into a position in the grid
-        private static bool occupied(TetrisClasses.PieceType type, int x, int y, short dir)
+        private static bool occupied(PieceType type, int x, int y, short dir)
         {
             var matchingCells = eachblock(type, x, y, dir); // FIXME: 'result' logic must be ensured to work like on JS
             foreach (var tuple in matchingCells)
@@ -381,7 +377,7 @@ namespace BridgeTetris
             return false; // FIXME: maybe just return eachblock result??
         }
 
-        private static bool unoccupied(TetrisClasses.PieceType type, int x, int y, short dir)
+        private static bool unoccupied(PieceType type, int x, int y, short dir)
         {
             return !occupied(type, x, y, dir);
         }
@@ -389,14 +385,14 @@ namespace BridgeTetris
         // start with 4 instances of each piece and
         // pick randomly until the 'bag is empty'
         //private static List<Piece> pieces = new List<Piece>();
-        private static TetrisClasses.PieceType[] pieces;
+        private static PieceType[] pieces;
 
-        private static TetrisClasses.Piece randomPiece()
+        private static Piece randomPiece()
         {
-            pieces = new TetrisClasses.PieceType[] { i, i, i, i, j, j, j, j, l, l, l, l, o, o, o, o, s, s, s, s, t, t, t, t, z, z, z, z };
-            var type = (TetrisClasses.PieceType)pieces.Splice((int)random(0, pieces.Length - 1), 1)[0]; // This does not cast as Piece?
+            pieces = new PieceType[] { i, i, i, i, j, j, j, j, l, l, l, l, o, o, o, o, s, s, s, s, t, t, t, t, z, z, z, z };
+            var type = (PieceType)pieces.Splice((int)random(0, pieces.Length - 1), 1)[0]; // This does not cast as Piece?
 
-            return new TetrisClasses.Piece
+            return new Piece
             {
                 dir = DIR.UP,
                 type = type,
@@ -572,9 +568,9 @@ namespace BridgeTetris
             setRows(rows + n);
         }
 
-        private static TetrisClasses.PieceType getBlock(int x, int y)
+        private static PieceType getBlock(int x, int y)
         {
-            TetrisClasses.PieceType retval = null;
+            PieceType retval = null;
 
             if (x >= 0 && x < nx && blocks.Length > ((x + 1) * nx)
                 && y > 0 && y < ny) // FIXME: JavaScript logic removes requirements to check against y-axis here.
@@ -585,7 +581,7 @@ namespace BridgeTetris
             return retval;
         }
 
-        private static void setBlock(int x, int y, TetrisClasses.PieceType type)
+        private static void setBlock(int x, int y, PieceType type)
         {
             // FIXME: understand what this does and ensure whether it is needed or not!
             //        seems to be just a js trick to ensure the array has been allocated
@@ -600,7 +596,7 @@ namespace BridgeTetris
 
         private static void clearBlocks()
         {
-            blocks = new TetrisClasses.PieceType[nx, ny];
+            blocks = new PieceType[nx, ny];
         }
 
         private static void clearActions()
@@ -608,13 +604,13 @@ namespace BridgeTetris
             actions = new int[0];
         }
 
-        private static void setCurrentPiece(TetrisClasses.Piece piece)
+        private static void setCurrentPiece(Piece piece)
         {
             current = piece ?? randomPiece();
             invalidate();
         }
 
-        private static void setNextPiece(TetrisClasses.Piece piece = null)
+        private static void setNextPiece(Piece piece = null)
         {
             next = piece ?? randomPiece();
             invalidateNext();
@@ -848,7 +844,7 @@ namespace BridgeTetris
                     drawPiece(ctx, current.type, current.x, current.y, current.dir);
                 }
 
-                TetrisClasses.PieceType block;
+                PieceType block;
 
                 for (int y = 0; y < ny; y++)
                 {
@@ -906,7 +902,7 @@ namespace BridgeTetris
             }
         }
 
-        private static void drawPiece(CanvasRenderingContext2D ctx, TetrisClasses.PieceType type, int x, int y, short dir)
+        private static void drawPiece(CanvasRenderingContext2D ctx, PieceType type, int x, int y, short dir)
         {
             var matchingCells = eachblock(type, x, y, dir);
 
