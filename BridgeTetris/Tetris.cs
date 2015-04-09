@@ -240,7 +240,7 @@ namespace BridgeTetris
         #endregion
 
         #region tetris elements' abstraction classes
-        public class Piece
+        private class Piece
         {
             public PieceType type { get; set; }
             public short dir { get; set; }
@@ -248,7 +248,7 @@ namespace BridgeTetris
             public int y { get; set; }
         }
 
-        public class PieceType
+        private class PieceType
         {
             public int size { get; set; }
             public string color { get; set; }
