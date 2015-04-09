@@ -198,6 +198,6 @@ FakesAssemblies/
 /Combination_Samples/MVC_and_WebForms/Demo.WebForms/resources/js/*.js
 
 # Files expected to be created by compiling theproject
-BridgeTetris/Bridge/output/*.js
-TetrisWeb/js/*.js
-packages/Bridge.1.1.0
+Games/Tetris/BridgeTetris/Bridge/output/*.js
+Games/Tetris/TetrisWeb/js/*.js
+Games/Tetris/packages/Bridge.1.1.0
