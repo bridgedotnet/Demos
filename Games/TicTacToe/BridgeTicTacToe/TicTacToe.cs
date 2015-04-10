@@ -92,8 +92,6 @@ namespace BridgeTicTacToe
             jQuery.Select("#gameStatus").Text("Make your move!");
 
             jQuery.Select("#restart").Css("visibility", "hidden");
-
-            Console.Log("Upper bounds: " + board.GetUpperBound(0)); // FIXME: This returns NaN!?!?!?
         }
 
         /// <summary>
