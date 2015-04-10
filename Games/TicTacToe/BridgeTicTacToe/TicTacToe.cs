@@ -91,6 +91,8 @@ namespace BridgeTicTacToe
             jQuery.Select("#gameStatus").Css("background", "#bef");
             jQuery.Select("#gameStatus").Text("Make your move!");
 
+            jQuery.Select("#restart").Css("visibility", "hidden");
+
             Console.Log("Upper bounds: " + board.GetUpperBound(0)); // FIXME: This returns NaN!?!?!?
         }
 
@@ -296,6 +298,7 @@ namespace BridgeTicTacToe
             }
 
             var draw = true;
+
             for (var i = 0; i <= brd.GetUpperBound(0); i++)
             {
                 for (var j = 0; j <= brd.GetUpperBound(1); j++)
@@ -303,22 +306,13 @@ namespace BridgeTicTacToe
                     if (string.IsNullOrWhiteSpace(brd[i, j]))
                     {
                         draw = false;
-                        break;
                     }
-                }
-
-                if (!draw)
-                {
-                    break;
                 }
             }
 
             if (draw)
             {
-                jQuery.Select("#gameStatus").Css("background", "#eef");
-                jQuery.Select("#gameStatus").Text("Cat's game!");
-
-                BridgeTicTacToe.TicTacToe.updateScoreBoard(ScoreType.Tie);
+                BridgeTicTacToe.TicTacToe.WinAlert("none");
 
                 return true;
             }
@@ -331,24 +325,39 @@ namespace BridgeTicTacToe
         /// </summary>
         private static void WinAlert(string who)
         {
-            BridgeTicTacToe.TicTacToe.winner = (who == human) ? Player.Human : Player.Computer;
+            Player whoWon;
 
-            var whoWon = BridgeTicTacToe.TicTacToe.winner;
-
-            if (whoWon == Player.Human)
+            if (who == human)
             {
+                whoWon = Player.Human;
+
                 jQuery.Select("#gameStatus").Css("background", "#cfc");
                 jQuery.Select("#gameStatus").Text("Victory is yours!");
 
                 BridgeTicTacToe.TicTacToe.updateScoreBoard(ScoreType.Win);
             }
-            else if (whoWon == Player.Computer)
+            else if (who == computer)
             {
+                whoWon = Player.Computer;
+
                 jQuery.Select("#gameStatus").Css("background", "#fbb");
                 jQuery.Select("#gameStatus").Text("Better luck next time!");
 
                 BridgeTicTacToe.TicTacToe.updateScoreBoard(ScoreType.Defeat);
             }
+            else
+            {
+                whoWon = Player.None;
+
+                jQuery.Select("#gameStatus").Css("background", "#eef");
+                jQuery.Select("#gameStatus").Text("Cat's game!");
+
+                BridgeTicTacToe.TicTacToe.updateScoreBoard(ScoreType.Tie);
+            }
+
+            BridgeTicTacToe.TicTacToe.winner = whoWon;
+
+            jQuery.Select("#restart").Css("visibility", "visible");
         }
 
         private static void ClearBoard()
@@ -379,6 +388,8 @@ namespace BridgeTicTacToe
             {
                 BridgeTicTacToe.TicTacToe.CompMove();
             }
+
+            jQuery.Select("#restart").Css("visibility", "hidden");
         }
 
         private static void updateScoreBoard(ScoreType which)
