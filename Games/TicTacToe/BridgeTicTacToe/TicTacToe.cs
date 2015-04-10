@@ -47,7 +47,10 @@ namespace BridgeTicTacToe
         {
             var hmn = BridgeTicTacToe.TicTacToe.human;
 
-            if (jQuery.This.Is("td") && turn == Turn.Human && string.IsNullOrWhiteSpace(jQuery.This.Text()))
+            var ongoingGame = BridgeTicTacToe.TicTacToe.winner == Player.None;
+            var emptySlot = string.IsNullOrWhiteSpace(jQuery.This.Text());
+
+            if (jQuery.This.Is("td") && ongoingGame && turn == Turn.Human && emptySlot)
             {
                 jQuery.This.Text(hmn);
                 BridgeTicTacToe.TicTacToe.BoardCheck();
