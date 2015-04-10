@@ -61,12 +61,27 @@
             margin-top: -2px;
         }
 
-        #gameStatus {
+        #statusBoard, #gameStatus, #scoreBoard {
             align-self: center;
-            text-align: center;
             font-family: sans-serif;
             padding: 8px;
-            font-size: 110%;
+        }
+
+        #statusBoard {
+            background-color: #eee;
+        }
+
+        #gameStatus {
+            text-align: center;
+            font-size: 110%
+        }
+
+        #scoreBoard {
+            background-color: #ffe;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 8px;
+            width: 200px
         }
 
         td {
@@ -102,7 +117,20 @@
         Click on empty spaces below to play. Making a row of three wins the game.
         <br>Don't worry, the AI here is not too smart. :)
     </p>
-    <div id="gameStatus"></div>
+    <div id="statusBoard">
+        <div id="scoreBoard">
+            <div style="background-color: #cfc; padding: 2px; margin: 2px">
+                Wins: <span id="winCounter">0</span>
+            </div>
+            <div style="background-color: #fbb; padding: 2px; margin: 2px">
+                Defeats: <span id="defeatCounter">0</span>
+            </div>
+            <div style="background-color: #eef; padding: 2px; margin: 2px">
+                Ties: <span id="tieCounter">0</span>
+            </div>
+        </div>
+        <div id="gameStatus"></div>
+    </div>
     <br>
     <br>
     <div id="board-outer" class="center">

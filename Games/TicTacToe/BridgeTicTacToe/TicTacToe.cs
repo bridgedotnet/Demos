@@ -39,6 +39,18 @@ namespace BridgeTicTacToe
         };
 
         private static Player winner = Player.None;
+
+        private static int winsCount = 0;
+        private static int defeatsCount = 0;
+        private static int tiesCount = 0;
+
+        private enum ScoreType
+        {
+            Win,
+            Defeat,
+            Tie
+        }
+
         #endregion
 
         #region Game Logic
@@ -306,6 +318,8 @@ namespace BridgeTicTacToe
                 jQuery.Select("#gameStatus").Css("background", "#eef");
                 jQuery.Select("#gameStatus").Text("Cat's game!");
 
+                BridgeTicTacToe.TicTacToe.updateScoreBoard(ScoreType.Tie);
+
                 return true;
             }
 
@@ -325,11 +339,15 @@ namespace BridgeTicTacToe
             {
                 jQuery.Select("#gameStatus").Css("background", "#cfc");
                 jQuery.Select("#gameStatus").Text("Victory is yours!");
+
+                BridgeTicTacToe.TicTacToe.updateScoreBoard(ScoreType.Win);
             }
             else if (whoWon == Player.Computer)
             {
                 jQuery.Select("#gameStatus").Css("background", "#fbb");
                 jQuery.Select("#gameStatus").Text("Better luck next time!");
+
+                BridgeTicTacToe.TicTacToe.updateScoreBoard(ScoreType.Defeat);
             }
         }
 
@@ -360,6 +378,34 @@ namespace BridgeTicTacToe
             if (turn == Turn.Computer)
             {
                 BridgeTicTacToe.TicTacToe.CompMove();
+            }
+        }
+
+        private static void updateScoreBoard(ScoreType which)
+        {
+            int newValue = 0;
+
+            // There's no Enum.GetName() support yet, so we just map enum to string names
+            string scoreName = "";
+
+            switch (which) {
+                case ScoreType.Win:
+                    newValue = ++BridgeTicTacToe.TicTacToe.winsCount;
+                    scoreName = "win";
+                    break;
+                case ScoreType.Defeat:
+                    newValue = ++BridgeTicTacToe.TicTacToe.defeatsCount;
+                    scoreName = "defeat";
+                    break;
+                case ScoreType.Tie:
+                    newValue = ++BridgeTicTacToe.TicTacToe.tiesCount;
+                    scoreName = "tie";
+                    break;
+            }
+
+            if (newValue != 0)
+            {
+                jQuery.Select("#" + scoreName + "Counter").Text(newValue.ToString());
             }
         }
 
