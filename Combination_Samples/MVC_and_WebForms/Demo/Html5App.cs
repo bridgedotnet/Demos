@@ -205,7 +205,7 @@ namespace Demo
 
             Action<Event> onLoad = delegate
             {
-                var val = JSON.Parse<string>(request.ResponseText);
+                var val = JSON.Parse(request.ResponseText).As<string>();
                 var dateTime = DateTime.Parse(val);
 
                 Document.GetElementById<InputElement>("dateTimeInput").Value = dateTime.ToString("yyyy-MM-dd hh:mm:ss");

@@ -146,7 +146,7 @@ namespace Demo
                 }),
                 (Func<string>)(() => { return Script.Arguments[0].ToString(); }));
 
-                var msg = JSON.Parse<string>(result);
+                var msg = JSON.Parse(result).As<string>();
 
                 if (msg == "ok")
                 {
@@ -338,7 +338,7 @@ namespace Demo
                             btn.ButtonReset();
                         }
 
-                        var val = JSON.Parse<string>((string)data);
+                        var val = JSON.Parse((string)data).As<string>();
                         var dateTime = DateTime.ParseExact(val, "yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
                         jQuery.Select("#dateTimeInput").Val(dateTime.ToString("yyyy-MM-dd HH:mm:ss"));

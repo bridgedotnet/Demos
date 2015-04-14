@@ -150,7 +150,7 @@ namespace Demo
                     Cache = false,
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
-                        var val = JSON.Parse<string>((string)data);
+                        var val = JSON.Parse((string)data).As<string>();
                         var dateTime = DateTime.ParseExact(val, "yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
                         jQuery.Select("#dateTimeInput").Val(dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
