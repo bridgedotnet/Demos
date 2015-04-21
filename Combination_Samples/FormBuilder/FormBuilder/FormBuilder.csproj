@@ -47,6 +47,7 @@
       <Link>TextFormField.cs</Link>
     </Compile>
     <Compile Include="App.cs" />
+    <Compile Include="BridgeForm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -11,32 +11,9 @@
         main: function () {
             // fetch form template from http handler and start building form
             $.ajax({ url: FormBuilder.App.FORM_TEMPLATE_DATA, cache: false, success: function (data, str, jqXHR) {
-                var $t;
-                var template = new DTO.Form();
-
-                var rawFields = data.Fields;
-
-                $t = Bridge.getEnumerator(rawFields);
-                while ($t.moveNext()) {
-                    var rawField = $t.getCurrent();
-                    if (rawField.Kind === Bridge.cast(DTO.FormFieldType.radio, Bridge.Int)) {
-                        template.getFields().add(Bridge.merge(new DTO.RadioFormField(), {
-                            setId: rawField.Id, 
-                            setLabel: rawField.Label, 
-                            setOptions: rawField.Options
-                        } ));
-                    }
-                    else  {
-                        template.getFields().add(Bridge.merge(new DTO.TextFormField(), {
-                            setId: rawField.Id, 
-                            setLabel: rawField.Label, 
-                            setRequired: rawField.Required
-                        } ));
-                    }
-                }
-
+                var template = new DTO.Form("constructor$1", data);
                 FormBuilder.App.createForm($(FormBuilder.App.FORM_CONTAINER), template);
-            }             });
+            } });
         },
         createForm: function (container, template) {
             var $t;

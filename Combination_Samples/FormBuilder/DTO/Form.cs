@@ -2,13 +2,13 @@
 
 namespace DTO
 {
-    public class Form
+    public partial class Form
     {
         public List<FormField> Fields { get; set; }
 
         public Form()
         {
             this.Fields = new List<FormField>();
-        }
+        }       
     }
 }

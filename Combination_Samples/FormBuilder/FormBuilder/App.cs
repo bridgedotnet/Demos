@@ -22,32 +22,7 @@ namespace FormBuilder
                     Cache = false,
                     Success = delegate(object data, string str, jqXHR jqXHR)
                     {
-                        Form template = new Form();
-
-                        dynamic rawFields = data["Fields"];
-
-                        foreach (var rawField in rawFields)
-                        {
-                            if (rawField["Kind"] == (int)FormFieldType.Radio)
-                            {
-                                template.Fields.Add(new RadioFormField()
-                                {
-                                    Id = rawField["Id"],
-                                    Label = rawField["Label"],
-                                    Options = rawField["Options"]
-                                });
-                            }
-                            else
-                            {
-                                template.Fields.Add(new TextFormField()
-                                {
-                                    Id = rawField["Id"],
-                                    Label = rawField["Label"],
-                                    Required = rawField["Required"]
-                                });
-                            }
-                        }
-
+                        Form template = new Form(data);                        
                         App.CreateForm(jQuery.Select(FORM_CONTAINER), template);
                     }
                 }

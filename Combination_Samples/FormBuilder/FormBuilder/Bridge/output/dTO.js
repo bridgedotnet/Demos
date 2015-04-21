@@ -6,6 +6,30 @@
     },
     constructor: function () {
         this.setFields(new Bridge.List$1(DTO.FormField)());
+    },
+    constructor$1: function (obj) {
+        this.$constructor();
+
+        var rawFields = obj.Fields;
+
+        $t = Bridge.getEnumerator(rawFields);
+        while ($t.moveNext()) {
+            var rawField = $t.getCurrent();
+            if (rawField.Kind === Bridge.cast(DTO.FormFieldType.radio, Bridge.Int)) {
+                this.getFields().add(Bridge.merge(new DTO.RadioFormField(), {
+                    setId: rawField.Id, 
+                    setLabel: rawField.Label, 
+                    setOptions: rawField.Options
+                } ));
+            }
+            else  {
+                this.getFields().add(Bridge.merge(new DTO.TextFormField(), {
+                    setId: rawField.Id, 
+                    setLabel: rawField.Label, 
+                    setRequired: rawField.Required
+                } ));
+            }
+        }
     }
 });
 
