@@ -1,8 +1,8 @@
 ﻿using Bridge;
 using Bridge.Html5;
 using Bridge.WebGL;
-using System;
 using Html5.TypedArrays;
+using System;
 
 namespace Cube3D
 {
