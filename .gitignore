@@ -209,3 +209,6 @@ Games/TicTacToe/TicTacWeb/js/bridge*.js
 # Installed from NuGet, the version control does not need to track this
 Games/TicTacToe/BridgeTicTacToe/App_Readme
 Games/TicTacToe/BridgeTicTacToe/Bridge
+
+!VSCode/Demo/bin/
+!VSCode/Demo/build/
