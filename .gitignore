@@ -210,4 +210,5 @@ Games/TicTacToe/TicTacWeb/js/bridge*.js
 Games/TicTacToe/BridgeTicTacToe/App_Readme
 Games/TicTacToe/BridgeTicTacToe/Bridge
 
+output/
 !VSCode/Demo/build/
