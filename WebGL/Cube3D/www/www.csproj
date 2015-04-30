@@ -57,9 +57,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="js\glMatrix-0.9.5.min.js" />
     <Content Include="index.html" />
     <Content Include="js\bridge.js" />
@@ -67,6 +64,9 @@
     <Content Include="js\cube3D.js" />
     <Content Include="js\cube3D.min.js" />
     <Content Include="js\webgl-utils.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
