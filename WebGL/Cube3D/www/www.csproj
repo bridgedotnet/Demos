@@ -7,19 +7,18 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{58795DDA-473E-4357-A204-B8C11E58E1EF}</ProjectGuid>
+    <ProjectGuid>{3D9384AA-76B1-4B37-B3D6-80FAF0E9EEF1}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cube3D</RootNamespace>
-    <AssemblyName>Cube3D</AssemblyName>
+    <RootNamespace>www</RootNamespace>
+    <AssemblyName>www</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <NuGetPackageImportStamp>a8d50f3c</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,30 +38,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bridge">
-      <HintPath>..\packages\Bridge.1.3.0\lib\Bridge.dll</HintPath>
-    </Reference>
-    <Reference Include="Bridge.Html5">
-      <HintPath>..\packages\Bridge.1.3.0\lib\Bridge.Html5.dll</HintPath>
-    </Reference>
-    <Reference Include="Bridge.WebGL">
-      <HintPath>..\packages\Bridge.WebGL.1.0.0\lib\net45\Bridge.WebGL.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bridge\bridge.json" />
-    <Content Include="crate.gif" />
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Readme\Bridge.NET\LICENSE.txt" />
-    <Content Include="App_Readme\Bridge.NET\README.txt" />
-    <Content Include="App_Readme\Bridge.NET\README.WebGL.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="TypedArrays.cs" />
-    <Compile Include="Draw.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\glMatrix-0.9.5.min.js" />
+    <Content Include="index.html" />
+    <Content Include="js\bridge.js" />
+    <Content Include="js\bridge.min.js" />
+    <Content Include="js\cube3D.js" />
+    <Content Include="js\cube3D.min.js" />
+    <Content Include="js\webgl-utils.js" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -77,9 +81,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>10743</DevelopmentServerPort>
+          <DevelopmentServerPort>1315</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:10743/</IISUrl>
+          <IISUrl>http://localhost:1315/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -89,13 +93,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\Bridge.1.3.0\build\Bridge.targets" Condition="Exists('..\packages\Bridge.1.3.0\build\Bridge.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Bridge.1.3.0\build\Bridge.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bridge.1.3.0\build\Bridge.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
