@@ -46,7 +46,7 @@
       <HintPath>..\packages\Bridge.1.3.0\lib\Bridge.Html5.dll</HintPath>
     </Reference>
     <Reference Include="Bridge.WebGL">
-      <HintPath>..\packages\Bridge.WebGL.1.0.0\lib\Bridge.WebGL.dll</HintPath>
+      <HintPath>..\packages\Bridge.WebGL.1.0.0\lib\net45\Bridge.WebGL.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
