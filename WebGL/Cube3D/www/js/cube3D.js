@@ -67,6 +67,10 @@ Bridge.define('Cube3D.Cube', {
     mvMatrixUniform: null,
     nMatrixUniform: null,
     samplerUniform: null,
+    useLightingUniform: null,
+    ambientColorUniform: null,
+    lightingDirectionUniform: null,
+    directionalColorUniform: null,
     alphaUniform: null,
     cubeVertexPositionBuffer: null,
     cubeVertexNormalBuffer: null,
@@ -147,15 +151,21 @@ Bridge.define('Cube3D.Cube', {
         this.gl.useProgram(shaderProgram);
 
         this.vertexPositionAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexPosition");
+        this.vertexNormalAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexNormal");
         this.textureCoordAttribute = this.gl.getAttribLocation(shaderProgram, "aTextureCoord");
 
         this.gl.enableVertexAttribArray(this.vertexPositionAttribute);
+        this.gl.enableVertexAttribArray(this.vertexNormalAttribute);
         this.gl.enableVertexAttribArray(this.textureCoordAttribute);
 
         this.pMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uPMatrix");
         this.mvMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uMVMatrix");
         this.nMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uNMatrix");
         this.samplerUniform = this.gl.getUniformLocation(shaderProgram, "uSampler");
+        this.useLightingUniform = this.gl.getUniformLocation(shaderProgram, "uUseLighting");
+        this.ambientColorUniform = this.gl.getUniformLocation(shaderProgram, "uAmbientColor");
+        this.lightingDirectionUniform = this.gl.getUniformLocation(shaderProgram, "uLightingDirection");
+        this.directionalColorUniform = this.gl.getUniformLocation(shaderProgram, "uDirectionalColor");
         this.alphaUniform = this.gl.getUniformLocation(shaderProgram, "uAlpha");
 
         this.program = shaderProgram;
@@ -232,15 +242,15 @@ Bridge.define('Cube3D.Cube', {
         var vertices = [-1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0];
 
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
-        this.cubeVertexNormalBuffer = this.gl.createBuffer();
 
+        this.cubeVertexNormalBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
 
         var vertexNormals = [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0];
 
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertexNormals), this.gl.STATIC_DRAW);
-        this.cubeVertexTextureCoordBuffer = this.gl.createBuffer();
 
+        this.cubeVertexTextureCoordBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
 
         var textureCoords = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0];
@@ -267,6 +277,9 @@ Bridge.define('Cube3D.Cube', {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
         this.gl.vertexAttribPointer(this.vertexPositionAttribute, 3, this.gl.FLOAT, false, 0, 0);
 
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
+        this.gl.vertexAttribPointer(this.vertexNormalAttribute, 3, this.gl.FLOAT, false, 0, 0);
+
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
         this.gl.vertexAttribPointer(this.textureCoordAttribute, 2, this.gl.FLOAT, false, 0, 0);
 
@@ -276,9 +289,39 @@ Bridge.define('Cube3D.Cube', {
         this.gl.uniform1i(this.samplerUniform, 0);
 
         // Add Blending
-        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-        this.gl.enable(this.gl.BLEND);
-        this.gl.uniform1f(this.alphaUniform, 0.5);
+        var blending = document.getElementById("blending").checked;
+
+        if (blending) {
+            this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+            this.gl.enable(this.gl.BLEND);
+            this.gl.uniform1f(this.alphaUniform, parseFloat(document.getElementById("alpha").value));
+        }
+        else  {
+            this.gl.disable(this.gl.BLEND);
+            this.gl.enable(this.gl.DEPTH_TEST);
+            this.gl.uniform1f(this.alphaUniform, 1);
+        }
+
+        // Add Lighting
+        var lighting = document.getElementById("lighting").checked;
+
+        this.gl.uniform1i(this.useLightingUniform, lighting); // TODO: add to WebGL API
+        //gl.Uniform1i(this.useLightingUniform, lighting);
+
+        if (lighting) {
+            this.gl.uniform3f(this.ambientColorUniform, parseFloat(document.getElementById("ambientR").value), parseFloat(document.getElementById("ambientG").value), parseFloat(document.getElementById("ambientB").value));
+
+            var lightingDirection = [parseFloat(document.getElementById("lightDirectionX").value), parseFloat(document.getElementById("lightDirectionY").value), parseFloat(document.getElementById("lightDirectionZ").value)];
+
+            var adjustedLD = vec3.create();
+
+            vec3.normalize(lightingDirection, adjustedLD);
+            vec3.scale(adjustedLD, -1);
+
+            this.gl.uniform3fv(this.lightingDirectionUniform, adjustedLD);
+
+            this.gl.uniform3f(this.directionalColorUniform, parseFloat(document.getElementById("directionalR").value), parseFloat(document.getElementById("directionalG").value), parseFloat(document.getElementById("directionalB").value));
+        }
 
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
 

@@ -90,6 +90,10 @@ namespace Cube3D
         public WebGLUniformLocation mvMatrixUniform;
         public WebGLUniformLocation nMatrixUniform;
         public WebGLUniformLocation samplerUniform;
+        public WebGLUniformLocation useLightingUniform;
+        public WebGLUniformLocation ambientColorUniform;
+        public WebGLUniformLocation lightingDirectionUniform;
+        public WebGLUniformLocation directionalColorUniform;
         public WebGLUniformLocation alphaUniform;
 
         public WebGLBuffer cubeVertexPositionBuffer;
@@ -180,15 +184,21 @@ namespace Cube3D
             gl.UseProgram(shaderProgram);
 
             this.vertexPositionAttribute = gl.GetAttribLocation(shaderProgram, "aVertexPosition");
+            this.vertexNormalAttribute = gl.GetAttribLocation(shaderProgram, "aVertexNormal");
             this.textureCoordAttribute = gl.GetAttribLocation(shaderProgram, "aTextureCoord");
 
             gl.EnableVertexAttribArray(this.vertexPositionAttribute);
+            gl.EnableVertexAttribArray(this.vertexNormalAttribute);
             gl.EnableVertexAttribArray(this.textureCoordAttribute);
 
             this.pMatrixUniform = gl.GetUniformLocation(shaderProgram, "uPMatrix");
             this.mvMatrixUniform = gl.GetUniformLocation(shaderProgram, "uMVMatrix");
             this.nMatrixUniform = gl.GetUniformLocation(shaderProgram, "uNMatrix");
             this.samplerUniform = gl.GetUniformLocation(shaderProgram, "uSampler");
+            this.useLightingUniform = gl.GetUniformLocation(shaderProgram, "uUseLighting");
+            this.ambientColorUniform = gl.GetUniformLocation(shaderProgram, "uAmbientColor");
+            this.lightingDirectionUniform = gl.GetUniformLocation(shaderProgram, "uLightingDirection");
+            this.directionalColorUniform = gl.GetUniformLocation(shaderProgram, "uDirectionalColor");
             this.alphaUniform = gl.GetUniformLocation(shaderProgram, "uAlpha");
 
             this.program = shaderProgram;
@@ -324,8 +334,8 @@ namespace Cube3D
             };
 
             gl.BufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-            this.cubeVertexNormalBuffer = gl.CreateBuffer();
 
+            this.cubeVertexNormalBuffer = gl.CreateBuffer();
             gl.BindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
 
             var vertexNormals = new double[] {
@@ -367,8 +377,8 @@ namespace Cube3D
             };
 
             gl.BufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-            this.cubeVertexTextureCoordBuffer = gl.CreateBuffer();
 
+            this.cubeVertexTextureCoordBuffer = gl.CreateBuffer();
             gl.BindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
 
             var textureCoords = new double[] {
@@ -440,6 +450,9 @@ namespace Cube3D
             gl.BindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
             gl.VertexAttribPointer(this.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
+            gl.BindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
+            gl.VertexAttribPointer(this.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
+
             gl.BindBuffer(gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
             gl.VertexAttribPointer(this.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
 
@@ -449,9 +462,56 @@ namespace Cube3D
             gl.Uniform1i(this.samplerUniform, 0);
 
             // Add Blending
-            gl.BlendFunc(gl.SRC_ALPHA, gl.ONE);
-            gl.Enable(gl.BLEND);
-            gl.Uniform1f(this.alphaUniform, 0.5);
+            var blending = Document.GetElementById("blending").As<InputElement>().Checked;
+
+            if (blending)
+            {
+                gl.BlendFunc(gl.SRC_ALPHA, gl.ONE);
+                gl.Enable(gl.BLEND);
+                gl.Uniform1f(this.alphaUniform, Window.ParseFloat(Document.GetElementById("alpha").As<InputElement>().Value));
+            }
+            else
+            {
+                gl.Disable(gl.BLEND);
+                gl.Enable(gl.DEPTH_TEST);
+                gl.Uniform1f(this.alphaUniform, 1);
+            }
+
+            // Add Lighting
+            var lighting = Document.GetElementById("lighting").As<InputElement>().Checked;
+
+            Script.Write("this.gl.uniform1i(this.useLightingUniform, lighting);"); // TODO: add to WebGL API
+            //gl.Uniform1i(this.useLightingUniform, lighting);
+
+            if (lighting)
+            {
+                gl.Uniform3f(
+                    this.ambientColorUniform,
+                    Window.ParseFloat(Document.GetElementById("ambientR").As<InputElement>().Value),
+                    Window.ParseFloat(Document.GetElementById("ambientG").As<InputElement>().Value),
+                    Window.ParseFloat(Document.GetElementById("ambientB").As<InputElement>().Value)
+                );
+
+                var lightingDirection = new double[] {
+                    Window.ParseFloat(Document.GetElementById("lightDirectionX").As<InputElement>().Value),
+                    Window.ParseFloat(Document.GetElementById("lightDirectionY").As<InputElement>().Value),
+                    Window.ParseFloat(Document.GetElementById("lightDirectionZ").As<InputElement>().Value)
+                };
+
+                var adjustedLD = Script.Call<double[][][]>("vec3.create");
+
+                Script.Call("vec3.normalize", lightingDirection, adjustedLD);
+                Script.Call("vec3.scale", adjustedLD, -1);
+
+                gl.Uniform3fv(this.lightingDirectionUniform, adjustedLD);
+
+                gl.Uniform3f(
+                    this.directionalColorUniform,
+                    Window.ParseFloat(Document.GetElementById("directionalR").As<InputElement>().Value),
+                    Window.ParseFloat(Document.GetElementById("directionalG").As<InputElement>().Value),
+                    Window.ParseFloat(Document.GetElementById("directionalB").As<InputElement>().Value)
+                );
+            }
 
             gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
 
@@ -478,8 +538,8 @@ namespace Cube3D
         public void Tick()
         {
             // Global.RequestAnimationFrame(Tick);
-            Script.Write("requestAnimFrame(Bridge.fn.bind(this, this.tick));"); 
-            
+            Script.Write("requestAnimFrame(Bridge.fn.bind(this, this.tick));");
+
             this.HandleKeys();
             this.DrawScene();
             this.Animate();
