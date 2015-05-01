@@ -14,5 +14,5 @@
 		"command": "build\\builder.bat"          
 	},
 
-	"showOutput": "silent" //never
+	"showOutput": "silent"
 }

@@ -8,8 +8,7 @@ namespace Demo
 		[Ready]
 		public static void Main()
 		{
-			Console.WriteLine("Testing");
-			Console.ReadLine();
+			Window.Alert("Success!");
 		}
 	}
 }
