@@ -6,36 +6,55 @@ using System;
 
 namespace Cube3D
 {
-    public static class Draw
+    public class App
     {
-        public static CanvasElement canvas;
-        public static WebGLRenderingContext GL;
-        public static WebGLProgram program;
-        public static WebGLTexture texture;
+        [Ready]
+        public static void Main()
+        {
+            var cube = new Cube();
 
-        public static double[] mvMatrix = Script.Call<double[]>("mat4.create");
-        public static double[][] mvMatrixStack = new double[][] { };
-        public static double[] pMatrix = Script.Call<double[]>("mat4.create");
+            cube.canvas = App.GetCanvasEl("lesson07-canvas");
+            cube.gl = App.InitGL(cube.canvas);
+            cube.InitShaders();
+            cube.InitBuffers();
+            cube.InitTexture();
 
-        public static int vertexPositionAttribute, vertexNormalAttribute, textureCoordAttribute;
+            cube.gl.ClearColor(1, 1, 1, 1);
+            cube.gl.Enable(cube.gl.DEPTH_TEST);
 
-        public static WebGLUniformLocation pMatrixUniform, mvMatrixUniform, nMatrixUniform, samplerUniform;
-        public static WebGLBuffer cubeVertexPositionBuffer, cubeVertexNormalBuffer, cubeVertexTextureCoordBuffer, cubeVertexIndexBuffer;
+            Document.OnKeyDown = cube.HandleKeyDown;
+            Document.OnKeyUp = cube.HandleKeyUp;
 
-        public static double xRot = 0;
-        public static int xSpeed = 3;
+            cube.Tick();
+        }
 
-        public static double yRot = 0;
-        public static int ySpeed = -3;
+        public static CanvasElement GetCanvasEl(string id)
+        {
+            return Document.GetElementById(id).As<CanvasElement>();
+        }
 
-        public static double z = -5.0;
-        public static bool[] currentlyPressedKeys = new bool[] { };
+        public static WebGLRenderingContext InitGL(CanvasElement canvas)
+        {
+            var gl = App.Create3DContext(canvas);
 
-        public static double lastTime = 0;
+            if (gl == null)
+            {
+                Global.Alert("Could not initialise WebGL, sorry :-(");
+            }
+
+            return gl;
+        }
 
         public static WebGLRenderingContext Create3DContext(CanvasElement canvas)
         {
-            string[] names = new string[] { "webgl", "experimental-webgl", "webkit-3d", "moz-webgl" };
+            string[] names = new string[] 
+            { 
+                "webgl", 
+                "experimental-webgl", 
+                "webkit-3d", 
+                "moz-webgl" 
+            };
+
             WebGLRenderingContext context = null;
 
             foreach (string name in names)
@@ -44,7 +63,7 @@ namespace Cube3D
                 {
                     context = canvas.GetContext(name).As<WebGLRenderingContext>();
                 }
-                catch (Exception e) { }
+                catch (Exception ex) { }
 
                 if (context != null)
                 {
@@ -54,20 +73,45 @@ namespace Cube3D
 
             return context;
         }
+    }
 
-        public static void InitGL(CanvasElement canvas)
-        {
-            var gl = Draw.Create3DContext(canvas);
+    public class Cube
+    {
+        public CanvasElement canvas;
+        public WebGLRenderingContext gl;
+        public WebGLProgram program;
+        public WebGLTexture texture;
 
-            if (gl == null)
-            {
-                Window.Alert("Could not initialise WebGL, sorry :-(");
-            }
+        public double[] mvMatrix = Script.Call<double[]>("mat4.create");
+        public double[][] mvMatrixStack = new double[][] { };
+        public double[] pMatrix = Script.Call<double[]>("mat4.create");
 
-            Draw.GL = gl;
-        }
+        public int vertexPositionAttribute;
+        public int vertexNormalAttribute;
+        public int textureCoordAttribute;
 
-        public static WebGLShader GetShader(WebGLRenderingContext gl, string id)
+        public WebGLUniformLocation pMatrixUniform;
+        public WebGLUniformLocation mvMatrixUniform;
+        public WebGLUniformLocation nMatrixUniform;
+        public WebGLUniformLocation samplerUniform;
+
+        public WebGLBuffer cubeVertexPositionBuffer;
+        public WebGLBuffer cubeVertexNormalBuffer;
+        public WebGLBuffer cubeVertexTextureCoordBuffer;
+        public WebGLBuffer cubeVertexIndexBuffer;
+
+        public double xRot = 0;
+        public int xSpeed = 3;
+
+        public double yRot = 0;
+        public int ySpeed = -3;
+
+        public double z = -5.0;
+        public bool[] currentlyPressedKeys = new bool[] { };
+
+        public double lastTime = 0;
+
+        public WebGLShader GetShader(WebGLRenderingContext gl, string id)
         {
             var shaderScript = Document.GetElementById(id).As<ScriptElement>();
 
@@ -109,24 +153,25 @@ namespace Cube3D
 
             if (!gl.GetShaderParameter(shader, gl.COMPILE_STATUS).As<bool>())
             {
-                Window.Alert(gl.GetShaderInfoLog(shader));
+                Global.Alert(gl.GetShaderInfoLog(shader));
                 return null;
             }
 
             return shader;
         }
 
-        public static void InitShaders()
-        {
-            var gl = Draw.GL;
-            var fragmentShader = Draw.GetShader(gl, "shader-fs");
-            var vertexShader = Draw.GetShader(gl, "shader-vs");
+        WebGLProgram shaderProgram;
 
-            var shaderProgram = gl.CreateProgram().As<WebGLProgram>();
+        public void InitShaders()
+        {
+            var fragmentShader = this.GetShader(gl, "shader-fs");
+            var vertexShader = this.GetShader(gl, "shader-vs");
+
+            shaderProgram = gl.CreateProgram().As<WebGLProgram>();
 
             if (shaderProgram.Is<int>())
             {
-                Window.Alert("Could not initialise program");
+                Global.Alert("Could not initialise program");
             }
 
             gl.AttachShader(shaderProgram, vertexShader);
@@ -135,36 +180,34 @@ namespace Cube3D
 
             if (!gl.GetProgramParameter(shaderProgram, gl.LINK_STATUS).As<bool>())
             {
-                Window.Alert("Could not initialise shaders");
+                Global.Alert("Could not initialise shaders");
             }
 
             gl.UseProgram(shaderProgram);
 
-            Draw.vertexPositionAttribute = gl.GetAttribLocation(shaderProgram, "aVertexPosition");
-            gl.EnableVertexAttribArray(Draw.vertexPositionAttribute);
+            this.vertexPositionAttribute = gl.GetAttribLocation(shaderProgram, "aVertexPosition");
+            this.vertexNormalAttribute = gl.GetAttribLocation(shaderProgram, "aVertexNormal");
+            this.textureCoordAttribute = gl.GetAttribLocation(shaderProgram, "aTextureCoord");
 
-            Draw.vertexNormalAttribute = gl.GetAttribLocation(shaderProgram, "aVertexNormal");
-            gl.EnableVertexAttribArray(Draw.vertexNormalAttribute);
+            gl.EnableVertexAttribArray(this.vertexPositionAttribute);
+            gl.EnableVertexAttribArray(this.vertexNormalAttribute);
+            gl.EnableVertexAttribArray(this.textureCoordAttribute);
 
-            Draw.textureCoordAttribute = gl.GetAttribLocation(shaderProgram, "aTextureCoord");
-            gl.EnableVertexAttribArray(Draw.textureCoordAttribute);
+            this.pMatrixUniform = gl.GetUniformLocation(shaderProgram, "uPMatrix");
+            this.mvMatrixUniform = gl.GetUniformLocation(shaderProgram, "uMVMatrix");
+            this.nMatrixUniform = gl.GetUniformLocation(shaderProgram, "uNMatrix");
+            this.samplerUniform = gl.GetUniformLocation(shaderProgram, "uSampler");
 
-            Draw.pMatrixUniform = gl.GetUniformLocation(shaderProgram, "uPMatrix");
-            Draw.mvMatrixUniform = gl.GetUniformLocation(shaderProgram, "uMVMatrix");
-            Draw.nMatrixUniform = gl.GetUniformLocation(shaderProgram, "uNMatrix");
-            Draw.samplerUniform = gl.GetUniformLocation(shaderProgram, "uSampler");
-
-            Draw.program = shaderProgram;
+            this.program = shaderProgram;
         }
 
 
-        public static void HandleLoadedTexture(ImageElement image)
+        public void HandleLoadedTexture(ImageElement image)
         {
-            var gl = Draw.GL;
+            gl.PixelStorei(gl.UNPACK_FLIP_Y_WEBGL, gl.ONE);
+            //Script.Call("gl.pixelStorei", gl.UNPACK_FLIP_Y_WEBGL, true);
 
-            //gl.PixelStorei(gl.UNPACK_FLIP_Y_WEBGL, gl.ONE);
-            Script.Call("gl.pixelStorei", gl.UNPACK_FLIP_Y_WEBGL, true);
-            gl.BindTexture(gl.TEXTURE_2D, Draw.texture);
+            gl.BindTexture(gl.TEXTURE_2D, this.texture);
             gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
             gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
@@ -172,69 +215,67 @@ namespace Cube3D
             gl.BindTexture(gl.TEXTURE_2D, null);
         }
 
-        public static void InitTexture()
+        public void InitTexture()
         {
-            var gl = Draw.GL;
-
-            Draw.texture = gl.CreateTexture();
+            this.texture = gl.CreateTexture();
 
             var textureImageElement = new ImageElement();
 
-            textureImageElement.OnLoad = (e) =>
+            textureImageElement.OnLoad = (ev) =>
             {
-                Draw.HandleLoadedTexture(textureImageElement);
+                this.HandleLoadedTexture(textureImageElement);
             };
 
             textureImageElement.Src = "crate.gif";
         }
 
-        public static void MVPushMatrix()
+        public void MVPushMatrix()
         {
             var copy = Script.Call<object>("mat4.create");
             Script.Call("mat4.set", mvMatrix, copy);
-            Draw.mvMatrixStack.Push(copy);
+
+            this.mvMatrixStack.Push(copy);
         }
 
-        public static void MVPopMatrix()
+        public void MVPopMatrix()
         {
             if (mvMatrixStack.Length == 0)
             {
                 throw new Exception("Invalid popMatrix!");
             }
 
-            Draw.mvMatrix = mvMatrixStack.Pop().As<double[]>();
+            this.mvMatrix = mvMatrixStack.Pop().As<double[]>();
         }
 
-        public static void SetMatrixUniforms()
+        public void SetMatrixUniforms()
         {
-            var gl = Draw.GL;
-
-            gl.UniformMatrix4fv(Draw.pMatrixUniform, false, pMatrix);
-            gl.UniformMatrix4fv(Draw.mvMatrixUniform, false, mvMatrix);
+            gl.UniformMatrix4fv(this.pMatrixUniform, false, pMatrix);
+            gl.UniformMatrix4fv(this.mvMatrixUniform, false, mvMatrix);
 
             var normalMatrix = Script.Call<double[]>("mat3.create");
 
             Script.Call<object>("mat4.toInverseMat3", mvMatrix, normalMatrix);
             Script.Call<object>("mat3.transpose", normalMatrix);
-            gl.UniformMatrix3fv(Draw.nMatrixUniform, false, normalMatrix);
+
+            gl.UniformMatrix3fv(this.nMatrixUniform, false, normalMatrix);
         }
 
-        public static double DegToRad(double degrees)
+        public double DegToRad(double degrees)
         {
             return degrees * Math.PI / 180;
         }
 
-        public static void HandleKeyDown(Event e)
+        public void HandleKeyDown(Event e)
         {
-            Draw.currentlyPressedKeys[e.As<KeyboardEvent>().KeyCode] = true;
+            this.currentlyPressedKeys[e.As<KeyboardEvent>().KeyCode] = true;
         }
 
-        public static void HandleKeyUp(Event e)
+        public void HandleKeyUp(Event e)
         {
-            Draw.currentlyPressedKeys[e.As<KeyboardEvent>().KeyCode] = false;
+            this.currentlyPressedKeys[e.As<KeyboardEvent>().KeyCode] = false;
         }
 
-        public static void HandleKeys()
+        public void HandleKeys()
         {
             if (currentlyPressedKeys[33])
             {
@@ -273,11 +314,9 @@ namespace Cube3D
             }
         }
 
-        public static void InitBuffers()
+        public void InitBuffers()
         {
-            var gl = Draw.GL;
-
-            Draw.cubeVertexPositionBuffer = gl.CreateBuffer();
+            this.cubeVertexPositionBuffer = gl.CreateBuffer();
             gl.BindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
 
             var vertices = new double[] {
@@ -319,7 +358,7 @@ namespace Cube3D
             };
 
             gl.BufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-            Draw.cubeVertexNormalBuffer = gl.CreateBuffer();
+            this.cubeVertexNormalBuffer = gl.CreateBuffer();
 
             gl.BindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
 
@@ -362,7 +401,7 @@ namespace Cube3D
             };
 
             gl.BufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-            Draw.cubeVertexTextureCoordBuffer = gl.CreateBuffer();
+            this.cubeVertexTextureCoordBuffer = gl.CreateBuffer();
 
             gl.BindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
 
@@ -406,8 +445,9 @@ namespace Cube3D
 
             gl.BufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
 
-            Draw.cubeVertexIndexBuffer = gl.CreateBuffer();
+            this.cubeVertexIndexBuffer = gl.CreateBuffer();
             gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+
             var cubeVertexIndices = new int[] {
                 0, 1, 2,      0, 2, 3,    // Front face
                 4, 5, 6,      4, 6, 7,    // Back face
@@ -420,10 +460,8 @@ namespace Cube3D
             gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
         }
 
-        public static void DrawScene()
+        public void DrawScene()
         {
-            var gl = Draw.GL;
-
             gl.Viewport(0, 0, canvas.Width, canvas.Height);
 
             gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -432,35 +470,41 @@ namespace Cube3D
             Script.Call("mat4.identity", mvMatrix);
 
             Script.Call("mat4.translate", mvMatrix, new double[] { 0.0, 0.0, z });
-            Script.Call("mat4.rotate", mvMatrix, Draw.DegToRad(xRot), new int[] { 1, 0, 0 });
-            Script.Call("mat4.rotate", mvMatrix, Draw.DegToRad(yRot), new int[] { 0, 1, 0 });
+            Script.Call("mat4.rotate", mvMatrix, this.DegToRad(xRot), new int[] { 1, 0, 0 });
+            Script.Call("mat4.rotate", mvMatrix, this.DegToRad(yRot), new int[] { 0, 1, 0 });
 
-            gl.BindBuffer(gl.ARRAY_BUFFER, Draw.cubeVertexPositionBuffer);
-            gl.VertexAttribPointer(Draw.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+            gl.BindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
+            gl.VertexAttribPointer(this.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            gl.BindBuffer(gl.ARRAY_BUFFER, Draw.cubeVertexNormalBuffer);
-            gl.VertexAttribPointer(Draw.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
+            gl.BindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
+            gl.VertexAttribPointer(this.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            gl.BindBuffer(gl.ARRAY_BUFFER, Draw.cubeVertexTextureCoordBuffer);
-            gl.VertexAttribPointer(Draw.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
+            gl.BindBuffer(gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
+            gl.VertexAttribPointer(this.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
 
             gl.ActiveTexture(gl.TEXTURE0);
-            gl.BindTexture(gl.TEXTURE_2D, Draw.texture);
+            gl.BindTexture(gl.TEXTURE_2D, this.texture);
 
-            gl.Uniform1i(Draw.samplerUniform, 0);
+            gl.Uniform1i(this.samplerUniform, 0);
 
-            gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, Draw.cubeVertexIndexBuffer);
+            // Add Blending
+            gl.BlendFunc(gl.SRC_ALPHA, gl.ONE);
+            gl.Enable(gl.BLEND);
+            gl.Disable(gl.DEPTH_TEST);
+            //gl.Uniform1f(new WebGLUniformLocation().AlphaUniform, 1.0);
 
-            Draw.SetMatrixUniforms();
+            gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
+
+            this.SetMatrixUniforms();
 
             gl.DrawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
         }
 
-        public static void Animate()
+        public void Animate()
         {
             var timeNow = new Date().GetTime();
 
-            if (Draw.lastTime != 0)
+            if (this.lastTime != 0)
             {
                 var elapsed = timeNow - lastTime;
 
@@ -468,36 +512,17 @@ namespace Cube3D
                 yRot += (ySpeed * elapsed) / 1000.0;
             }
 
-            Draw.lastTime = timeNow;
+            this.lastTime = timeNow;
         }
 
-        public static void Tick()
+        public void Tick()
         {
-            Script.Write("requestAnimFrame(Cube3D.Draw.tick);");
-            Draw.HandleKeys();
-            Draw.DrawScene();
-            Draw.Animate();
-        }
+            //Global.RequestAnimationFrame(Tick);
 
-        [Ready]
-        public static void WebGLStart()
-        {
-            Draw.canvas = Document.GetElementById("lesson07-canvas").As<CanvasElement>();
-            
-            Draw.InitGL(Draw.canvas);
-            Draw.InitShaders();
-            Draw.InitBuffers();
-            Draw.InitTexture();
-
-            var gl = Draw.GL;
-
-            gl.ClearColor(1, 1, 1, 1);
-            gl.Enable(gl.DEPTH_TEST);
-
-            Document.OnKeyDown = Draw.HandleKeyDown;
-            Document.OnKeyUp = Draw.HandleKeyUp;
-
-            Draw.Tick();
+            Script.Write("requestAnimFrame(this.tick);");
+            this.HandleKeys();
+            this.DrawScene();
+            this.Animate();
         }
     }
 }
