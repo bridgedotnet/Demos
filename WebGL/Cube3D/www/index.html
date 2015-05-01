@@ -14,11 +14,13 @@
         varying vec2 vTextureCoord;
         varying vec3 vLightWeighting;
 
+        uniform float uAlpha;
+
         uniform sampler2D uSampler;
 
         void main(void) {
             vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-            gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
+            gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a * uAlpha);
         }
     </script>
 
@@ -45,8 +47,8 @@
     <script src="js/Cube3D.js"></script>
 </head>
 <body>
-    <canvas id="lesson07-canvas" style="border: none;" width="500" height="500"></canvas>
+    <canvas id="canvas1" style="border: none;" width="300" height="300"></canvas>
 
-    <p>Credits to <a href="http://learningwebgl.com/lessons/lesson07/index.html">LearningWebGL.com</a></p>
+    <p>Credits to <a href="http://learningwebgl.com/lessons/lesson08/index.html">LearningWebGL.com</a></p>
 </body>
 </html>
