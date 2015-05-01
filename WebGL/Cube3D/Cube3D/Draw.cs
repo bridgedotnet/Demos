@@ -468,7 +468,7 @@ namespace Cube3D
             {
                 gl.BlendFunc(gl.SRC_ALPHA, gl.ONE);
                 gl.Enable(gl.BLEND);
-                gl.Uniform1f(this.alphaUniform, Window.ParseFloat(Document.GetElementById("alpha").As<InputElement>().Value));
+                gl.Uniform1f(this.alphaUniform, Global.ParseFloat(Document.GetElementById("alpha").As<InputElement>().Value));
             }
             else
             {
@@ -487,15 +487,15 @@ namespace Cube3D
             {
                 gl.Uniform3f(
                     this.ambientColorUniform,
-                    Window.ParseFloat(Document.GetElementById("ambientR").As<InputElement>().Value),
-                    Window.ParseFloat(Document.GetElementById("ambientG").As<InputElement>().Value),
-                    Window.ParseFloat(Document.GetElementById("ambientB").As<InputElement>().Value)
+                    Global.ParseFloat(Document.GetElementById("ambientR").As<InputElement>().Value),
+                    Global.ParseFloat(Document.GetElementById("ambientG").As<InputElement>().Value),
+                    Global.ParseFloat(Document.GetElementById("ambientB").As<InputElement>().Value)
                 );
 
                 var lightingDirection = new double[] {
-                    Window.ParseFloat(Document.GetElementById("lightDirectionX").As<InputElement>().Value),
-                    Window.ParseFloat(Document.GetElementById("lightDirectionY").As<InputElement>().Value),
-                    Window.ParseFloat(Document.GetElementById("lightDirectionZ").As<InputElement>().Value)
+                    Global.ParseFloat(Document.GetElementById("lightDirectionX").As<InputElement>().Value),
+                    Global.ParseFloat(Document.GetElementById("lightDirectionY").As<InputElement>().Value),
+                    Global.ParseFloat(Document.GetElementById("lightDirectionZ").As<InputElement>().Value)
                 };
 
                 var adjustedLD = Script.Call<double[][][]>("vec3.create");
@@ -507,9 +507,9 @@ namespace Cube3D
 
                 gl.Uniform3f(
                     this.directionalColorUniform,
-                    Window.ParseFloat(Document.GetElementById("directionalR").As<InputElement>().Value),
-                    Window.ParseFloat(Document.GetElementById("directionalG").As<InputElement>().Value),
-                    Window.ParseFloat(Document.GetElementById("directionalB").As<InputElement>().Value)
+                    Global.ParseFloat(Document.GetElementById("directionalR").As<InputElement>().Value),
+                    Global.ParseFloat(Document.GetElementById("directionalG").As<InputElement>().Value),
+                    Global.ParseFloat(Document.GetElementById("directionalB").As<InputElement>().Value)
                 );
             }
 
