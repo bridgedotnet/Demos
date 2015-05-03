@@ -4,6 +4,4 @@ mcs	/nostdlib \
 	/out:build/Demo.dll \
 	/recurse:*.cs
 
-mkdir Bridge/output
-
-mono build/Bridge.Builder.exe -lib build/Demo.dll -o Bridge/output/
+mono build/Bridge.Builder.exe -lib build/Demo.dll
