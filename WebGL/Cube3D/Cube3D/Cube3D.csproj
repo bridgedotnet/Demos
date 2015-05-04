@@ -42,7 +42,7 @@
     <Compile Include="Cube.cs" />
     <Compile Include="GLMatrix.cs" />
     <Compile Include="TypedArrays.cs" />
-    <Compile Include="Draw.cs" />
+    <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
