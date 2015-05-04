@@ -1,4 +1,6 @@
-﻿Bridge.define('Cube3D.App', {
+﻿/* global Bridge */
+
+Bridge.define('Cube3D.App', {
     statics: {
         config: {
             init: function () {
@@ -6,17 +8,24 @@
             }
         },
         main: function () {
+            Cube3D.App.initCube("canvas1");
+            Cube3D.App.initCube("canvas2");
+            Cube3D.App.initCube("canvas3");
+        },
+        initCube: function (canvasId) {
             var cube = new Cube3D.Cube();
 
-            cube.canvas = Cube3D.App.getCanvasEl("canvas1");
+            Cube3D.App.initSettings(cube);
+
+            cube.canvas = Cube3D.App.getCanvasEl(canvasId);
             cube.gl = Cube3D.App.initGL(cube.canvas);
             cube.initShaders();
             cube.initBuffers();
             cube.initTexture();
             cube.tick();
 
-            document.onkeydown = Bridge.fn.bind(cube, cube.handleKeyDown);
-            document.onkeyup = Bridge.fn.bind(cube, cube.handleKeyUp);
+            document.addEventListener("keydown", Bridge.fn.bind(cube, cube.handleKeyDown));
+            document.addEventListener("keyup", Bridge.fn.bind(cube, cube.handleKeyUp));
         },
         getCanvasEl: function (id) {
             return document.getElementById(id);
@@ -51,6 +60,24 @@
             }
 
             return context;
+        }        ,
+        initSettings: function (cube) {
+            cube.setuseBlending(document.getElementById("blending").checked);
+            cube.setalpha(parseFloat(document.getElementById("alpha").value));
+
+            cube.setuseLighting(document.getElementById("lighting").checked);
+
+            cube.setambientR(parseFloat(document.getElementById("ambientR").value));
+            cube.setambientG(parseFloat(document.getElementById("ambientG").value));
+            cube.setambientB(parseFloat(document.getElementById("ambientB").value));
+
+            cube.setlightDirectionX(parseFloat(document.getElementById("lightDirectionX").value));
+            cube.setlightDirectionY(parseFloat(document.getElementById("lightDirectionY").value));
+            cube.setlightDirectionZ(parseFloat(document.getElementById("lightDirectionZ").value));
+
+            cube.setdirectionalR(parseFloat(document.getElementById("directionalR").value));
+            cube.setdirectionalG(parseFloat(document.getElementById("directionalG").value));
+            cube.setdirectionalB(parseFloat(document.getElementById("directionalB").value));
         }
     }
 });
@@ -81,6 +108,20 @@ Bridge.define('Cube3D.Cube', {
     yRotation: 0,
     lastTime: 0,
     config: {
+        properties: {
+            useBlending: false,
+            alpha: 0,
+            useLighting: false,
+            ambientR: 0,
+            ambientG: 0,
+            ambientB: 0,
+            lightDirectionX: 0,
+            lightDirectionY: 0,
+            lightDirectionZ: 0,
+            directionalR: 0,
+            directionalG: 0,
+            directionalB: 0
+        },
         init: function () {
             this.mvMatrix = mat4.create();
             this.mvMatrixStack = [];
@@ -171,7 +212,7 @@ Bridge.define('Cube3D.Cube', {
         this.program = shaderProgram;
     },
     handleLoadedTexture: function (image) {
-        this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, this.gl.ONE);
+        this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
@@ -206,9 +247,11 @@ Bridge.define('Cube3D.Cube', {
     },
     handleKeyDown: function (e) {
         this.currentlyPressedKeys[e.keyCode] = true;
+        e.preventDefault();
     },
     handleKeyUp: function (e) {
         this.currentlyPressedKeys[e.keyCode] = false;
+        e.preventDefault();
     },
     handleKeys: function () {
         if (this.currentlyPressedKeys[33]) {
@@ -268,7 +311,7 @@ Bridge.define('Cube3D.Cube', {
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-        mat4.perspective(45, Bridge.cast(this.canvas.width, Number) / this.canvas.height, 0.1, 100.0, this.pMatrix);
+        mat4.perspective(45, Bridge.cast(this.canvas.width, Number) / this.canvas.height, 0.1, 100, this.pMatrix);
         mat4.identity(this.mvMatrix);
         mat4.translate(this.mvMatrix, [0.0, 0.0, this.z]);
         mat4.rotate(this.mvMatrix, this.degToRad(this.xRotation), [1, 0, 0]);
@@ -289,12 +332,10 @@ Bridge.define('Cube3D.Cube', {
         this.gl.uniform1i(this.samplerUniform, 0);
 
         // Add Blending
-        var blending = document.getElementById("blending").checked;
-
-        if (blending) {
+        if (this.getuseBlending()) {
             this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
             this.gl.enable(this.gl.BLEND);
-            this.gl.uniform1f(this.alphaUniform, parseFloat(document.getElementById("alpha").value));
+            this.gl.uniform1f(this.alphaUniform, this.getalpha());
         }
         else  {
             this.gl.disable(this.gl.BLEND);
@@ -303,24 +344,19 @@ Bridge.define('Cube3D.Cube', {
         }
 
         // Add Lighting
-        var lighting = document.getElementById("lighting").checked;
+        this.gl.uniform1i(this.useLightingUniform, this.getuseLighting());
 
-        this.gl.uniform1i(this.useLightingUniform, lighting); // TODO: add to WebGL API
-        //gl.Uniform1i(this.useLightingUniform, lighting);
+        if (this.getuseLighting()) {
+            this.gl.uniform3f(this.ambientColorUniform, this.getambientR(), this.getambientG(), this.getambientB());
 
-        if (lighting) {
-            this.gl.uniform3f(this.ambientColorUniform, parseFloat(document.getElementById("ambientR").value), parseFloat(document.getElementById("ambientG").value), parseFloat(document.getElementById("ambientB").value));
-
-            var lightingDirection = [parseFloat(document.getElementById("lightDirectionX").value), parseFloat(document.getElementById("lightDirectionY").value), parseFloat(document.getElementById("lightDirectionZ").value)];
-
+            var lightingDirection = [this.getlightDirectionX(), this.getlightDirectionY(), this.getlightDirectionZ()];
             var adjustedLD = vec3.create();
 
             vec3.normalize(lightingDirection, adjustedLD);
             vec3.scale(adjustedLD, -1);
 
             this.gl.uniform3fv(this.lightingDirectionUniform, adjustedLD);
-
-            this.gl.uniform3f(this.directionalColorUniform, parseFloat(document.getElementById("directionalR").value), parseFloat(document.getElementById("directionalG").value), parseFloat(document.getElementById("directionalB").value));
+            this.gl.uniform3f(this.directionalColorUniform, this.getdirectionalR(), this.getdirectionalG(), this.getdirectionalB());
         }
 
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
@@ -345,6 +381,7 @@ Bridge.define('Cube3D.Cube', {
         // Global.RequestAnimationFrame(Tick);
         requestAnimFrame(Bridge.fn.bind(this, this.tick));
 
+        Cube3D.App.initSettings(this);
         this.handleKeys();
         this.drawScene();
         this.animate();
