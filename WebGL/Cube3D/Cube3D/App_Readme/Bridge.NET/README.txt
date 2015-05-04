@@ -1,7 +1,7 @@
 ﻿Project          : Bridge
-Release Date     : 2015-04-27
-Current Version  : 1.3
-Previous Version : 1.2
+Release Date     : 2015-05-04
+Current Version  : 1.4
+Previous Version : 1.3
 
 Use Bridge.NET to build platform independent applications for mobile, web 
 and desktop. Run on iOS, Windows, Mac, Linux and billions of other devices 
@@ -30,7 +30,7 @@ I. SYSTEM REQUIREMENTS
 --------------------------------------------------------------------------
 
 1. Visual Studio 2012, 2013, and 2015
-3. .NET Framework 4.5 and higher
+3. .NET Framework 4.0, 4.5, 4.5.1, 4.5.3 and higher
 
 
 --------------------------------------------------------------------------
@@ -51,16 +51,24 @@ directly into a new C# Class Library project. Use any of the following
 commands on the Package Manager Console to quickly install all the 
 necessary pieces and setup your project for Bridge.
 
-
     PM> Install-Package Bridge
 
+Other Framework packages available from NuGet:
 
-jQuery and Bootstrap packages are also available to install as per your 
-project requirements:
-
+    // http://jquery.com/
     PM> Install-Package Bridge.jQuery
 
+    // http://getbootstrap.com/
     PM> Install-Package Bridge.Bootstrap
+
+    // http://qunitjs.com/
+    PM> Install-Package Bridge.QUnit
+
+    // https://developer.mozilla.org/en-US/docs/Web/WebGL
+    PM> Install-Package Bridge.WebGL
+
+Many more Frameworks coming soon. Need something now, make your voice 
+heard in the Bridge.NET Community Forums (http://forums.bridge.net)
 
 
 --------------------------------------------------------------------------

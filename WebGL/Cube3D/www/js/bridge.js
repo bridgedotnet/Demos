@@ -1,7 +1,7 @@
 /*
- * @version   : 1.3.0 - Bridge.NET
+ * @version   : 1.4.0 - Bridge.NET
  * @author    : Object.NET, Inc. http://www.bridge.net/
- * @date      : 2015-04-27
+ * @date      : 2015-05-11
  * @copyright : Copyright (c) 2008-2015, Object.NET, Inc. (http://www.object.net/). All rights reserved.
  * @license   : See license.txt and https://github.com/bridgedotnet/Bridge.NET/blob/master/LICENSE.
  */
@@ -136,8 +136,11 @@
             }
         },
 
-        getHashCode: function (value) {
+        getHashCode: function (value, safe) {
             if (Bridge.isEmpty(value, true)) {
+                if (safe) {
+                    return 0;
+                }
                 throw new Bridge.InvalidOperationException('HashCode cannot be calculated for empty value');
             }
 
@@ -169,6 +172,47 @@
 
                 return hash;
             }
+
+            if (typeof value == "object") {
+                var result = 0,
+                    removeCache = false,
+                    len,
+                    i,
+                    item,
+                    cacheItem,
+                    temp;
+
+                if (!Bridge.$$hashCodeCache) {
+                    Bridge.$$hashCodeCache = [];
+                    Bridge.$$hashCodeCalculated = [];
+                    removeCache = true;
+                }
+
+                for (i = 0, len = Bridge.$$hashCodeCache.length; i < len; i += 1) {
+                    item = Bridge.$$hashCodeCache[i];
+                    if (item.obj === value) {
+                        return item.hash;
+                    }
+                }
+
+                cacheItem = { obj: value, hash: 0 };
+                Bridge.$$hashCodeCache.push(cacheItem);
+
+                for (var property in value) {
+                    if (value.hasOwnProperty(property)) {
+                        temp = Bridge.isEmpty(value[property], true) ? 0 : Bridge.getHashCode(value[property]);
+                        result = 29 * result + temp;
+                    }
+                }
+
+                cacheItem.hash = result;
+
+                if (removeCache) {
+                    delete Bridge.$$hashCodeCache;
+                }
+
+                return result;
+            }
         
             return value.$$hashCode || (value.$$hashCode = (Math.random() * 0x100000000) | 0);
         },
@@ -190,8 +234,22 @@
             return null;
         },
 
-        getTypeName: function (type) {
-            return type.$$name || (type.toString().match(/^\s*function\s*([^\s(]+)/) || [])[1] || "Object";
+        getTypeName: function (obj) {
+            var str;
+
+            if (obj.$$name) {
+                return obj.$$name;
+            }            
+
+            if ((obj).constructor == Function) {
+                str = (obj).toString()
+            }
+            else {
+                str = (obj).constructor.toString();
+            }
+
+            var results = (/function (.{1,})\(/).exec(str);
+            return (results && results.length > 1) ? results[1] : "Object";
         },
 
         is: function (obj, type, ignoreFn) {
@@ -241,10 +299,14 @@
         },
 	
         cast: function (obj, type) {
+            if (obj === null) {
+                return null;
+            }
+
 	        var result = Bridge.as(obj, type);
 
 	        if (result == null) {
-	            throw new Bridge.InvalidCastException('Unable to cast type ' + Bridge.getTypeName(obj.constructor) + ' to type ' + Bridge.getTypeName(type));
+	            throw new Bridge.InvalidCastException('Unable to cast type ' + Bridge.getTypeName(obj) + ' to type ' + Bridge.getTypeName(type));
 	        }
 
 	        return result;
@@ -425,12 +487,81 @@
             else if (Bridge.isNull(a) && Bridge.isNull(b)) {
                 return true;
             }
+
+            if (typeof a == "object" && typeof b == "object") {
+                return (Bridge.getHashCode(a) === Bridge.getHashCode(b)) && Bridge.objectEquals(a, b);
+            }
         
             return a === b;
         },
 
-        compare: function (a, b) {
+        objectEquals: function (a, b) {
+            Bridge.$$leftChain = [];
+            Bridge.$$rightChain = [];
+
+            var result = Bridge.deepEquals(a, b);
+
+            delete Bridge.$$leftChain;
+            delete Bridge.$$rightChain;
+
+            return result;
+        },
+
+        deepEquals: function (a, b) {
+            if (typeof a == "object" && typeof b == "object") {
+                if (Bridge.$$leftChain.indexOf(a) > -1 || Bridge.$$rightChain.indexOf(b) > -1) {
+                    return false;
+                }
+
+                var p;
+
+                for (p in b) {
+                    if (b.hasOwnProperty(p) !== a.hasOwnProperty(p)) {
+                        return false;
+                    }
+                    else if (typeof b[p] !== typeof a[p]) {
+                        return false;
+                    }
+                }
+
+                for (p in a) {
+                    if (b.hasOwnProperty(p) !== a.hasOwnProperty(p)) {
+                        return false;
+                    }
+                    else if (typeof a[p] !== typeof b[p]) {
+                        return false;
+                    }
+
+                    if (typeof (a[p]) == "object") {
+                        Bridge.$$leftChain.push(a);
+                        Bridge.$$rightChain.push(b);
+
+                        if (!Bridge.deepEquals(a[p], b[p])) {
+                            return false;
+                        }
+
+                        Bridge.$$leftChain.pop();
+                        Bridge.$$rightChain.pop();
+                    }
+                    else {
+                        if(!Bridge.equals(a[p], b[p])) {
+                            return false;
+                        }
+                    }                    
+                }
+
+                return true;
+            }
+            else {
+                return Bridge.equals(a, b);
+            }
+        },
+
+        compare: function (a, b, safe) {
             if (!Bridge.isDefined(a, true)) {
+                if (safe) {
+                    return 0;
+                }
                 throw new Bridge.NullReferenceException();
             }
             else if (Bridge.isNumber(a) || Bridge.isString(a) || Bridge.isBoolean(a)) {
@@ -438,6 +569,10 @@
             }
             else if (Bridge.isDate(a)) {
                 return Bridge.compare(a.valueOf(), b.valueOf());
+            }
+
+            if (safe && !a.compareTo) {
+                return 0;
             }
 
             return a.compareTo(b);
@@ -491,7 +626,7 @@
 
             return s !== s.toLowerCase() && s === s.toUpperCase();
         },
-
+        
         fn: {
             call: function (obj, fnName){
                 var args = Array.prototype.slice.call(arguments, 2);
@@ -992,6 +1127,14 @@
         },
 
         contains: function (str, value) {
+            if (value == null) {
+                throw new Bridge.ArgumentNullException();
+            }
+
+            if (str == null) {
+                return false;
+            }
+
             return str.indexOf(value) > -1;
         },
         
@@ -1083,12 +1226,30 @@
             }
 
             if (arguments.length == 3) {
-                if (!arguments[2]) {
+                if (arguments[2]) {
                     return strA.toLocaleUpperCase().localeCompare(strB.toLocaleUpperCase());
                 }
             }
 
             return strA.localeCompare(strB);
+        },
+
+        toCharArray: function (str, startIndex, length) {
+            if (startIndex < 0 || startIndex > str.length || startIndex > str.length - length) {
+                throw new Bridge.ArgumentOutOfRangeException("startIndex", "startIndex cannot be less than zero and must refer to a location within the string");
+            }
+
+            if (length < 0) {
+                throw new Bridge.ArgumentOutOfRangeException("length", "must be non-negative");
+            }
+
+            var arr = [];
+
+            for (var i = startIndex; i < startIndex + length; i++) {
+                arr.push(str.charCodeAt(i));
+            }
+
+            return arr;
         }
     };
 
@@ -1197,7 +1358,7 @@
             prop = prop || {};
             var extend = prop.$inherits || prop.inherits,
                 statics = prop.$statics || prop.statics,
-                base = extend ? extend[0].prototype : this.prototype,
+                base,
                 cacheName = prop.$cacheName,
                 prototype,
                 nameParts,
@@ -1209,10 +1370,7 @@
                 name,                
                 fn;
 
-            if (Bridge.isFunction(extend)) {
-                extend = null;
-            }
-            else if (prop.$inherits) {
+            if (prop.$inherits) {
                 delete prop.$inherits;
             }
             else {
@@ -1252,6 +1410,13 @@
                     this.$$initCtor.apply(this, arguments);
                 }
             }
+
+            scope = Bridge.Class.set(scope, className, Class);
+            if (extend && Bridge.isFunction(extend)) {
+                extend = extend();
+            }
+
+            base = extend ? extend[0].prototype : this.prototype;
 
             // Instantiate a base class (but only create the instance,
             // don't run the init constructor)
@@ -1336,9 +1501,7 @@
                 for (name in statics) {
                     Class[name] = statics[name];
                 }
-            }
-
-            scope = Bridge.Class.set(scope, className, Class);
+            }            
 
             if (!extend) {
                 extend = [Object];
@@ -6934,6 +7097,14 @@ Bridge.define('Bridge.PropertyChangedEventArgs', {
         return sum / count;
     };
 
+    Enumerable.prototype.nullableAverage = function (selector) {
+        if (this.any(Bridge.isNull)) {
+            return null;
+        }
+
+        return this.average(selector);
+    };
+
     // Overload:function()
     // Overload:function(predicate)
     Enumerable.prototype.count = function (predicate) {
@@ -6950,24 +7121,48 @@ Bridge.define('Bridge.PropertyChangedEventArgs', {
     // Overload:function(selector)
     Enumerable.prototype.max = function (selector) {
         if (selector == null) selector = Functions.Identity;
-        return this.select(selector).aggregate(function (a, b) { return (a > b) ? a : b; });
+        return this.select(selector).aggregate(function (a, b) {
+            return (Bridge.compare(a, b, true) === 1) ? a : b;
+        });
+    };
+
+    Enumerable.prototype.nullableMax = function (selector) {
+        if (this.any(Bridge.isNull)) {
+            return null;
+        }
+
+        return this.max(selector);
     };
 
     // Overload:function()
     // Overload:function(selector)
     Enumerable.prototype.min = function (selector) {
         if (selector == null) selector = Functions.Identity;
-        return this.select(selector).aggregate(function (a, b) { return (a < b) ? a : b; });
+        return this.select(selector).aggregate(function (a, b) {
+            return (Bridge.compare(a, b, true) === -1) ? a : b;
+        });
+    };
+
+    Enumerable.prototype.nullableMin = function (selector) {
+        if (this.any(Bridge.isNull)) {
+            return null;
+        }
+
+        return this.min(selector);
     };
 
     Enumerable.prototype.maxBy = function (keySelector) {
         keySelector = Utils.createLambda(keySelector);
-        return this.aggregate(function (a, b) { return (keySelector(a) > keySelector(b)) ? a : b; });
+        return this.aggregate(function (a, b) {
+            return (Bridge.compare(keySelector(a), keySelector(b), true) === 1) ? a : b;
+        });
     };
 
     Enumerable.prototype.minBy = function (keySelector) {
         keySelector = Utils.createLambda(keySelector);
-        return this.aggregate(function (a, b) { return (keySelector(a) < keySelector(b)) ? a : b; });
+        return this.aggregate(function (a, b) {
+            return (Bridge.compare(keySelector(a), keySelector(b), true) === -1) ? a : b;
+        });
     };
 
     // Overload:function()
@@ -6975,6 +7170,14 @@ Bridge.define('Bridge.PropertyChangedEventArgs', {
     Enumerable.prototype.sum = function (selector) {
         if (selector == null) selector = Functions.Identity;
         return this.select(selector).aggregate(0, function (a, b) { return a + b; });
+    };
+
+    Enumerable.prototype.nullableSum = function (selector) {
+        if (this.any(Bridge.isNull)) {
+            return null;
+        }
+
+        return this.sum(selector);
     };
 
     
