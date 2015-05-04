@@ -11,8 +11,6 @@ namespace Cube3D
         public static void Main()
         {
             App.InitCube("canvas1");
-            App.InitCube("canvas2");
-            App.InitCube("canvas3");
         }
 
         public static void InitCube(string canvasId)

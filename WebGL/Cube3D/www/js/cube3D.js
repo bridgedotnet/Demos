@@ -9,8 +9,6 @@ Bridge.define('Cube3D.App', {
         },
         main: function () {
             Cube3D.App.initCube("canvas1");
-            Cube3D.App.initCube("canvas2");
-            Cube3D.App.initCube("canvas3");
         },
         initCube: function (canvasId) {
             var cube = new Cube3D.Cube();
