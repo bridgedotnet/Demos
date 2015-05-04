@@ -1,4 +1,5 @@
 ﻿using Bridge;
+using Bridge.GLMatrix;
 using Bridge.Html5;
 using Bridge.WebGL;
 using Html5.TypedArrays;
@@ -26,9 +27,9 @@ namespace Cube3D
         public double directionalG { get; set; }
         public double directionalB { get; set; }
 
-        public double[] mvMatrix = Script.Call<double[]>("mat4.create");
+        public double[] mvMatrix = Mat4.Create();
         public double[][] mvMatrixStack = new double[][] { };
-        public double[] pMatrix = Script.Call<double[]>("mat4.create");
+        public double[] pMatrix = Mat4.Create();
 
         public int vertexPositionAttribute;
         public int vertexNormalAttribute;
@@ -182,10 +183,10 @@ namespace Cube3D
             gl.UniformMatrix4fv(this.pMatrixUniform, false, pMatrix);
             gl.UniformMatrix4fv(this.mvMatrixUniform, false, mvMatrix);
 
-            var normalMatrix = Script.Call<double[]>("mat3.create");
+            var normalMatrix = Mat3.Create();
 
-            Script.Call<object>("mat4.toInverseMat3", mvMatrix, normalMatrix);
-            Script.Call<object>("mat3.transpose", normalMatrix);
+            Mat4.ToInverseMat3(mvMatrix, normalMatrix);
+            Mat3.Transpose(normalMatrix);
 
             gl.UniformMatrix3fv(this.nMatrixUniform, false, normalMatrix);
         }
@@ -391,11 +392,11 @@ namespace Cube3D
             gl.Viewport(0, 0, canvas.Width, canvas.Height);
             gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-            Script.Call("mat4.perspective", 45, (double)canvas.Width / canvas.Height, 0.1, 100.0, pMatrix);
-            Script.Call("mat4.identity", mvMatrix);
-            Script.Call("mat4.translate", mvMatrix, new double[] { 0.0, 0.0, z });
-            Script.Call("mat4.rotate", mvMatrix, this.DegToRad(xRotation), new int[] { 1, 0, 0 });
-            Script.Call("mat4.rotate", mvMatrix, this.DegToRad(yRotation), new int[] { 0, 1, 0 });
+            Mat4.Perspective(45, (double)canvas.Width / canvas.Height, 0.1, 100, pMatrix);
+            Mat4.Identity(mvMatrix);
+            Mat4.Translate(mvMatrix, new double[] { 0.0, 0.0, z });
+            Mat4.Rotate(mvMatrix, this.DegToRad(xRotation), new double[] { 1, 0, 0 });
+            Mat4.Rotate(mvMatrix, this.DegToRad(yRotation), new double[] { 0, 1, 0 });
 
             gl.BindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
             gl.VertexAttribPointer(this.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
@@ -433,10 +434,10 @@ namespace Cube3D
                 gl.Uniform3f(this.ambientColorUniform, this.ambientR, this.ambientG, this.ambientB);
 
                 var lightingDirection = new double[] { this.lightDirectionX, this.lightDirectionY, this.lightDirectionZ };
-                var adjustedLD = Script.Call<double[][][]>("vec3.create");
+                var adjustedLD = Vec3.Create();
 
-                Script.Call("vec3.normalize", lightingDirection, adjustedLD);
-                Script.Call("vec3.scale", adjustedLD, -1);
+                Vec3.Normalize(lightingDirection, adjustedLD);
+                Vec3.Scale(adjustedLD, -1);
 
                 gl.Uniform3fv(this.lightingDirectionUniform, adjustedLD);
                 gl.Uniform3f(this.directionalColorUniform, this.directionalR, this.directionalG, this.directionalB);

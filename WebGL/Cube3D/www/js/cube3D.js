@@ -311,7 +311,7 @@ Bridge.define('Cube3D.Cube', {
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-        mat4.perspective(45, Bridge.cast(this.canvas.width, Number) / this.canvas.height, 0.1, 100.0, this.pMatrix);
+        mat4.perspective(45, Bridge.cast(this.canvas.width, Number) / this.canvas.height, 0.1, 100, this.pMatrix);
         mat4.identity(this.mvMatrix);
         mat4.translate(this.mvMatrix, [0.0, 0.0, this.z]);
         mat4.rotate(this.mvMatrix, this.degToRad(this.xRotation), [1, 0, 0]);
