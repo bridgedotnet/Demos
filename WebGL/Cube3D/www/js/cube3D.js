@@ -119,7 +119,7 @@ Bridge.define('Cube3D.Cube', {
     cubeVertexTextureCoordBuffer: null,
     cubeVertexIndexBuffer: null,
     xRotation: 0,
-    xSpeed: 3,
+    xSpeed: 25,
     yRotation: 0,
     lastTime: 0,
     config: {
@@ -127,7 +127,7 @@ Bridge.define('Cube3D.Cube', {
             this.mvMatrix = mat4.create();
             this.mvMatrixStack = [];
             this.pMatrix = mat4.create();
-            this.ySpeed = -3;
+            this.ySpeed = -25;
             this.z = -5.0;
             this.currentlyPressedKeys = [];
         }

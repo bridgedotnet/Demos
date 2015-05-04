@@ -51,10 +51,10 @@ namespace Cube3D
         public WebGLBuffer cubeVertexIndexBuffer;
 
         public double xRotation = 0;
-        public int xSpeed = 3;
+        public int xSpeed = 25;
 
         public double yRotation = 0;
-        public int ySpeed = -3;
+        public int ySpeed = -25;
 
         public double z = -5.0;
         public bool[] currentlyPressedKeys = new bool[] { };
