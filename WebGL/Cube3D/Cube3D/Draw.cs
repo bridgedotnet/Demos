@@ -96,6 +96,8 @@ namespace Cube3D
             cube.directionalR = Global.ParseFloat(Document.GetElementById("directionalR").As<InputElement>().Value);
             cube.directionalG = Global.ParseFloat(Document.GetElementById("directionalG").As<InputElement>().Value);
             cube.directionalB = Global.ParseFloat(Document.GetElementById("directionalB").As<InputElement>().Value);
+
+            cube.textureImageSrc = "crate.png";
         }
     }
 }

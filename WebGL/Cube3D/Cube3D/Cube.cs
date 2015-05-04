@@ -2,7 +2,6 @@
 using Bridge.GLMatrix;
 using Bridge.Html5;
 using Bridge.WebGL;
-using Html5.TypedArrays;
 using System;
 
 namespace Cube3D
@@ -14,18 +13,19 @@ namespace Cube3D
         public WebGLProgram program;
         public WebGLTexture texture;
 
-        public bool useBlending { get; set; }
-        public double alpha { get; set; }
-        public bool useLighting { get; set; }
-        public double ambientR { get; set; }
-        public double ambientG { get; set; }
-        public double ambientB { get; set; }
-        public double lightDirectionX { get; set; }
-        public double lightDirectionY { get; set; }
-        public double lightDirectionZ { get; set; }
-        public double directionalR { get; set; }
-        public double directionalG { get; set; }
-        public double directionalB { get; set; }
+        public bool useBlending;
+        public double alpha;
+        public bool useLighting;
+        public double ambientR;
+        public double ambientG;
+        public double ambientB;
+        public double lightDirectionX;
+        public double lightDirectionY;
+        public double lightDirectionZ;
+        public double directionalR;
+        public double directionalG;
+        public double directionalB;
+        public string textureImageSrc;
 
         public double[] mvMatrix = Mat4.Create();
         public double[][] mvMatrixStack = new double[][] { };
@@ -175,7 +175,7 @@ namespace Cube3D
                 this.HandleLoadedTexture(textureImageElement);
             };
 
-            textureImageElement.Src = "crate.gif";
+            textureImageElement.Src = this.textureImageSrc;
         }
 
         public void SetMatrixUniforms()
@@ -199,13 +199,11 @@ namespace Cube3D
         public void HandleKeyDown(Event e)
         {
             this.currentlyPressedKeys[e.As<KeyboardEvent>().KeyCode] = true;
-            e.PreventDefault();
         }
 
         public void HandleKeyUp(Event e)
         {
             this.currentlyPressedKeys[e.As<KeyboardEvent>().KeyCode] = false;
-            e.PreventDefault();
         }
 
         public void HandleKeys()

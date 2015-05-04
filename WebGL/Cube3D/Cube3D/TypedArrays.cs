@@ -1,7 +1,6 @@
 ﻿using Bridge;
-using Bridge.Html5;
 
-namespace Html5.TypedArrays
+namespace Bridge.Html5
 {
     // No support in Bridge.NET yet - https://github.com/bridgedotnet/Bridge/issues/182
     [Ignore]
