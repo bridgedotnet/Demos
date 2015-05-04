@@ -1,0 +1,68 @@
+﻿body {
+    background: #f5f5f5;
+}
+
+*:focus {
+    outline: none;
+}
+
+:-moz-placeholder {
+    color: #888;
+}
+ 
+::-webkit-input-placeholder {
+    color: #888;
+}
+
+input:focus:-moz-placeholder {
+    color: #ccc;
+}
+
+input#number:focus::-webkit-input-placeholder {
+    color: #ccc;
+}
+
+
+input#number {
+    height:20px; 
+    width:220px; 
+    padding:5px 8px;
+    border: 1px solid #808080;
+    border-radius: 4px;
+}
+
+input#number:focus {
+    border: 1px solid #0094ff;
+}
+
+button {
+    padding: 6px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button#save {
+    background: #5cb85c;
+    color: #fff;
+    border: 1px solid #4cae4c;
+}
+
+button#save:hover {
+    background: #449d44;
+    border-color: #398439;
+}
+
+button#restore {
+    background: #d9534f;
+    color: #fff;
+    border: 1px solid #d43f3a;
+}
+
+button#restore:hover {
+    background: #c9302c;
+    border-color: #ac2925;
+}
+
+input[type="radio"] {
+    cursor: pointer;
+}
