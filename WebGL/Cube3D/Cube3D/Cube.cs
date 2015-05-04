@@ -465,13 +465,11 @@ namespace Cube3D
 
         public void Tick()
         {
-            // Global.RequestAnimationFrame(Tick);
-            Script.Write("requestAnimFrame(Bridge.fn.bind(this, this.tick));");
-
             App.InitSettings(this);
             this.HandleKeys();
             this.DrawScene();
             this.Animate();
+            Global.SetTimeout(this.Tick, 20);
         }
     }
 }

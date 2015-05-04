@@ -64,7 +64,6 @@
     <Content Include="js\bridge.min.js" />
     <Content Include="js\cube3D.js" />
     <Content Include="js\cube3D.min.js" />
-    <Content Include="js\webgl-utils.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

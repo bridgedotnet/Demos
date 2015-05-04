@@ -375,12 +375,10 @@ Bridge.define('Cube3D.Cube', {
         this.lastTime = timeNow;
     },
     tick: function () {
-        // Global.RequestAnimationFrame(Tick);
-        requestAnimFrame(Bridge.fn.bind(this, this.tick));
-
         Cube3D.App.initSettings(this);
         this.handleKeys();
         this.drawScene();
         this.animate();
+        Bridge.global.setTimeout(Bridge.fn.bind(this, this.tick), 20);
     }
 });
