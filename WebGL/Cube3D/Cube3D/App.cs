@@ -79,6 +79,13 @@ namespace Cube3D
 
         public static void InitSettings(Cube cube)
         {
+            var useSettings = Document.GetElementById("settings").As<InputElement>();
+
+            if (useSettings == null || !useSettings.Checked)
+            {
+                return;
+            }
+
             cube.useBlending = Document.GetElementById("blending").As<InputElement>().Checked;
             cube.alpha = Global.ParseFloat(Document.GetElementById("alpha").As<InputElement>().Value);
 

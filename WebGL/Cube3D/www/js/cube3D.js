@@ -62,6 +62,12 @@ Bridge.define('Cube3D.App', {
             } ), canvas);
         },
         initSettings: function (cube) {
+            var useSettings = document.getElementById("settings");
+
+            if (useSettings === null || !useSettings.checked) {
+                return;
+            }
+
             cube.useBlending = document.getElementById("blending").checked;
             cube.alpha = parseFloat(document.getElementById("alpha").value);
 
@@ -89,19 +95,18 @@ Bridge.define('Cube3D.Cube', {
     gl: null,
     program: null,
     texture: null,
-    useBlending: false,
-    alpha: 0,
-    useLighting: false,
-    ambientR: 0,
-    ambientG: 0,
-    ambientB: 0,
+    useBlending: true,
+    alpha: 1,
+    useLighting: true,
+    ambientR: 0.4,
+    ambientG: 0.4,
+    ambientB: 0.4,
     lightDirectionX: 0,
     lightDirectionY: 0,
-    lightDirectionZ: 0,
-    directionalR: 0,
-    directionalG: 0,
-    directionalB: 0,
-    textureImageSrc: null,
+    directionalR: 0.25,
+    directionalG: 0.25,
+    directionalB: 0.25,
+    textureImageSrc: "crate.gif",
     vertexPositionAttribute: 0,
     vertexNormalAttribute: 0,
     textureCoordAttribute: 0,
@@ -124,6 +129,7 @@ Bridge.define('Cube3D.Cube', {
     lastTime: 0,
     config: {
         init: function () {
+            this.lightDirectionZ = -1;
             this.mvMatrix = mat4.create();
             this.mvMatrixStack = [];
             this.pMatrix = mat4.create();

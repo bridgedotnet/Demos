@@ -13,19 +13,19 @@ namespace Cube3D
         public WebGLProgram program;
         public WebGLTexture texture;
 
-        public bool useBlending;
-        public double alpha;
-        public bool useLighting;
-        public double ambientR;
-        public double ambientG;
-        public double ambientB;
-        public double lightDirectionX;
-        public double lightDirectionY;
-        public double lightDirectionZ;
-        public double directionalR;
-        public double directionalG;
-        public double directionalB;
-        public string textureImageSrc;
+        public bool useBlending = true;
+        public double alpha = 1;
+        public bool useLighting = true;
+        public double ambientR = 0.4;
+        public double ambientG = 0.4;
+        public double ambientB = 0.4;
+        public double lightDirectionX = 0;
+        public double lightDirectionY = 0;
+        public double lightDirectionZ = -1;
+        public double directionalR = 0.25;
+        public double directionalG = 0.25;
+        public double directionalB = 0.25;
+        public string textureImageSrc = "crate.gif";
 
         public double[] mvMatrix = Mat4.Create();
         public double[][] mvMatrixStack = new double[][] { };
