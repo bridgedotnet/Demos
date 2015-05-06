@@ -10,7 +10,7 @@
     <RootNamespace>Cube3D</RootNamespace>
     <AssemblyName>Cube3D</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <NuGetPackageImportStamp>dfb0d83c</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>c959c7d8</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,13 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Bridge\bridge.json" />
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_Readme\Bridge.NET\LICENSE.txt" />
     <Content Include="App_Readme\Bridge.NET\README.txt" />
     <Content Include="App_Readme\Bridge.NET\README.WebGL.txt" />
+    <Content Include="Bridge\bridge.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cube.cs" />
@@ -44,6 +41,9 @@
     <Compile Include="TypedArrays.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Bridge, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -54,7 +54,7 @@
       <HintPath>..\packages\Bridge.1.4.0\lib\net45\Bridge.Html5.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bridge.WebGL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Bridge.WebGL, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bridge.WebGL.1.1.0\lib\net45\Bridge.WebGL.dll</HintPath>
       <Private>True</Private>
     </Reference>
