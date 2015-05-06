@@ -57,7 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="crate.png" />
+    <Content Include="crate.gif" />
     <Content Include="js\glMatrix-0.9.5.min.js" />
     <Content Include="index.html" />
     <Content Include="js\bridge.js" />

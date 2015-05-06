@@ -51,10 +51,10 @@ namespace Cube3D
         public WebGLBuffer cubeVertexIndexBuffer;
 
         public double xRotation = 0;
-        public int xSpeed = 25;
+        public int xSpeed = 15;
 
         public double yRotation = 0;
-        public int ySpeed = -25;
+        public int ySpeed = -15;
 
         public double z = -5.0;
         public bool[] currentlyPressedKeys = new bool[] { };
@@ -208,32 +208,32 @@ namespace Cube3D
 
         public void HandleKeys()
         {
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_PAGE_UP])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_Q])
             {
                 z -= 0.05;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_PAGE_DOWN])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_E])
             {
                 z += 0.05;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_LEFT])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_A])
             {
                 ySpeed -= 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_RIGHT])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_D])
             {
                 ySpeed += 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_UP])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_S])
             {
                 xSpeed -= 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_DOWN])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_W])
             {
                 xSpeed += 1;
             }
@@ -415,6 +415,7 @@ namespace Cube3D
             {
                 gl.BlendFunc(gl.SRC_ALPHA, gl.ONE);
                 gl.Enable(gl.BLEND);
+                gl.Disable(gl.DEPTH_TEST);
                 gl.Uniform1f(this.alphaUniform, this.alpha);
             }
             else

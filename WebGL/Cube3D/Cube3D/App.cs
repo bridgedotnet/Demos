@@ -20,31 +20,27 @@ namespace Cube3D
             App.InitSettings(cube);
 
             cube.canvas = App.GetCanvasEl(canvasId);
-            cube.gl = App.InitGL(cube.canvas);
-            cube.InitShaders();
-            cube.InitBuffers();
-            cube.InitTexture();
-            cube.Tick();
+            cube.gl = App.Create3DContext(cube.canvas);
 
-            Document.AddEventListener(EventType.KeyDown, cube.HandleKeyDown);
-            Document.AddEventListener(EventType.KeyUp, cube.HandleKeyUp);
+            if (cube.gl != null)
+            {
+                cube.InitShaders();
+                cube.InitBuffers();
+                cube.InitTexture();
+                cube.Tick();
+
+                Document.AddEventListener(EventType.KeyDown, cube.HandleKeyDown);
+                Document.AddEventListener(EventType.KeyUp, cube.HandleKeyUp);
+            }
+            else
+            {
+                App.ShowError(cube.canvas, "<b>Either the browser doesn't support WebGL or it is disabled.<br>Please follow <a href=\"http://get.webgl.com\">Get WebGL</a>.</b>");
+            }
         }
 
         public static CanvasElement GetCanvasEl(string id)
         {
             return Document.GetElementById(id).As<CanvasElement>();
-        }
-
-        public static WebGLRenderingContext InitGL(CanvasElement canvas)
-        {
-            var gl = App.Create3DContext(canvas);
-
-            if (gl == null)
-            {
-                Global.Alert("Could not initialise WebGL, sorry :-(");
-            }
-
-            return gl;
         }
 
         public static WebGLRenderingContext Create3DContext(CanvasElement canvas)
@@ -76,6 +72,11 @@ namespace Cube3D
             return context;
         }
 
+        public static void ShowError(CanvasElement canvas, string message)
+        {
+            Document.Body.ReplaceChild(new ParagraphElement { InnerHTML = message }, canvas);
+        }
+
         public static void InitSettings(Cube cube)
         {
             cube.useBlending = Document.GetElementById("blending").As<InputElement>().Checked;
@@ -95,7 +96,7 @@ namespace Cube3D
             cube.directionalG = Global.ParseFloat(Document.GetElementById("directionalG").As<InputElement>().Value);
             cube.directionalB = Global.ParseFloat(Document.GetElementById("directionalB").As<InputElement>().Value);
 
-            cube.textureImageSrc = "crate.png";
+            cube.textureImageSrc = "crate.gif";
         }
     }
 }

@@ -16,26 +16,23 @@ Bridge.define('Cube3D.App', {
             Cube3D.App.initSettings(cube);
 
             cube.canvas = Cube3D.App.getCanvasEl(canvasId);
-            cube.gl = Cube3D.App.initGL(cube.canvas);
-            cube.initShaders();
-            cube.initBuffers();
-            cube.initTexture();
-            cube.tick();
+            cube.gl = Cube3D.App.create3DContext(cube.canvas);
 
-            document.addEventListener("keydown", Bridge.fn.bind(cube, cube.handleKeyDown));
-            document.addEventListener("keyup", Bridge.fn.bind(cube, cube.handleKeyUp));
+            if (cube.gl !== null) {
+                cube.initShaders();
+                cube.initBuffers();
+                cube.initTexture();
+                cube.tick();
+
+                document.addEventListener("keydown", Bridge.fn.bind(cube, cube.handleKeyDown));
+                document.addEventListener("keyup", Bridge.fn.bind(cube, cube.handleKeyUp));
+            }
+            else  {
+                Cube3D.App.showError(cube.canvas, "<b>Either the browser doesn't support WebGL or it is disabled.<br>Please follow <a href=\"http://get.webgl.com\">Get WebGL</a>.</b>");
+            }
         },
         getCanvasEl: function (id) {
             return document.getElementById(id);
-        },
-        initGL: function (canvas) {
-            var gl = Cube3D.App.create3DContext(canvas);
-
-            if (gl === null) {
-                Bridge.global.alert("Could not initialise WebGL, sorry :-(");
-            }
-
-            return gl;
         },
         create3DContext: function (canvas) {
             var $t;
@@ -59,6 +56,11 @@ Bridge.define('Cube3D.App', {
 
             return context;
         }        ,
+        showError: function (canvas, message) {
+            document.body.replaceChild(Bridge.merge(document.createElement('p'), {
+                innerHTML: message
+            } ), canvas);
+        },
         initSettings: function (cube) {
             cube.useBlending = document.getElementById("blending").checked;
             cube.alpha = parseFloat(document.getElementById("alpha").value);
@@ -77,7 +79,7 @@ Bridge.define('Cube3D.App', {
             cube.directionalG = parseFloat(document.getElementById("directionalG").value);
             cube.directionalB = parseFloat(document.getElementById("directionalB").value);
 
-            cube.textureImageSrc = "crate.png";
+            cube.textureImageSrc = "crate.gif";
         }
     }
 });
@@ -117,7 +119,7 @@ Bridge.define('Cube3D.Cube', {
     cubeVertexTextureCoordBuffer: null,
     cubeVertexIndexBuffer: null,
     xRotation: 0,
-    xSpeed: 25,
+    xSpeed: 15,
     yRotation: 0,
     lastTime: 0,
     config: {
@@ -125,7 +127,7 @@ Bridge.define('Cube3D.Cube', {
             this.mvMatrix = mat4.create();
             this.mvMatrixStack = [];
             this.pMatrix = mat4.create();
-            this.ySpeed = -25;
+            this.ySpeed = -15;
             this.z = -5.0;
             this.currentlyPressedKeys = [];
         }
@@ -251,27 +253,27 @@ Bridge.define('Cube3D.Cube', {
         this.currentlyPressedKeys[e.keyCode] = false;
     },
     handleKeys: function () {
-        if (this.currentlyPressedKeys[33]) {
+        if (this.currentlyPressedKeys[81]) {
             this.z -= 0.05;
         }
 
-        if (this.currentlyPressedKeys[34]) {
+        if (this.currentlyPressedKeys[69]) {
             this.z += 0.05;
         }
 
-        if (this.currentlyPressedKeys[37]) {
+        if (this.currentlyPressedKeys[65]) {
             this.ySpeed -= 1;
         }
 
-        if (this.currentlyPressedKeys[39]) {
+        if (this.currentlyPressedKeys[68]) {
             this.ySpeed += 1;
         }
 
-        if (this.currentlyPressedKeys[38]) {
+        if (this.currentlyPressedKeys[83]) {
             this.xSpeed -= 1;
         }
 
-        if (this.currentlyPressedKeys[40]) {
+        if (this.currentlyPressedKeys[87]) {
             this.xSpeed += 1;
         }
     },
@@ -332,6 +334,7 @@ Bridge.define('Cube3D.Cube', {
         if (this.useBlending) {
             this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
             this.gl.enable(this.gl.BLEND);
+            this.gl.disable(this.gl.DEPTH_TEST);
             this.gl.uniform1f(this.alphaUniform, this.alpha);
         }
         else  {
