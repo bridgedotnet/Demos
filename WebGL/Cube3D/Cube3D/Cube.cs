@@ -228,12 +228,12 @@ namespace Cube3D
                 ySpeed += 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_S])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_W])
             {
                 xSpeed -= 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_W])
+            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_S])
             {
                 xSpeed += 1;
             }

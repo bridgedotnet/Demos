@@ -269,11 +269,11 @@ Bridge.define('Cube3D.Cube', {
             this.ySpeed += 1;
         }
 
-        if (this.currentlyPressedKeys[83]) {
+        if (this.currentlyPressedKeys[87]) {
             this.xSpeed -= 1;
         }
 
-        if (this.currentlyPressedKeys[87]) {
+        if (this.currentlyPressedKeys[83]) {
             this.xSpeed += 1;
         }
     },
