@@ -57,7 +57,7 @@ Bridge.define('Cube3D.App', {
             return context;
         }        ,
         showError: function (canvas, message) {
-            document.body.replaceChild(Bridge.merge(document.createElement('p'), {
+            canvas.parentElement.replaceChild(Bridge.merge(document.createElement('p'), {
                 innerHTML: message
             } ), canvas);
         },

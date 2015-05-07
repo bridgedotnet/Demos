@@ -74,7 +74,7 @@ namespace Cube3D
 
         public static void ShowError(CanvasElement canvas, string message)
         {
-            Document.Body.ReplaceChild(new ParagraphElement { InnerHTML = message }, canvas);
+            canvas.ParentElement.ReplaceChild(new ParagraphElement { InnerHTML = message }, canvas);
         }
 
         public static void InitSettings(Cube cube)
