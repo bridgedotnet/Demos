@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveBridge", "LiveBridge\LiveBridge.csproj", "{F7C139EA-A745-4752-8910-91A476D38700}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveBridgeBuilder", "..\LiveBridgeBuilder\LiveBridgeBuilder\LiveBridgeBuilder.csproj", "{A8FC4352-1D8E-4D97-958D-8A702099402D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7C139EA-A745-4752-8910-91A476D38700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C139EA-A745-4752-8910-91A476D38700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C139EA-A745-4752-8910-91A476D38700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C139EA-A745-4752-8910-91A476D38700}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8FC4352-1D8E-4D97-958D-8A702099402D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8FC4352-1D8E-4D97-958D-8A702099402D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8FC4352-1D8E-4D97-958D-8A702099402D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8FC4352-1D8E-4D97-958D-8A702099402D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
