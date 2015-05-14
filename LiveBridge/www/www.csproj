@@ -65,6 +65,7 @@
     <Content Include="BridgeTranslator\ICSharpCode.NRefactory.dll" />
     <Content Include="BridgeTranslator\Mono.Cecil.dll" />
     <Content Include="BridgeTranslator\Object.Net.Utilities.dll" />
+    <Content Include="index.html" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Live Bridge.NET Compiler</title>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="resources/js/bridge/bridge.min.js"></script>
+</head>
+<body>
+    <div class="Header1">
+        <img src="resources/images/bridgedotnet-sh.png" />
+    </div>
+    <div class="Header2">
+        <h1>Live Compiler</h1>
+    </div>
+    <div class="Panel">
+        <div style="padding-left: 400px; position: absolute;">
+            <button id="btnTranslate" title="Translate">Translate</button>
+            <span id="progress" style="margin-left: 10px" />
+        </div>
+        <table class="CodeTable" cellspacing="0" cellpadding="0" border="0" style="table-layout: fixed;">
+            <tr>
+                <th style="padding: 5px">C#</th>
+                <th>JavaScript <a href="run.html" target="_blank">Run</a></th>
+            </tr>
+            <tr>
+                <td class="CodeCell Left">
+                    <div id="CsEditor" class="CodeEditor ace_editor ace-tm Active" style="height: 400px; width: 465px; position: relative;">
+                    </div>
+                </td>
+                <td class="CodeCell Right">
+                    <div id="JsEditor" class="CodeEditor ace_editor ace-tm Active" style="height: 400px; width: 465px; position: relative;">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="resources/js/ace/ace.js"></script>
+    <script src="resources/js/bridge/bridgeStub.js"></script>
+</body>
+</html>

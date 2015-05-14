@@ -40,12 +40,9 @@
     <Content Include="App_Readme\Bridge.NET\README.jQuery.txt" />
     <Content Include="App_Readme\Bridge.NET\README.txt" />
     <Content Include="App_Readme\Bridge.NET\README.WebGL.txt" />
-    <Content Include="Bridge\output\readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Bridge\bridge.json" />
-    <None Include="Bridge\build\clean.bat" />
-    <None Include="Bridge\build\deploy.bat" />
+    <None Include="bridge.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +67,7 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Bridge.1.4.0\build\Bridge.targets" Condition="Exists('..\packages\Bridge.1.4.0\build\Bridge.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
