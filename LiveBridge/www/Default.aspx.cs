@@ -29,12 +29,14 @@ namespace LiveBridge
 
             try
             {
+                string bridgeStubLocation = (this.isDebugMode) ? this.Server.MapPath("~") + @"..\BridgeStub\bin\Debug\BridgeStub.dll" : this.Server.MapPath(@".\BridgeTranslator\Stub\BridgeStub.dll");
+
                 LiveTranslator translator =
                     new LiveTranslator(
                         this.Server.MapPath(@".\UserCode\"),
                         csCode,
                         false,
-                        this.Server.MapPath("~") + @"..\BridgeStub\bin\" + (this.isDebugMode ? "Debug" : "Release") + @"\BridgeStub.dll",
+                        bridgeStubLocation,
                         HttpContext.Current);
 
                 string jsCode = translator.Translate();

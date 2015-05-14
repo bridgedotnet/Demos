@@ -162,6 +162,7 @@
     <Compile Include="LiveTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="BridgeTranslator\Stub\" />
     <Folder Include="resources\js\bridge\" />
     <Folder Include="UserCode\" />
   </ItemGroup>
@@ -193,6 +194,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>IF "$(ConfigurationName)" == "Release" (
+   xcopy  "$(ProjectDir)\..\BridgeStub\bin\Release\*.dll" "$(ProjectDir)\BridgeTranslator\Stub" /Y 
+)</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
