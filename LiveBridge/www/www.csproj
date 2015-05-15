@@ -140,6 +140,7 @@
     <Content Include="resources\js\ace\worker-xml.js" />
     <Content Include="resources\js\ace\worker-xquery.js" />
     <Content Include="resources\js\live.js" />
+    <Content Include="resources\live.css" />
     <Content Include="run.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

@@ -39,15 +39,19 @@ namespace LiveBridge
                         bridgeStubLocation,
                         HttpContext.Current);
 
-                string jsCode = translator.Translate();
+                string jsCode = translator.Translate();              
+                       
+                string hash = jsCode.GetHashCode().ToString();
 
                 json = JsonConvert.SerializeObject(new
                     {
                         Success = true,
-                        JsCode = jsCode
+                        JsCode = jsCode,
+                        Hash = hash
                     });
 
-                Session["script"] = jsCode;
+                // store emitted javascript to session with its hash as key.                   
+                Session[hash] = jsCode;
             }
             catch (Exception ex)
             {
@@ -56,8 +60,6 @@ namespace LiveBridge
                         Success = false,
                         ErrorMessage = ex.Message
                     });
-
-                Session["script"] = string.Empty;
             }
             finally
             {

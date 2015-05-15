@@ -19,14 +19,20 @@ function btnTranslate_click(e) {
     translate(cs, complete);
 }
 
+function btnRun_click(e) {
+    window.open("run.html?h=" + $("#hash").text());
+}
+
 function complete(result) {
     progress(null);
     if (!result.Success) {
         jsEditor.setValue(result.ErrorMessage);
+        $("#hash").text("");
         Log("Finished with Error(s)");
     }
     else {
         jsEditor.setValue(result.JsCode);
+        $("#hash").text(result.Hash);
         progress("Finished");
     }
 }

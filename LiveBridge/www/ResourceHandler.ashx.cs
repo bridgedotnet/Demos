@@ -17,16 +17,19 @@ namespace LiveBridge
 
             try
             {
-                string script = context.Session["script"].ToString();
-                //context.Session.Remove("script");
+                string hash = context.Request.UrlReferrer.Query.Split('=').LastOrDefault();
+                if (!string.IsNullOrEmpty(hash))
+                {
+                    string script = context.Session[hash].ToString();
 
-                if (!string.IsNullOrEmpty(script))
-                {
-                    context.Response.Write(script);
-                }
-                else
-                {
-                    context.Response.Write(string.Empty);
+                    if (!string.IsNullOrEmpty(script))
+                    {
+                        context.Response.Write(script);
+                    }
+                    else
+                    {
+                        context.Response.Write(string.Empty);
+                    }
                 }
             }
             catch (Exception ex)

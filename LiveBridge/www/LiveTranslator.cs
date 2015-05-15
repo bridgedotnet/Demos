@@ -17,6 +17,7 @@ namespace LiveBridge
             using Bridge.Linq;
             using Bridge.WebGL;
             using System.Linq;
+            using System.Text;
             using System.Collections.Generic;
 
             namespace BridgeStub
