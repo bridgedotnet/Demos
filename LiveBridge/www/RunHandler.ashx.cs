@@ -7,9 +7,10 @@ using System.Web.SessionState;
 namespace LiveBridge
 {
     /// <summary>
-    /// Summary description for ResourceHandler
+    /// Returns the generated JavaScript code from session with the JavaScript code hash as key.
+    /// The hash is passed as the value of query parameter "h". Returns empty string if no hash parameter or session is found.
     /// </summary>
-    public class ResourceHandler : IHttpHandler, IRequiresSessionState
+    public class RunHandler : IHttpHandler, IRequiresSessionState
     {
         public void ProcessRequest(HttpContext context)
         {
@@ -30,6 +31,10 @@ namespace LiveBridge
                     {
                         context.Response.Write(string.Empty);
                     }
+                }
+                else
+                {
+                    context.Response.Write(string.Empty);
                 }
             }
             catch (Exception ex)

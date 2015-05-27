@@ -20,7 +20,7 @@ namespace LiveBridge
             using System.Text;
             using System.Collections.Generic;
 
-            namespace BridgeStub
+            namespace LiveBridgeBuilder
             {";
 
         const string FOOTER = "}";

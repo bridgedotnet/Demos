@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "www", "www\www.csproj", "{F7C139EA-A745-4752-8910-91A476D38700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeStub", "BridgeStub\BridgeStub.csproj", "{3A3063BA-BC2E-4A91-B893-5713D1D16BC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveBridgeBuilder", "LiveBridgeBuilder\LiveBridgeBuilder.csproj", "{3A3063BA-BC2E-4A91-B893-5713D1D16BC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

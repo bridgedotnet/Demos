@@ -65,11 +65,11 @@
     <Content Include="BridgeTranslator\ICSharpCode.NRefactory.dll" />
     <Content Include="BridgeTranslator\Mono.Cecil.dll" />
     <Content Include="BridgeTranslator\Object.Net.Utilities.dll" />
+    <Content Include="BridgeTranslator\Builder\readme.txt" />
     <Content Include="index.html" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="resources\images\bridgedotnet-sh.png" />
     <Content Include="resources\js\ace\ace.js" />
@@ -139,7 +139,6 @@
     <Content Include="resources\js\ace\worker-php.js" />
     <Content Include="resources\js\ace\worker-xml.js" />
     <Content Include="resources\js\ace\worker-xquery.js" />
-    <Content Include="resources\js\live.js" />
     <Content Include="resources\live.css" />
     <Content Include="run.html" />
     <Content Include="Web.config">
@@ -147,29 +146,27 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceHandler.ashx.cs">
-      <DependentUpon>ResourceHandler.ashx</DependentUpon>
+    <Compile Include="RunHandler.ashx.cs">
+      <DependentUpon>RunHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="LiveTranslator.cs" />
+    <Compile Include="TranslateHandler.ashx.cs">
+      <DependentUpon>TranslateHandler.ashx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BridgeTranslator\Stub\" />
     <Folder Include="resources\js\bridge\" />
     <Folder Include="UserCode\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ResourceHandler.ashx" />
+    <Content Include="RunHandler.ashx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TranslateHandler.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -198,7 +195,7 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>IF "$(ConfigurationName)" == "Release" (
-   xcopy  "$(ProjectDir)\..\BridgeStub\bin\Release\*.dll" "$(ProjectDir)\BridgeTranslator\Stub" /Y 
+   xcopy  "$(ProjectDir)\..\LiveBridgeBuilder\bin\Release\*.dll" "$(ProjectDir)\BridgeTranslator\Builder" /Y 
 )</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

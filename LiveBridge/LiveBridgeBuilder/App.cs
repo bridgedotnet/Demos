@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 
-namespace BridgeStub
+namespace LiveBridgeBuilder
 {
     public class App
     {
@@ -56,7 +56,7 @@ namespace BridgeStub
             jQuery.Ajax(
                 new AjaxOptions()
                 {
-                    Url = "Default.aspx?ajax=1",
+                    Url = "TranslateHandler.ashx?ajax=1",
                     Type = "POST",
                     Cache = false,
                     Data = new

@@ -1,6 +1,6 @@
 ﻿/* global Bridge */
 
-Bridge.define('BridgeStub.App', {
+Bridge.define('LiveBridgeBuilder.App', {
     statics: {
         INIT_CS_CODE: "public class App \r\n{ \r\n    [Ready] \r\n    public static void Main() \r\n    { \r\n        Console.WriteLine(\"Hello Bridge.NET\"); \r\n    }\r\n}",
         csEditor: null,
@@ -11,47 +11,47 @@ Bridge.define('BridgeStub.App', {
             }
         },
         main: function () {
-            BridgeStub.App.initEditors();
-            BridgeStub.App.hookTranslateEvent();
-            BridgeStub.App.hookRunEvent();
+            LiveBridgeBuilder.App.initEditors();
+            LiveBridgeBuilder.App.hookTranslateEvent();
+            LiveBridgeBuilder.App.hookRunEvent();
         },
         initEditors: function () {
             // Initialize ace csharp editor
 
-            BridgeStub.App.csEditor = ace.edit("CsEditor");
-            BridgeStub.App.csEditor.getSession().setMode("ace/mode/csharp");
-            BridgeStub.App.csEditor.setWrapBehavioursEnabled(true);
-            BridgeStub.App.csEditor.setValue(BridgeStub.App.INIT_CS_CODE, 1);
+            LiveBridgeBuilder.App.csEditor = ace.edit("CsEditor");
+            LiveBridgeBuilder.App.csEditor.getSession().setMode("ace/mode/csharp");
+            LiveBridgeBuilder.App.csEditor.setWrapBehavioursEnabled(true);
+            LiveBridgeBuilder.App.csEditor.setValue(LiveBridgeBuilder.App.INIT_CS_CODE, 1);
 
             // Initialize ace js editor
 
-            BridgeStub.App.jsEditor = ace.edit("JsEditor");
-            BridgeStub.App.jsEditor.getSession().setMode("ace/mode/javascript");
-            BridgeStub.App.jsEditor.setValue("");
+            LiveBridgeBuilder.App.jsEditor = ace.edit("JsEditor");
+            LiveBridgeBuilder.App.jsEditor.getSession().setMode("ace/mode/javascript");
+            LiveBridgeBuilder.App.jsEditor.setValue("");
         },
         translate: function () {
-            BridgeStub.App.progress("Compiling...");
+            LiveBridgeBuilder.App.progress("Compiling...");
 
             // Make call to Bridge.NET translator and show emitted javascript upon success 
 
-            $.ajax({ url: "Default.aspx?ajax=1", type: "POST", cache: false, data: { cs: BridgeStub.App.csEditor.getValue() }, success: function (data, textStatus, request) {
-                BridgeStub.App.progress(null);
+            $.ajax({ url: "TranslateHandler.ashx?ajax=1", type: "POST", cache: false, data: { cs: LiveBridgeBuilder.App.csEditor.getValue() }, success: function (data, textStatus, request) {
+                LiveBridgeBuilder.App.progress(null);
                 if (!Bridge.cast(data.Success, Boolean)) {
-                    BridgeStub.App.jsEditor.setValue(data.ErrorMessage);
+                    LiveBridgeBuilder.App.jsEditor.setValue(data.ErrorMessage);
                     $("#hash").text("");
-                    BridgeStub.App.progress("Finished with error(s)");
+                    LiveBridgeBuilder.App.progress("Finished with error(s)");
                 }
                 else  {
-                    BridgeStub.App.jsEditor.setValue(data.JsCode);
+                    LiveBridgeBuilder.App.jsEditor.setValue(data.JsCode);
                     $("#hash").text(data.Hash.toString());
-                    BridgeStub.App.progress("Finished");
+                    LiveBridgeBuilder.App.progress("Finished");
                 }
             } });
         },
         hookTranslateEvent: function () {
             // Attach click event handler to the translate html button
 
-            $("#btnTranslate").on("click", BridgeStub.App.translate);
+            $("#btnTranslate").on("click", LiveBridgeBuilder.App.translate);
         },
         hookRunEvent: function () {
             // Attach click event handler to the run button
