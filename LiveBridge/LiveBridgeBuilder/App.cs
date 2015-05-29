@@ -117,7 +117,6 @@ namespace LiveBridgeBuilder
                 App.Keystrokes++;
                 App.Interval = Global.SetInterval(App.OnInterval, App.INTERVAL_DELAY);
             }
-            Console.WriteLine(App.Keystrokes);
         }
 
         protected static void HookCsEditorInputEvent()
