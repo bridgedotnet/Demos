@@ -20,15 +20,21 @@ namespace LiveBridgeBuilder
         Console.WriteLine(""Hello Bridge.NET""); 
     }
 }";
+        private const int MAX_KEYSTROKES = 10;
 
+        private const int INTERVAL_DELAY = 2000;
+        
         public static object CsEditor, JsEditor;
+
+        public static int Keystrokes, Interval;
 
         [Ready]
         public static void Main()
         {
-            InitEditors();
-            HookTranslateEvent();
-            HookRunEvent();
+            App.InitEditors();
+            App.HookTranslateEvent();
+            App.HookRunEvent();
+            App.Translate();            
         }
 
         protected static void InitEditors()
@@ -39,7 +45,8 @@ namespace LiveBridgeBuilder
             App.CsEditor.ToDynamic().getSession().setMode("ace/mode/csharp");
             App.CsEditor.ToDynamic().setWrapBehavioursEnabled(true);
             App.CsEditor.ToDynamic().setValue(App.INIT_CS_CODE, 1);
-
+            App.HookCsEditorInputEvent();
+                        
             // Initialize ace js editor
 
             App.JsEditor = Script.ToDynamic().ace.edit("JsEditor");
@@ -81,6 +88,43 @@ namespace LiveBridgeBuilder
                     }
                 }
             );
+        }
+        
+        protected static void OnInterval()
+        {
+            // Translate every INTERVAL_DELAY ms unless there are no changes to the C# editor content
+
+            if (App.Keystrokes > 0)
+            {
+                App.Keystrokes = App.MAX_KEYSTROKES;
+                App.OnCsEditorInput();
+            }
+        }
+
+        protected static void OnCsEditorInput()
+        {
+            // Translate every MAX_KEYSTROKES keystrokes or after INTERVAL_DELAY msecs since the last keystroke
+
+            Global.ClearInterval(App.Interval);
+
+            if (App.Keystrokes >= App.MAX_KEYSTROKES)
+            {
+                App.Keystrokes = 0;
+                App.Translate();
+            }
+            else
+            {
+                App.Keystrokes++;
+                App.Interval = Global.SetInterval(App.OnInterval, App.INTERVAL_DELAY);
+            }
+            Console.WriteLine(App.Keystrokes);
+        }
+
+        protected static void HookCsEditorInputEvent()
+        {
+            // Attach input event handler to the c# editor
+
+            jQuery.Select("#CsEditor").On("keyup", App.OnCsEditorInput);
         }
 
         protected static void HookTranslateEvent()
