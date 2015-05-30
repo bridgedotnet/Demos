@@ -27,8 +27,6 @@ namespace LiveBridgeBuilder
         public static void Main()
         {
             App.InitEditors();
-            //App.HookTranslateEvent();
-            App.HookRunEvent();
             App.Translate();            
         }
 
@@ -102,7 +100,6 @@ namespace LiveBridgeBuilder
         protected static void OnCsEditorInput()
         {
             // Translate every MAX_KEYSTROKES keystrokes or after INTERVAL_DELAY msecs since the last keystroke
-
             Global.ClearInterval(App.Interval);
 
             if (App.Keystrokes >= App.MAX_KEYSTROKES)
@@ -124,22 +121,13 @@ namespace LiveBridgeBuilder
             jQuery.Select("#CsEditor").KeyUp(App.OnCsEditorInput);
         }
 
-        //protected static void HookTranslateEvent()
-        //{
-        //    // Attach click event handler to the translate html button
-
-        //    jQuery.Select("#btnTranslate").Click(App.Translate);
-        //}
-
         /// <summary>
         /// Attach click event handler to the run button
         /// </summary>
+        [Bridge.jQuery2.Click("#btnRun")]
         protected static void HookRunEvent()
         {
-            jQuery.Select("#btnRun").Click(() =>
-            {
-                Window.Open("run.html?h=" + jQuery.Select("#hash").Text());
-            });
+            Window.Open("run.html?h=" + jQuery.Select("#hash").Text());
         }
         
         /// <summary>
