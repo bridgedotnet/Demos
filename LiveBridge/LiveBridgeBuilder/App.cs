@@ -27,7 +27,7 @@ namespace LiveBridgeBuilder
         public static void Main()
         {
             App.InitEditors();
-            App.HookTranslateEvent();
+            //App.HookTranslateEvent();
             App.HookRunEvent();
             App.Translate();            
         }
@@ -49,7 +49,8 @@ namespace LiveBridgeBuilder
             App.JsEditor.getSession().setMode("ace/mode/javascript");
             App.JsEditor.setValue("");
         }
-        
+
+        [Bridge.jQuery2.Click("#btnTranslate")]
         protected static void Translate()
         {
             App.Progress("Compiling...");
@@ -123,27 +124,30 @@ namespace LiveBridgeBuilder
             jQuery.Select("#CsEditor").KeyUp(App.OnCsEditorInput);
         }
 
-        protected static void HookTranslateEvent()
-        {
-            // Attach click event handler to the translate html button
+        //protected static void HookTranslateEvent()
+        //{
+        //    // Attach click event handler to the translate html button
 
-            jQuery.Select("#btnTranslate").Click(App.Translate);
-        }
+        //    jQuery.Select("#btnTranslate").Click(App.Translate);
+        //}
 
+        /// <summary>
+        /// Attach click event handler to the run button
+        /// </summary>
         protected static void HookRunEvent()
         {
-            // Attach click event handler to the run button
-            
             jQuery.Select("#btnRun").Click(() =>
             {
                 Window.Open("run.html?h=" + jQuery.Select("#hash").Text());
             });
         }
         
+        /// <summary>
+        /// Show translation progress message
+        /// </summary>
+        /// <param name="message"></param>
         public static void Progress(string message)
         {
-            // Show translation progress message
-
             var progress = jQuery.Select("#progress");
 
             if (!string.IsNullOrEmpty(message))
