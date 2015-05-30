@@ -23,10 +23,12 @@ namespace LiveBridgeBuilder
         private const int MAX_KEYSTROKES = 10;
 
         private const int INTERVAL_DELAY = 2000;
-        
-        public static object CsEditor, JsEditor;
 
-        public static int Keystrokes, Interval;
+        public static dynamic CsEditor;
+        public static dynamic JsEditor;
+
+        public static int Keystrokes;
+        public static int Interval;
 
         [Ready]
         public static void Main()
@@ -39,19 +41,20 @@ namespace LiveBridgeBuilder
 
         protected static void InitEditors()
         {
-            // Initialize ace csharp editor
-            
-            App.CsEditor = Script.ToDynamic().ace.edit("CsEditor");
-            App.CsEditor.ToDynamic().getSession().setMode("ace/mode/csharp");
-            App.CsEditor.ToDynamic().setWrapBehavioursEnabled(true);
-            App.CsEditor.ToDynamic().setValue(App.INIT_CS_CODE, 1);
-            App.HookCsEditorInputEvent();
-                        
-            // Initialize ace js editor
+            // Get an instance of the ace editor
+            var ace = Global.Get<dynamic>("ace");
 
-            App.JsEditor = Script.ToDynamic().ace.edit("JsEditor");
-            App.JsEditor.ToDynamic().getSession().setMode("ace/mode/javascript");
-            App.JsEditor.ToDynamic().setValue("");
+            // Initialize ace csharp editor
+            App.CsEditor = ace.edit("CsEditor");
+            App.CsEditor.getSession().setMode("ace/mode/csharp");
+            App.CsEditor.setWrapBehavioursEnabled(true);
+            App.CsEditor.setValue(App.INIT_CS_CODE, 1);
+            App.HookCsEditorInputEvent();
+
+            // Initialize ace js editor
+            App.JsEditor = ace.edit("JsEditor");
+            App.JsEditor.getSession().setMode("ace/mode/javascript");
+            App.JsEditor.setValue("");
         }
         
         protected static void Translate()
@@ -68,20 +71,21 @@ namespace LiveBridgeBuilder
                     Cache = false,
                     Data = new
                     {
-                        cs = App.CsEditor.ToDynamic().getValue()
+                        cs = App.CsEditor.getValue()
                     },
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
                         App.Progress(null);
+
                         if (!(bool)data["Success"])
                         {
-                            App.JsEditor.ToDynamic().setValue(data["ErrorMessage"]);
+                            App.JsEditor.setValue(data["ErrorMessage"]);
                             jQuery.Select("#hash").Text(string.Empty);
                             App.Progress("Finished with error(s)");
                         }
                         else
                         {
-                            App.JsEditor.ToDynamic().setValue(data["JsCode"]);
+                            App.JsEditor.setValue(data["JsCode"]);
                             jQuery.Select("#hash").Text(data["Hash"].ToString());
                             App.Progress("Finished");
                         }
@@ -123,21 +127,21 @@ namespace LiveBridgeBuilder
         {
             // Attach input event handler to the c# editor
 
-            jQuery.Select("#CsEditor").On("keyup", App.OnCsEditorInput);
+            jQuery.Select("#CsEditor").KeyUp(App.OnCsEditorInput);
         }
 
         protected static void HookTranslateEvent()
         {
             // Attach click event handler to the translate html button
 
-            jQuery.Select("#btnTranslate").On("click", App.Translate);
+            jQuery.Select("#btnTranslate").Click(App.Translate);
         }
 
         protected static void HookRunEvent()
         {
             // Attach click event handler to the run button
             
-            jQuery.Select("#btnRun").On("click", () =>
+            jQuery.Select("#btnRun").Click(() =>
             {
                 Window.Open("run.html?h=" + jQuery.Select("#hash").Text());
             });
