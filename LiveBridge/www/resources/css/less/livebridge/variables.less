@@ -1,0 +1,292 @@
+//
+// Variables
+// --------------------------------------------------
+
+//== Colors
+//
+//## Text and brand colors for use across theme.
+
+// Bridge.NET Colour Palette
+
+// Bluegrey
+@blue-grey-50:          #eceff1;
+@blue-grey-100:         #cfd8dc;
+@blue-grey-200:         #b0bec5;
+@blue-grey-300:         #90a4ae;
+@blue-grey-400:         #78909c;
+@blue-grey-500:         #607d8b;
+@blue-grey-600:         #546e7a;
+@blue-grey-700:         #455a64;
+@blue-grey-800:         #37474f;
+@blue-grey-850:         #2c3940;
+@blue-grey-900:         #263238;
+@blue-grey-950:         #202b30;
+@blue-grey-1000:        #1e282d;
+@blue-grey-1100:        #182126;
+
+// Light Blue
+@blue-100:              #cadfea;
+@blue-300:              #99c1d7;
+@blue-500:              #68a4c4;
+@blue-600:              #5095ba;
+
+// Orange
+@orange-300:            #eda25f;
+@orange-500:            #e67e22;
+
+// Green
+@green-300:             #a6d0ca;
+@green-400:             #79b9b0;
+@green-500:             #5fb9ac;
+
+// Red
+@red-300:               #e57373;
+
+// Brand Colours
+
+@brand-primary:         @blue-600;
+@brand-success:         @green-500;
+@brand-info:            @blue-300;
+@brand-warning:         @orange-500;
+@brand-danger:          @red-300;
+
+// Text Colours
+@primary-title-color: @blue-grey-900;
+@primary-text-color: @blue-grey-700;
+@secondary-text-color: @blue-grey-400;
+@muted-text-color: @blue-grey-200;
+
+//== Scaffolding
+//
+//## Settings for some of the most global styles.
+
+//** Global text color on `<body>`.
+@text-color:            @primary-text-color;
+
+
+//== Typography
+//
+//## Font, line-height, and color for body text, headings, and more.
+
+@font-family-sans-serif:  'Open Sans', sans-serif;
+
+@font-size-base:          15px;
+
+@font-size-h1:            40px;
+@font-size-h2:            30px;
+@font-size-h3:            24px;
+@font-size-h4:            20px;
+@font-size-h5:            16px;
+@font-size-h6:            14px;
+
+//** Unit-less `line-height` for use in components like buttons.
+@line-height-base:        1.7;
+
+@headings-font-family:    'Raleway', sans-serif;
+@headings-font-weight:    300;
+@headings-color:          @primary-title-color;
+@headings-line-height:    1.4;
+
+//== Tables
+//
+//## Customizes the `.table` component with basic values, each used across all table variations.
+
+@table-border-color:            @blue-grey-100;
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+//@btn-font-weight:                normal;
+
+@btn-default-color:              white;
+@btn-default-bg:                 @blue-grey-500;
+@btn-default-border:             @blue-grey-500;
+
+@btn-primary-border:             @btn-primary-bg;
+@btn-success-border:             @btn-success-bg;
+@btn-info-border:                @btn-info-bg;
+@btn-warning-border:             @btn-warning-bg;
+@btn-danger-border:              @btn-danger-bg;
+
+@btn-link-disabled-color:        @blue-grey-300;
+
+
+//== Forms
+//
+//##
+
+@input-bg-disabled:              @blue-grey-50;
+
+//** Text color for `<input>`s
+@input-color:                    @primary-text-color;
+//** `<input>` border color
+@input-border:                   @blue-grey-100;
+
+//** Default `.form-control` border radius
+// This has no effect on `<select>`s in some browsers, due to the limited stylability of `<select>`s in CSS.
+@input-border-radius:            0;
+//** Large `.form-control` border radius
+@input-border-radius-large:      0;
+//** Small `.form-control` border radius
+@input-border-radius-small:      0;
+
+//** Border color for inputs on focus
+@input-border-focus:             @brand-primary;
+
+//** Placeholder text color
+@input-color-placeholder:        @blue-grey-200;
+
+@legend-color:                   @blue-grey-500;
+@legend-border-color:            @blue-grey-100;
+
+//** Background color for textual input addons
+@input-group-addon-bg:           @blue-grey-50;
+//** Border color for textual input addons
+@input-group-addon-border-color: @blue-grey-100;
+
+
+//== Grid system
+//
+//## Define your custom responsive grid.
+
+// Navbar collapse
+//** Point at which the navbar becomes uncollapsed.
+@grid-float-breakpoint:     @screen-md-min;
+
+//== Navbar
+//
+//##
+
+@navbar-default-font-size: 13px;
+
+// Basics of navbar (home page)
+@navbar-height-home:               80px;
+@navbar-margin-bottom-home:        @line-height-computed;
+@navbar-border-radius-home:        0;
+@navbar-padding-horizontal-home:   floor((@grid-gutter-width / 2));
+@navbar-padding-vertical-home:     ((@navbar-height - @line-height-computed) / 2);
+@navbar-collapse-max-height-home:  340px;
+
+@navbar-default-color-home:        white;
+@navbar-default-bg-home:           transparent;
+@navbar-default-border-home:       transparent;
+
+// Navbar links (home page)
+@navbar-default-link-color-home:           @blue-100;
+@navbar-default-link-hover-color-home:     white;
+@navbar-default-link-hover-bg-home:        transparent;
+@navbar-default-link-active-color-home:    white;
+@navbar-default-link-active-bg-home:       transparent;
+@navbar-default-link-disabled-color-home:  @blue-grey-600;
+@navbar-default-link-disabled-bg-home:     transparent;
+
+// Navbar brand label (home page)
+@navbar-default-brand-color-home:          @navbar-default-link-color;
+@navbar-default-brand-hover-color-home:    darken(@navbar-default-brand-color, 10%);
+@navbar-default-brand-hover-bg-home:       transparent;
+
+// Navbar toggle (home page)
+@navbar-default-toggle-hover-bg-home:      transparent;
+@navbar-default-toggle-icon-bar-bg-home:   white;
+@navbar-default-toggle-border-color-home:  transparent;
+
+//--------
+
+// Basics of a navbar (subpages)
+@navbar-height:                            60px;
+@navbar-margin-bottom:                     0;
+@navbar-border-radius:                     0;
+@navbar-default-bg:                        @blue-grey-900;
+@navbar-default-border:                    transparent;
+
+// Navbar links (subpages)
+@navbar-default-link-color:                @blue-grey-300;
+@navbar-default-link-hover-color:          @blue-grey-100;
+@navbar-default-link-hover-bg:             @blue-grey-850;
+@navbar-default-link-active-color:         white;
+@navbar-default-link-active-bg:            @blue-grey-950;
+@navbar-default-link-disabled-color:       @blue-grey-500;
+
+// Navbar toggle (subpages)
+@navbar-default-toggle-hover-bg:           transparent;
+@navbar-default-toggle-icon-bar-bg:        white;
+@navbar-default-toggle-border-color:       transparent;
+
+
+//== Navbar Dropdowns
+//
+//## Dropdown menu container and contents.
+//## All variables below are introduced for Bridge.NET
+
+//** Background for the dropdown menu.
+@navbar-dropdown-bg:                    white;
+//** Dropdown menu `border-color`.
+@navbar-dropdown-border:                white;
+//** Dropdown menu `border-color` **for IE8**.
+@navbar-dropdown-fallback-border:       white;
+//** Divider color for between dropdown items.
+@navbar-dropdown-divider-bg:            @blue-grey-850;
+
+//** Dropdown link text color.
+@navbar-dropdown-link-color:            @secondary-text-color;
+//** Hover color for dropdown links.
+@navbar-dropdown-link-hover-color:      @primary-text-color;
+//** Hover background for dropdown links.
+@navbar-dropdown-link-hover-bg:         @blue-grey-50;
+
+//** Active dropdown menu item text color.
+@navbar-dropdown-link-active-color:     @navbar-dropdown-link-hover-color;
+//** Active dropdown menu item background color.
+@navbar-dropdown-link-active-bg:        @navbar-dropdown-link-hover-bg;
+
+//** Disabled dropdown menu item background color.
+@navbar-dropdown-link-disabled-color:   @blue-grey-400;
+
+//** Text color for headers within dropdown menus.
+@navbar-dropdown-header-color:          @blue-grey-400;
+
+
+//== Navbar user Dropdowns
+//
+//## Dropdown menu container for user specific actions.
+//## All variables below are introduced for Bridge.NET.
+
+@user-link-color:                       @blue-grey-300;
+@user-link-bg:                          @blue-grey-950;
+@user-link-hover-color:                 @blue-grey-100;
+@user-link-hover-bg:                    @blue-grey-1000;
+@user-dropdown-bg:                      white;
+@user-dropdown-border:                  white;
+@user-dropdown-fallback-border:         white;
+@user-dropdown-divider-bg:              @blue-grey-850;
+@user-dropdown-link-color:              @secondary-text-color;
+@user-dropdown-link-hover-color:        @primary-text-color;
+@user-dropdown-link-hover-bg:           @blue-grey-50;
+@user-dropdown-link-active-color:       @user-dropdown-link-hover-color;
+@user-dropdown-link-active-bg:          @user-dropdown-link-hover-bg;
+@user-dropdown-link-disabled-color:     @blue-grey-400;
+@user-dropdown-header-color:            @blue-grey-400;
+@user-dropdown-min-width:               175px;
+@user-dropdown-max-width:               375px;
+
+//== Type
+//
+//##
+
+//** Text muted color
+@text-muted:                  @muted-text-color;
+//** Abbreviations and acronyms border color
+@abbr-border-color:           @blue-grey-100;
+//** Headings small color
+@headings-small-color:        @blue-grey-400;
+//** Blockquote small color
+@blockquote-small-color:      @blue-grey-400;
+//** Blockquote font size
+@blockquote-font-size:        (@font-size-base * 1.25);
+//** Blockquote border color
+@blockquote-border-color:     @blue-grey-100;
+//** Page header border color
+@page-header-border-color:    @blue-grey-100;
+//** Horizontal line color.
+@hr-border:                   @blue-grey-100;

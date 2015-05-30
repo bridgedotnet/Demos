@@ -1,0 +1,55 @@
+//
+// Buttons
+// --------------------------------------------------
+
+
+// Base styles
+// --------------------------------------------------
+
+.btn {
+  border: 1px solid transparent;
+  .button-size(11px; 30px; 14px; @line-height-base; 50px);
+  min-width: 165px;
+
+  .transition(all 0.15s linear 0s);
+  transition-property: color,background-color,border-color,opacity;
+
+  &:active,
+  &.active {
+    .box-shadow(none);
+  }
+
+  text-decoration: none !important;
+
+}
+
+.btn-control {
+  border: 1px solid @blue-grey-100;
+  display: inline-block;
+  padding: 7px 8px 2px;
+
+  svg {
+    fill: @blue-grey-900;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: @blue-grey-100;
+  }
+}
+
+.btn-livebridge {
+  background: @blue-grey-50;
+  padding: 5px 10px;
+  min-width: 120px;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: @blue-grey-100;
+    color: @text-color;
+  }
+}

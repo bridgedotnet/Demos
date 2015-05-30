@@ -1,5 +1,6 @@
 ﻿using Bridge.Html5;
 using Bridge.jQuery2;
+using Bridge.Bootstrap3;
 
 namespace LiveBridgeBuilder
 {
@@ -38,7 +39,10 @@ namespace LiveBridgeBuilder
         public static void Main()
         {
             App.InitEditors();
-            App.Translate();            
+            App.SetEditorSize();
+            Global.OnResize = SetEditorSize;
+            App.Translate();
+            jQuery.Select(".has-tooltip").Tooltip();
         }
 
         protected static void InitEditors()
@@ -48,6 +52,7 @@ namespace LiveBridgeBuilder
 
             // Initialize ace csharp editor
             App.CsEditor = ace.edit("CsEditor");
+            App.CsEditor.setTheme("ace/theme/terminal");
             App.CsEditor.getSession().setMode("ace/mode/csharp");
             App.CsEditor.setWrapBehavioursEnabled(true);
             App.CsEditor.setValue(App.INIT_CS_CODE, 1);
@@ -55,6 +60,7 @@ namespace LiveBridgeBuilder
 
             // Initialize ace js editor
             App.JsEditor = ace.edit("JsEditor");
+            App.JsEditor.setTheme("ace/theme/terminal");
             App.JsEditor.getSession().setMode("ace/mode/javascript");
             App.JsEditor.setValue("");
         }
@@ -90,13 +96,13 @@ namespace LiveBridgeBuilder
                         {
                             App.JsEditor.setValue(data["JsCode"]);
                             jQuery.Select("#hash").Text(data["Hash"].ToString());
-                            App.Progress("Finished");
+                            App.Progress("Compiled Successfully!");
                         }
                     }
                 }
             );
         }
-        
+
         protected static void OnInterval()
         {
             // Translate every INTERVAL_DELAY ms unless there are no changes to the C# editor content
@@ -140,7 +146,7 @@ namespace LiveBridgeBuilder
         {
             Window.Open("run.html?h=" + jQuery.Select("#hash").Text());
         }
-        
+
         /// <summary>
         /// Show translation progress message
         /// </summary>
@@ -157,6 +163,22 @@ namespace LiveBridgeBuilder
             {
                 progress.Text(string.Empty);
             }
+        }
+
+        /// <summary>
+        /// Adjust editor size
+        /// </summary>
+        protected static void SetEditorSize(Event e = null)
+        {           
+            // Set editor height
+            int mastheadHeight = jQuery.Select("#masthead").OuterHeight();
+            int titlebarHeight = jQuery.Select(".titlebar").OuterHeight();
+            int editorHeaderHeight = jQuery.Select(".code-description").OuterHeight();
+            int sitefooterHeight = jQuery.Select(".site-footer").OuterHeight();
+            int padding = 30;
+
+            int editorHeight = Window.InnerHeight - (mastheadHeight + titlebarHeight  + editorHeaderHeight + sitefooterHeight  + padding);
+            jQuery.Select(".ace_editor").Css("height", editorHeight);
         }
     }
 }

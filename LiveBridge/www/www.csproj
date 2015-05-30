@@ -66,12 +66,17 @@
     <Content Include="BridgeTranslator\Mono.Cecil.dll" />
     <Content Include="BridgeTranslator\Object.Net.Utilities.dll" />
     <Content Include="BridgeTranslator\Builder\readme.txt" />
+    <Content Include="Gruntfile.js" />
     <Content Include="index.html" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="resources\images\bridgedotnet-sh.png" />
+    <Content Include="resources\css\main.min.css" />
+    <Content Include="resources\images\bg-pattern-light.svg" />
+    <Content Include="resources\images\bridgedotnet-logo-w.svg" />
+    <Content Include="resources\images\icons.svg" />
+    <Content Include="resources\images\objectdotnet-logo-black.svg" />
     <Content Include="resources\js\ace\ace.js" />
     <Content Include="resources\js\ace\ext-beautify.js" />
     <Content Include="resources\js\ace\ext-chromevox.js" />
@@ -167,6 +172,68 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TranslateHandler.ashx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\css\less\bootstrap\buttons.less" />
+    <Content Include="resources\css\less\bootstrap\component-animations.less" />
+    <Content Include="resources\css\less\bootstrap\dropdowns.less" />
+    <Content Include="resources\css\less\bootstrap\forms.less" />
+    <Content Include="resources\css\less\bootstrap\grid.less" />
+    <Content Include="resources\css\less\bootstrap\mixins.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\alerts.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\background-variant.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\border-radius.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\buttons.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\center-block.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\clearfix.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\forms.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\gradients.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\grid-framework.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\grid.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\hide-text.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\image.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\labels.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\list-group.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\nav-divider.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\nav-vertical-align.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\opacity.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\pagination.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\panels.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\progress-bar.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\reset-filter.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\resize.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\responsive-visibility.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\size.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\tab-focus.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\table-row.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\text-emphasis.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\text-overflow.less" />
+    <Content Include="resources\css\less\bootstrap\mixins\vendor-prefixes.less" />
+    <Content Include="resources\css\less\bootstrap\navbar.less" />
+    <Content Include="resources\css\less\bootstrap\navs.less" />
+    <Content Include="resources\css\less\bootstrap\scaffolding.less" />
+    <Content Include="resources\css\less\bootstrap\utilities.less" />
+    <Content Include="resources\css\less\bootstrap\variables.less" />
+    <Content Include="resources\css\less\livebridge\buttons.less" />
+    <Content Include="resources\css\less\livebridge\dropdowns.less" />
+    <Content Include="resources\css\less\livebridge\forms.less" />
+    <Content Include="resources\css\less\livebridge\livebridge.less" />
+    <Content Include="resources\css\less\livebridge\navbar.less" />
+    <Content Include="resources\css\less\livebridge\scaffolding.less" />
+    <Content Include="resources\css\less\livebridge\variables.less" />
+    <Content Include="resources\css\less\main.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\css\less\livebridge\ace-editor.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\css\less\livebridge\editor-header.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\css\less\bootstrap\tooltip.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
