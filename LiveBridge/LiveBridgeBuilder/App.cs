@@ -1,6 +1,7 @@
 ﻿using Bridge.Html5;
 using Bridge.jQuery2;
 using Bridge.Bootstrap3;
+using System.Text.RegularExpressions;
 
 namespace LiveBridgeBuilder
 {
@@ -28,6 +29,8 @@ namespace LiveBridgeBuilder
         private const int MAX_KEYSTROKES = 10;
 
         private const int INTERVAL_DELAY = 2000;
+
+        private const int JS_HEADER_LINES = 12;
 
         public static dynamic CsEditor;
         public static dynamic JsEditor;
@@ -88,7 +91,8 @@ namespace LiveBridgeBuilder
 
                         if (!(bool)data["Success"])
                         {
-                            App.JsEditor.setValue(data["ErrorMessage"]);
+                            TranslateError error = App.GetErrorMessage(data["ErrorMessage"].ToString());
+                            App.JsEditor.setValue(error.ToString());
                             jQuery.Select("#hash").Text(string.Empty);
                             App.Progress("Finished with error(s)");
                         }
@@ -101,6 +105,47 @@ namespace LiveBridgeBuilder
                     }
                 }
             );
+        }
+
+        protected static TranslateError GetErrorMessage(string message)
+        {
+            string[] err = new Regex(@"Line (\d+), Col (\d+)\): (.*)", "g").Exec(message);
+
+            if (err != null)
+            {
+                int line = 0;
+                int col = 0;
+
+                if (int.TryParse(err[1], out line))
+                {
+                    line = line - App.JS_HEADER_LINES;
+                }
+                else
+                {
+                    line = 0;
+                }
+
+                if (!int.TryParse(err[2], out col))
+                {
+                    col = 0;
+                }
+
+                return new TranslateError
+                {
+                    Line = line,
+                    Column = col,
+                    Message = err[3]
+                };
+            }
+            else
+            {
+                return new TranslateError
+                {
+                    Line = 0,
+                    Column = 0,
+                    Message = message
+                };
+            }
         }
 
         protected static void OnInterval()
@@ -179,6 +224,18 @@ namespace LiveBridgeBuilder
 
             int editorHeight = Window.InnerHeight - (mastheadHeight + titlebarHeight  + editorHeaderHeight + sitefooterHeight  + padding);
             jQuery.Select(".ace_editor").Css("height", editorHeight);
+        }
+    }
+
+    public class TranslateError
+    {
+        public int Line { get; set; }
+        public int Column { get; set; }
+        public string Message { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("// Line {0}, Col {1} : {2}", this.Line.ToString(), this.Column.ToString(), this.Message);
         }
     }
 }
