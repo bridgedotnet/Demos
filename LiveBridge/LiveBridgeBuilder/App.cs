@@ -10,9 +10,20 @@ namespace LiveBridgeBuilder
     [Ready] 
     public static void Main() 
     { 
-        Console.WriteLine(""Hello Bridge.NET""); 
+        var body = Document.Body;
+
+        var button = new ButtonElement
+        {
+            InnerHTML = ""Click Me"",
+            OnClick = (ev) => {
+                Global.Alert(""Welcome to Bridge.NET"");
+            } 
+        };
+
+        body.AppendChild(button);
     }
 }";
+
         private const int MAX_KEYSTROKES = 10;
 
         private const int INTERVAL_DELAY = 2000;
