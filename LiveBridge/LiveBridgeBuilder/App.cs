@@ -52,13 +52,13 @@ namespace LiveBridgeBuilder
 
                         jQuery examples = jQuery.Select("#examples");
 
-                        int count = 0;
+                        int count = 1;
 
                         foreach (string name in names)
                         {
-                            string title = "example" + (count++).ToString();
+                            string title = "#example" + (count++).ToString();
                             
-                            if (!loadDefault && App.Hash == "#" + title)
+                            if (!loadDefault && App.Hash == title)
                             {
                                 // Mark the example to auto load
                                 autoLoadUrl = files[name]["raw_url"].ToString();
@@ -69,7 +69,7 @@ namespace LiveBridgeBuilder
                                 .Append(new AnchorElement
                                 {
                                     Href = files[name]["raw_url"].ToString(),
-                                    Text = files[name]["filename"].ToString(),
+                                    Text = App.FormatExampleFilename(files[name]["filename"].ToString()),
                                     Title = title,
                                     OnClick = App.LoadExample
                                 })
@@ -79,11 +79,23 @@ namespace LiveBridgeBuilder
                         // Auto load requested example or the first example by default
                         if (!string.IsNullOrEmpty(autoLoadUrl))
                         {
-                            App.LoadFromGist((loadDefault) ? "example0" : App.Hash, autoLoadUrl);
+                            string hash = (loadDefault) ? "#example1" : App.Hash;
+
+                            App.LoadFromGist(hash, autoLoadUrl);
+                            jQuery.Select("#examples > li > a[title='" + hash + "']").Parent().AddClass("active");
                         }
                     }
                 }
             );
+        }
+
+        protected static string FormatExampleFilename(string filename)
+        {
+            // Example Gist files are prefixed with numbering "N." (where N = 1,2,...). 
+            // While this is handy to define order it looks ugly in the Samples dropdown.
+            string[] res = new Regex(@"\d\.\s(.*)").Exec(filename);
+
+            return (res != null) ? res[1] : filename;
         }
 
         protected static void LoadExample(Event evt)
@@ -92,6 +104,11 @@ namespace LiveBridgeBuilder
             evt.PreventDefault();
             App.LoadFromGist(jQuery.This.Attr("title"), jQuery.This.Attr("href"));
 
+            // Clear active for all #examples > li
+            jQuery.Select("#examples > li").RemoveClass("active");
+
+            // Mark currently selected li as active
+            jQuery.This.Parent().AddClass("active");
         }
         
         protected static void LoadFromGist(string hash, string rawUrl)
@@ -229,6 +246,9 @@ namespace LiveBridgeBuilder
             {
                 App.Keystrokes = 0;
                 App.Translate();
+
+                // Clear url hash (a new hash should be provided to or required by the user)
+                Global.Location.ToDynamic().hash = string.Empty; 
             }
             else
             {
