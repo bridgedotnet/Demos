@@ -10,7 +10,7 @@ namespace LiveBridgeBuilder
     {
         private const int MAX_KEYSTROKES = 10;
 
-        private const int INTERVAL_DELAY = 2000;
+        private const int INTERVAL_DELAY = 1500;
 
         private const int JS_HEADER_LINES = 12;
 
