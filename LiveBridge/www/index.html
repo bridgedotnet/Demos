@@ -12,89 +12,104 @@
 </head>
 <body>
 
-    <header id="masthead" class="site-header" role="banner">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="http://bridge.net/" rel="home">
-                        <img class="site-logo" src="resources/images/bridgedotnet-logo-w.svg" alt="logo">
-                    </a>
-                </div>
-
-                <a href="#" id="offcanvas-toggle" class="pull-right">
-                    <svg class="icon-three-bars"><use xlink:href="resources/images/icons.svg#icon-three-bars"></use></svg>
-                </a>
-
-                <div class="navbar-text pull-right">
-                    <h1>Bridge.NET Live Compiler</h1>
-                </div>
-
-            </div><!--/.container -->
-        </nav><!-- .navbar -->
-    </header><!-- #masthead -->
-
-    <div class="container-fluid site-main">
-        <div id="title" class="row">
-            <div class="col-md-12">
-                <div class="title-with-arrow">
-                    <svg class="icon-arrow-curved"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/images/icons.svg#icon-arrow-curved"></use></svg>
-                    <div class="row">
-                        <div class="col-xs-6">Write C#.</div>
-                        <div class="col-xs-6">Run JavaScript.</div>
-                    </div>
-                </div>
-            </div>
+    <div id="sidebar-offcanvas" class="sidebar sidebar-right">
+        <div class="offcanvas-close-button clearfix">
+            <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
+        <nav>
+            <ul class="nav offcanvas-nav">
+                <li><a href="#"></a></li>
+            </ul>
+        </nav>
+    </div><!-- #sidebar-offcanvas -->
 
-        <div class="row">
-            <div class="col-sm-6 editor-container">
-                <div class="code-description truncate code-csharp">
-                    <span class="lang text-black">C#</span>
-                    <div class="code-editor-controls">
-                        <div class="dropdown">
-                            <a id="dLabel" data-target="#" class="btn-control" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-                                <svg class="icon-list-unordered"><use xlink:href="resources/images/icons.svg#icon-list-unordered"></use></svg> Samples
-                            </a>
-                            <ul id="examples" class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel"></ul>
+    <div class="main-wrapper">
+        <div class="overlay"></div>
+
+        <header id="masthead" class="site-header" role="banner">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="http://bridge.net/" rel="home">
+                            <img class="site-logo" src="resources/images/bridgedotnet-logo-w.svg" alt="logo">
+                        </a>
+                    </div>
+
+                    <a href="#" id="offcanvas-toggle" class="pull-right">
+                        <svg class="icon-three-bars"><use xlink:href="resources/images/icons.svg#icon-three-bars"></use></svg>
+                    </a>
+
+                    <div class="navbar-text pull-right">
+                        <h1>Bridge.NET Live Compiler</h1>
+                    </div>
+
+                </div><!--/.container -->
+            </nav><!-- .navbar -->
+        </header><!-- #masthead -->
+
+        <div class="container-fluid">
+            <div id="title" class="row">
+                <div class="col-md-12">
+                    <div class="title-with-arrow">
+                        <svg class="icon-arrow-curved"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/images/icons.svg#icon-arrow-curved"></use></svg>
+                        <div class="row">
+                            <div class="col-xs-6">Write C#.</div>
+                            <div class="col-xs-6">Run JavaScript.</div>
                         </div>
                     </div>
                 </div>
-                <div class="editor-wrapper">
-                    <div id="CsEditor" class="ace_editor ace-tm"></div>
-                </div>
             </div>
-            <div class="col-sm-6 editor-container">
-                <div class="code-description truncate code-javascript">
-                    <span class="lang text-black">JS</span><span id="progress"></span>
-                    <div class="code-editor-controls">
-                        <a href="#" id="btnRun" class="btn-control">
-                            <svg class="icon-run"><use xlink:href="resources/images/icons.svg#icon-run"></use></svg> Run Code
-                        </a>
+
+            <div class="row">
+                <div class="col-sm-6 editor-container">
+                    <div class="code-description truncate code-csharp">
+                        <span class="lang text-black">C#</span>
+                        <div class="code-editor-controls">
+                            <div class="dropdown">
+                                <a id="dLabel" data-target="#" class="btn-control" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                                    <svg class="icon-list-unordered"><use xlink:href="resources/images/icons.svg#icon-list-unordered"></use></svg> Samples
+                                </a>
+                                <ul id="examples" class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="editor-wrapper">
+                        <div id="CsEditor" class="ace_editor ace-tm"></div>
                     </div>
                 </div>
-                <div class="editor-wrapper">
-                    <div id="JsEditor" class="ace_editor ace-tm"></div>
-                </div>
-                <input type="hidden" id="hash" />
-            </div>
-        </div>
-
-    </div><!-- .site-main -->
-
-    <footer class="site-footer">
-        <div class="container">
-            <div class="row">
-                <div class="footer-left col-md-7">
-                    A Product of <a href="http://object.net/"><img src="resources/images/objectdotnet-logo-black.svg" alt="Object.NET logo" scale="0"></a>
-                    <span class="sep">|</span>Frameworks and Tools for .NET Developers
-                </div>
-                <div class="footer-right col-md-5">
-                    &copy; 2008 - 2015 <a href="http://object.net/">Object.NET, Inc.</a> All Rights Reserved
+                <div class="col-sm-6 editor-container">
+                    <div class="code-description truncate code-javascript">
+                        <span class="lang text-black">JS</span><span id="progress"></span>
+                        <div class="code-editor-controls">
+                            <a href="#" id="btnRun" class="btn-control">
+                                <svg class="icon-run"><use xlink:href="resources/images/icons.svg#icon-run"></use></svg> Run Code
+                            </a>
+                        </div>
+                    </div>
+                    <div class="editor-wrapper">
+                        <div id="JsEditor" class="ace_editor ace-tm"></div>
+                    </div>
+                    <input type="hidden" id="hash" />
                 </div>
             </div>
-        </div>
-    </footer>
+
+        </div><!-- .site-main -->
+
+        <footer class="site-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-left col-md-7">
+                        A Product of <a href="http://object.net/"><img src="resources/images/objectdotnet-logo-black.svg" alt="Object.NET logo" scale="0"></a>
+                        <span class="sep">|</span>Frameworks and Tools for .NET Developers
+                    </div>
+                    <div class="footer-right col-md-5">
+                        &copy; 2008 - 2015 <a href="http://object.net/">Object.NET, Inc.</a> All Rights Reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="resources/js/ace/ace.js"></script>
     <script src="resources/js/bridge/liveBridgeBuilder.min.js"></script>

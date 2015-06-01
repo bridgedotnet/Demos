@@ -287,6 +287,18 @@ namespace LiveBridgeBuilder
             int editorHeight = Window.InnerHeight - (mastheadHeight + titleHeight  + editorHeaderHeight + sitefooterHeight  + padding);
             jQuery.Select(".ace_editor").Css("height", editorHeight);
         }
+
+        /// <summary>
+        /// Attach click handler event to offcanvas sidebar triggers
+        /// </summary>
+        /// <param name="e"></param>
+        [Bridge.jQuery2.Click("#offcanvas-toggle, .offcanvas-close-button, .overlay")]
+        protected static void CanvasMenu(Event e)
+        {
+            e.PreventDefault();
+            jQuery.Select("#sidebar-offcanvas, .main-wrapper").ToggleClass("active");
+            jQuery.Select("body").ToggleClass("offcanvas-open");
+        }
     }
 
     public class TranslateError
