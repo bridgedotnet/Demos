@@ -79,7 +79,7 @@ namespace LiveBridgeBuilder
                         // Auto load requested example or the first example by default
                         if (!string.IsNullOrEmpty(autoLoadUrl))
                         {
-                            App.LoadFromGist((loadDefault) ? "example2" : App.Hash, autoLoadUrl);
+                            App.LoadFromGist((loadDefault) ? "example0" : App.Hash, autoLoadUrl);
                         }
                     }
                 }
