@@ -37,7 +37,7 @@ namespace LiveBridgeBuilder
             jQuery.Ajax(
                 new AjaxOptions()
                 {
-                    Url = "https://api.github.com/gists/200263594a0d09a571b1",
+                    Url = "https://api.github.com/gists/fc03fa0d97097d4ceabe",
                     Type = "GET",
                     Cache = false,
                     Success = delegate(object data, string textStatus, jqXHR request)
