@@ -124,6 +124,8 @@ namespace LiveBridgeBuilder
 
             // Initialize ace csharp editor
             App.CsEditor = ace.edit("CsEditor");
+            App.CsEditor.renderer.setPadding(10);
+            App.CsEditor.renderer.setScrollMargin(13, 13, 13, 13);
             App.CsEditor.setTheme("ace/theme/terminal");
             App.CsEditor.getSession().setMode("ace/mode/csharp");
             App.CsEditor.setWrapBehavioursEnabled(true);
@@ -132,6 +134,8 @@ namespace LiveBridgeBuilder
 
             // Initialize ace js editor
             App.JsEditor = ace.edit("JsEditor");
+            App.JsEditor.renderer.setPadding(10);
+            App.JsEditor.renderer.setScrollMargin(13, 13, 13, 13);
             App.JsEditor.setTheme("ace/theme/terminal");
             App.JsEditor.getSession().setMode("ace/mode/javascript");
             App.JsEditor.setValue("");
@@ -275,12 +279,12 @@ namespace LiveBridgeBuilder
         {           
             // Set editor height
             int mastheadHeight = jQuery.Select("#masthead").OuterHeight();
-            int titlebarHeight = jQuery.Select(".titlebar").OuterHeight();
+            int titleHeight = jQuery.Select("#title").OuterHeight();
             int editorHeaderHeight = jQuery.Select(".code-description").OuterHeight();
             int sitefooterHeight = jQuery.Select(".site-footer").OuterHeight();
-            int padding = 30;
+            int padding = 15;
 
-            int editorHeight = Window.InnerHeight - (mastheadHeight + titlebarHeight  + editorHeaderHeight + sitefooterHeight  + padding);
+            int editorHeight = Window.InnerHeight - (mastheadHeight + titleHeight  + editorHeaderHeight + sitefooterHeight  + padding);
             jQuery.Select(".ace_editor").Css("height", editorHeight);
         }
     }

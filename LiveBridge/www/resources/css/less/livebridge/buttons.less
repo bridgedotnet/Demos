@@ -5,18 +5,31 @@
 .btn-control {
   border: 1px solid @blue-grey-100;
   display: inline-block;
-  padding: 7px 8px 2px;
+  padding: 5px;
+  color: @primary-text-color;
 
   svg {
     fill: @blue-grey-900;
     width: 16px;
     height: 16px;
+    position: relative;
+    top: 3px;
   }
 
   &:hover,
   &:active,
   &:focus {
     background: @blue-grey-100;
+    color: @primary-text-color;
+    text-decoration: none;
+  }
+}
+
+.dropdown.open {
+  .btn-control {
+    background: @blue-grey-100;
+    color: @primary-text-color;
+    text-decoration: none;
   }
 }
 
@@ -32,3 +45,4 @@
     color: @text-color;
   }
 }
+

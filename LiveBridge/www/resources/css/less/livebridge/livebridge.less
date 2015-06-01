@@ -5,6 +5,7 @@ body {
   margin: 0;
 }
 
+/*
 .titlebar {
   background-color: @brand-primary;
   background-image: url('../images/bg-pattern-light.svg');
@@ -24,10 +25,40 @@ body {
     margin: 0;
   }
 }
+*/
 
 .site-main {
-  padding-top: 15px;
   padding-bottom: 15px;
+}
+
+.title-with-arrow {
+  color: @secondary-text-color;
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 18px;
+
+  .icon-arrow-curved {
+    fill: @secondary-text-color;
+    position: absolute;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    margin-left: -24px;
+    top: -12px;
+  }
+
+  .row {
+    .col-xs-6 {
+      padding-left: 40px;
+    }
+    .col-xs-6:first-child {
+      padding-left: 0;
+      padding-right: 40px;
+      text-align: right;
+    }
+
+  }
 }
 
 @media (min-width: @screen-sm-min) {
