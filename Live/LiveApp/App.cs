@@ -323,7 +323,7 @@ namespace LiveApp
         /// </summary>
         /// <param name="e"></param>
         [Bridge.jQuery2.Click("#offcanvas-toggle, .offcanvas-close-button, .overlay")]
-        protected static void CanvasMenu(Event e)
+        protected static void OffCanvasMenu(Event e)
         {
             e.PreventDefault();
             jQuery.Select("#sidebar-offcanvas, .main-wrapper").ToggleClass("active");
