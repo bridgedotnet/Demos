@@ -29,7 +29,6 @@ namespace LiveApp
             Global.OnResize = SetEditorSize;
             App.Hash = Global.Location.Hash;
             App.LoadExamples(string.IsNullOrEmpty(App.Hash));
-            jQuery.Select(".has-tooltip").Tooltip();
         }
 
         protected static void LoadExamples(bool loadDefault)
@@ -82,7 +81,12 @@ namespace LiveApp
                             string hash = (loadDefault) ? "#example1" : App.Hash;
 
                             App.LoadFromGist(hash, autoLoadUrl);
-                            jQuery.Select("#examples > li > a[title='" + hash + "']").Parent().AddClass("active");
+
+                            jQuery example = jQuery.Select("#examples > li > a[title='" + hash + "']");
+                            example.Parent().AddClass("active");
+
+                            // Update editor title with file name
+                            jQuery.Select("#filename").Html(example.Text());
                         }
                     }
                 }
@@ -109,6 +113,9 @@ namespace LiveApp
 
             // Mark currently selected li as active
             jQuery.This.Parent().AddClass("active");
+
+            // Update editor title with selected file name
+            jQuery.Select("#filename").Html(jQuery.This.Text());
         }
         
         protected static void LoadFromGist(string hash, string rawUrl)
