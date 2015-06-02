@@ -10,7 +10,7 @@ namespace LiveApp
     {
         private const int MAX_KEYSTROKES = 10;
 
-        private const int INTERVAL_DELAY = 1500;
+        private const int INTERVAL_DELAY = 1000;
 
         private const int JS_HEADER_LINES = 12;
 
