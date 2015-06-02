@@ -3,7 +3,7 @@ using System.Web;
 using System.Web.SessionState;
 using Newtonsoft.Json;
 
-namespace LiveBridge
+namespace Live
 {
     /// <summary>
     /// Translates the C# code into JavaScript and returns json:
@@ -42,7 +42,7 @@ namespace LiveBridge
 
             try
             {
-                string bridgeStubLocation = (this.isDebugMode) ? this.context.Server.MapPath("~") + @"..\LiveBridgeBuilder\bin\Debug\LiveBridgeBuilder.dll" : this.context.Server.MapPath(@".\BridgeTranslator\Builder\LiveBridgeBuilder.dll");
+                string bridgeStubLocation = (this.isDebugMode) ? this.context.Server.MapPath("~") + @"..\LiveApp\bin\Debug\LiveApp.dll" : this.context.Server.MapPath(@".\Bridge\Builder\LiveApp.dll");
 
                 LiveTranslator translator =
                     new LiveTranslator(

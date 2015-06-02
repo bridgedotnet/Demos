@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LiveBridge</RootNamespace>
-    <AssemblyName>LiveBridge</AssemblyName>
+    <RootNamespace>Live</RootNamespace>
+    <AssemblyName>Live</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -41,11 +41,11 @@
   <ItemGroup>
     <Reference Include="Bridge.Contract, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>BridgeTranslator\Bridge.Contract.dll</HintPath>
+      <HintPath>Bridge\Bridge.Contract.dll</HintPath>
     </Reference>
     <Reference Include="Bridge.Translator, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Bridge\Bridge.Translator.dll</HintPath>
+      <HintPath>Bridge\Bridge.Translator.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -58,14 +58,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BridgeTranslator\Bridge.Contract.dll" />
-    <Content Include="BridgeTranslator\Bridge.Translator.dll" />
-    <Content Include="BridgeTranslator\ICSharpCode.NRefactory.Cecil.dll" />
-    <Content Include="BridgeTranslator\ICSharpCode.NRefactory.CSharp.dll" />
-    <Content Include="BridgeTranslator\ICSharpCode.NRefactory.dll" />
-    <Content Include="BridgeTranslator\Mono.Cecil.dll" />
-    <Content Include="BridgeTranslator\Object.Net.Utilities.dll" />
-    <Content Include="BridgeTranslator\Builder\readme.txt" />
+    <Content Include="Bridge\Bridge.Contract.dll" />
+    <Content Include="Bridge\Bridge.Translator.dll" />
+    <Content Include="Bridge\ICSharpCode.NRefactory.Cecil.dll" />
+    <Content Include="Bridge\ICSharpCode.NRefactory.CSharp.dll" />
+    <Content Include="Bridge\ICSharpCode.NRefactory.dll" />
+    <Content Include="Bridge\Mono.Cecil.dll" />
+    <Content Include="Bridge\Object.Net.Utilities.dll" />
+    <Content Include="Bridge\Builder\readme.txt" />
     <Content Include="Gruntfile.js" />
     <Content Include="index.html" />
     <Content Include="packages.config" />
@@ -264,7 +264,7 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>IF "$(ConfigurationName)" == "Release" (
-   xcopy  "$(ProjectDir)\..\LiveBridgeBuilder\bin\Release\*.dll" "$(ProjectDir)\BridgeTranslator\Builder" /Y 
+   xcopy  "$(ProjectDir)\..\LiveApp\bin\Release\*.dll" "$(ProjectDir)\Bridge\Builder" /Y 
 )</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

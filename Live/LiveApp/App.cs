@@ -4,7 +4,7 @@ using Bridge.Bootstrap3;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
-namespace LiveBridgeBuilder
+namespace LiveApp
 {
     public class App
     {

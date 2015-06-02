@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiveBridge
+namespace Live
 {
     public class Global : System.Web.HttpApplication
     {

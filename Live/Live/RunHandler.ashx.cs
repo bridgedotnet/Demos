@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.SessionState;
 
-namespace LiveBridge
+namespace Live
 {
     /// <summary>
     /// Returns the generated JavaScript code from session with the JavaScript code hash as key.

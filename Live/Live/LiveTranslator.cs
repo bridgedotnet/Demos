@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Web;
 using Bridge.Translator;
 
-namespace LiveBridge
+namespace Live
 {
     public class LiveTranslator 
     {
@@ -20,7 +20,7 @@ namespace LiveBridge
             using System.Text;
             using System.Collections.Generic;
 
-            namespace LiveBridgeBuilder
+            namespace LiveApp
             {";
 
         const string FOOTER = "}";

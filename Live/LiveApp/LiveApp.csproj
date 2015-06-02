@@ -7,8 +7,8 @@
     <ProjectGuid>{3A3063BA-BC2E-4A91-B893-5713D1D16BC6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LiveBridgeBuilder</RootNamespace>
-    <AssemblyName>LiveBridgeBuilder</AssemblyName>
+    <RootNamespace>LiveApp</RootNamespace>
+    <AssemblyName>LiveApp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>122db363</NuGetPackageImportStamp>
