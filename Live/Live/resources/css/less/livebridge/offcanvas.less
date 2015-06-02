@@ -14,21 +14,17 @@
   border-left: 1px solid #e1e6e8;
 
   .translate(0, 0);
-  .transition(0.15s ease-out);
+  .transition(0.25s ease-out);
 
   &.active {
     .translate(-280px, 0);
-  }
-
-  h1 {
-    color: @blue-grey-700;
   }
 }
 
 .main-wrapper {
   position: relative;
   .translate(0, 0);
-  .transition(0.15s ease-out);
+  .transition(0.25s ease-out);
 
   &.active {
     .translate(-280px, 0);
@@ -38,9 +34,9 @@
 .offcanvas-open {
   .overlay {
     display: block;
-    //background-color: rgba(0,0,0,.1);
   }
 }
+
 .overlay {
   display: none;
   position: absolute;
@@ -54,14 +50,19 @@
 .offcanvas-close-button {
 
   .close {
+    background-color: transparent;
     font-size: 25px;
-    color: white;
-    text-shadow: none;
-    opacity: 0.3;
+    color: @blue-grey-1000;
+    opacity: 0.5;
+    border: none;
+    cursor: pointer;
+    float: right;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &:active {
       opacity: 0.7;
+      outline: none;
     }
   }
 }
@@ -73,17 +74,18 @@ body {
 
 // Offcanvas Nav
 .offcanvas-nav {
-  margin-bottom: 30px;
+  margin: 0;
 
   & > li a {
     color: @blue-grey-400;
     padding: 10px 20px;
+    font-weight: 700;
+    .transition(all 0.25s ease);
 
     &:hover,
     &:focus {
-      color: white;
+      color: @blue-grey-900;
       background: transparent;
-      text-decoration: underline;
     }
   }
 }
