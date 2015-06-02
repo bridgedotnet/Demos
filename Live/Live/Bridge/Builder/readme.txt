@@ -1,8 +1,8 @@
 ﻿WHEN BUILDING RELEASE:
 ----------------------
-The release version of LiveBridgeBuilder.dll is copied here automatically by the following Build Event (right click www 
+The release version of LiveApp.dll is copied here automatically by the following Build Event (right click the Live 
 project > project > Build Events):
 
 IF "$(ConfigurationName)" == "Release" (
-   xcopy  "$(ProjectDir)\..\LiveBridgeBuilder\bin\Release\*.dll" "$(ProjectDir)\BridgeTranslator\Builder" /Y 
+   xcopy  "$(ProjectDir)\..\LiveApp\bin\Release\*.dll" "$(ProjectDir)\Bridge\Builder" /Y 
 )
