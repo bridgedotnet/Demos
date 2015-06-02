@@ -75,7 +75,10 @@
     <Content Include="resources\css\main.min.css" />
     <Content Include="resources\images\bg-pattern-light.svg" />
     <Content Include="resources\images\bridgedotnet-logo-w.svg" />
+    <Content Include="resources\images\check.png" />
+    <Content Include="resources\images\error.png" />
     <Content Include="resources\images\icons.svg" />
+    <Content Include="resources\images\loader.gif" />
     <Content Include="resources\images\objectdotnet-logo-black.svg" />
     <Content Include="resources\js\ace\ace.js" />
     <Content Include="resources\js\ace\ext-beautify.js" />

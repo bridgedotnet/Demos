@@ -161,6 +161,7 @@ namespace LiveApp
         [Bridge.jQuery2.Click("#btnTranslate")]
         protected static void Translate()
         {
+            jQuery.Select("#status").Attr("src", "resources/images/loader.gif").Show();
             App.Progress("Compiling...");
 
             // Make call to Bridge.NET translator and show emitted javascript upon success 
@@ -177,6 +178,7 @@ namespace LiveApp
                     },
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
+                        //jQuery.Select("#status").Hide();
                         App.Progress(null);
 
                         if (!(bool)data["Success"])
@@ -184,12 +186,14 @@ namespace LiveApp
                             TranslateError error = App.GetErrorMessage(data["ErrorMessage"].ToString());
                             App.JsEditor.setValue(error.ToString(), -1);
                             jQuery.Select("#hash").Text(string.Empty);
+                            jQuery.Select("#status").Attr("src", "resources/images/error.png");
                             App.Progress("Finished with error(s)");
                         }
                         else
                         {
                             App.JsEditor.setValue(data["JsCode"], -1);
                             jQuery.Select("#hash").Text(data["Hash"].ToString());
+                            jQuery.Select("#status").Attr("src", "resources/images/check.png");
                             App.Progress("Compiled Successfully!");
                         }
                     }
