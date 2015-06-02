@@ -178,7 +178,6 @@ namespace LiveApp
                     },
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
-                        //jQuery.Select("#status").Hide();
                         App.Progress(null);
 
                         if (!(bool)data["Success"])
@@ -194,7 +193,7 @@ namespace LiveApp
                             App.JsEditor.setValue(data["JsCode"], -1);
                             jQuery.Select("#hash").Text(data["Hash"].ToString());
                             jQuery.Select("#status").Attr("src", "resources/images/check.png");
-                            App.Progress("Compiled Successfully!");
+                            App.Progress("Compiled successfully!");
                         }
                     }
                 }
