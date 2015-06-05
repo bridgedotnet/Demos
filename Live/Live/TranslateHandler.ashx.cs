@@ -46,7 +46,7 @@ namespace Live
 
                 LiveTranslator translator =
                     new LiveTranslator(
-                        this.context.Server.MapPath(@".\UserCode\"),
+                        this.context.Server.MapPath(@"."),
                         csCode,
                         false,
                         bridgeStubLocation,
