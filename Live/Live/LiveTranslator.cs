@@ -17,6 +17,7 @@ namespace Live
             using System.Collections.Generic;
             using System.Text;
             using System.Linq;
+            using System.Threading.Tasks;
             using Bridge;
             using Bridge.Bootstrap3;
             using Bridge.Html5;
@@ -138,7 +139,6 @@ namespace Live
                             this.bridgeFolder + "Bridge.WebGL.dll"),
                         outFile, 
                         this.csFolder + this.Source);
-                    //return String.Format(@" /nostdlib /warn:0 /reference:C:\Users\Dimitris\Documents\Bridge.NET\Git\Demos\Live\Live\Bridge\Builder\Bridge.dll;C:\Users\Dimitris\Documents\Bridge.NET\Git\Demos\Live\Live\Bridge\Builder\Bridge.Html5.dll; /out:" + outFile + " /recurse:" + this.csFolder + this.Source);
                 default:
                     throw (System.Exception)Bridge.Translator.Exception.Create("Unsupported platform - {0}", Environment.OSVersion.Platform);
             }
