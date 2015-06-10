@@ -19,7 +19,34 @@ namespace LiveApp
 
         public static int Keystrokes;
         public static int Interval;
-        public static string Hash;
+
+        public static string Hash
+        {
+            get
+            {
+                return Global.Location.Hash;
+            }
+            set
+            {
+                Global.Location.ToDynamic().hash = value;
+            }
+        }
+
+        public static bool HasHash
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(App.Hash);
+            }
+        }
+
+        public static bool IsGistHash
+        {
+            get
+            {
+                return App.HasHash && !App.Hash.StartsWith("#example");
+            }
+        }
 
         [Ready]
         public static void Main()
@@ -27,8 +54,13 @@ namespace LiveApp
             App.InitEditors();
             App.SetEditorSize();
             Global.OnResize = SetEditorSize;
-            App.Hash = Global.Location.Hash;
-            App.LoadExamples(string.IsNullOrEmpty(App.Hash));
+            
+            App.LoadExamples(!App.HasHash);
+
+            if (App.IsGistHash)
+            {
+                App.LoadFromGist(App.Hash, "https://api.github.com/gists/" + App.Hash.Substr(1), false);
+            }
         }
 
         protected static void LoadExamples(bool loadDefault)
@@ -118,9 +150,9 @@ namespace LiveApp
             jQuery.Select("#filename").Html(jQuery.This.Text());
         }
         
-        protected static void LoadFromGist(string hash, string rawUrl)
+        protected static void LoadFromGist(string hash, string url, bool isRaw = true)
         {
-            // Get raw C# file content from Gist url and upon success:
+            // Get C# file content from Gist url and upon success:
             //   set it as value of the CsEditor
             //   translate
             //   add hash to url
@@ -128,14 +160,29 @@ namespace LiveApp
             jQuery.Ajax(
                 new AjaxOptions()
                 {
-                    Url = rawUrl,
+                    Url = url,
                     Type = "GET",
                     Cache = false,
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
-                        App.CsEditor.setValue(data, -1);
+                        if (isRaw)
+                        {
+                            // the response data is the c# code
+                            App.CsEditor.setValue(data, -1);
+                        }
+                        else
+                        {
+                            // the contents of the first file of the json data is the c# code 
+                            var files = data["files"];
+
+                            var names = Global.ToDynamic().Object.keys(files);
+
+                            App.CsEditor.setValue(files[names[0]]["content"].ToString(), -1);
+                        }
+
                         App.Translate();
-                        Global.Location.ToDynamic().hash = hash;
+
+                        App.Hash = hash;
                     }
                 }
             );
@@ -173,6 +220,8 @@ namespace LiveApp
 
             // Make call to Bridge.NET translator and show emitted javascript upon success 
 
+            var cs = App.CsEditor.getValue();
+
             jQuery.Ajax(
                 new AjaxOptions()
                 {
@@ -181,7 +230,7 @@ namespace LiveApp
                     Cache = false,
                     Data = new
                     {
-                        cs = App.CsEditor.getValue()
+                        cs = cs
                     },
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
@@ -189,6 +238,7 @@ namespace LiveApp
 
                         if (!(bool)data["Success"])
                         {
+                            // error
                             TranslateError error = App.GetErrorMessage(data["ErrorMessage"].ToString());
                             App.JsEditor.setValue(error.ToString(), -1);
                             jQuery.Select("#hash").Text(string.Empty);
@@ -197,14 +247,45 @@ namespace LiveApp
                         }
                         else
                         {
+                            // success
                             App.JsEditor.setValue(data["JsCode"], -1);
                             jQuery.Select("#hash").Text(data["Hash"].ToString());
                             jQuery.Select("#status").Attr("src", "resources/images/check.png");
                             App.Progress("Compiled successfully!");
+
+                            App.CreatePermaLink(cs);
                         }
                     }
                 }
             );
+        }
+
+        protected static void CreatePermaLink(string code)
+        {
+            // Create Gist with the c# code as content and set new Gist id to url hash
+
+            if (App.HasHash)
+            {
+                return;
+            }
+
+            string json = "{ \"description\": \"live.bridge.net\",  \"public\": true,"
+                               + "\"files\": {   \"livebridgenet.cs\": {"
+                               + "\"content\":" + JSON.Stringify(code) + "  } }}";
+            jQuery.Ajax(
+                new AjaxOptions()
+                {
+                    Url = "https://api.github.com/gists",
+                    Type = "POST",
+                    Cache = false,
+                    DataType = "json",
+                    Data = json,
+                    Success = delegate(object data, string textStatus, jqXHR request)
+                    {
+                        App.Hash = data["id"].ToString();
+                    }
+                }
+            );            
         }
 
         protected static TranslateError GetErrorMessage(string message)
@@ -258,7 +339,7 @@ namespace LiveApp
                 App.Translate();
 
                 // Clear url hash (a new hash should be provided to or required by the user)
-                Global.Location.ToDynamic().hash = string.Empty; 
+                App.Hash = string.Empty; 
             }
             else
             {
