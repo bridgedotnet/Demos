@@ -220,8 +220,6 @@ namespace LiveApp
 
             // Make call to Bridge.NET translator and show emitted javascript upon success 
 
-            var cs = App.CsEditor.getValue();
-
             jQuery.Ajax(
                 new AjaxOptions()
                 {
@@ -230,7 +228,7 @@ namespace LiveApp
                     Cache = false,
                     Data = new
                     {
-                        cs = cs
+                        cs = App.CsEditor.getValue()
                     },
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
@@ -252,8 +250,6 @@ namespace LiveApp
                             jQuery.Select("#hash").Text(data["Hash"].ToString());
                             jQuery.Select("#status").Attr("src", "resources/images/check.png");
                             App.Progress("Compiled successfully!");
-
-                            App.CreatePermaLink(cs);
                         }
                     }
                 }
@@ -283,6 +279,7 @@ namespace LiveApp
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
                         App.Hash = data["id"].ToString();
+                        Global.Alert("Code saved successfully.");
                     }
                 }
             );            
@@ -338,8 +335,11 @@ namespace LiveApp
                 App.Keystrokes = 0;
                 App.Translate();
 
-                // Clear url hash (a new hash should be provided to or required by the user)
+                // Clear url hash 
                 App.Hash = string.Empty; 
+
+                // Clear filename
+                jQuery.Select("#filename").Html(string.Empty);
             }
             else
             {
@@ -363,6 +363,17 @@ namespace LiveApp
         {
             evt.PreventDefault();
             Window.Open("run.html?h=" + jQuery.Select("#hash").Text());
+        }
+
+        /// <summary>
+        /// Attach click event handler to the save button
+        /// </summary>
+        [Bridge.jQuery2.Click("#btnSave")]
+        protected static void HookSaveEvent(Event evt)
+        {
+            evt.PreventDefault();
+
+            App.CreatePermaLink(App.CsEditor.getValue());
         }
 
         /// <summary>
