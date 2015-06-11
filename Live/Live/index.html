@@ -76,15 +76,14 @@
                         <span class="lang text-black">C#</span>
                         <span id="filename"></span>
                         <div class="code-editor-controls">
-                            <div class="dropdown">
-                                <a href="#" id="btnSave" class="btn-control">
-                                    <svg class="icon-copy"><use xlink:href="resources/images/icons.svg#icon-copy"></use></svg> Save Code
-                                </a>
-
-                                <a id="dLabel" data-target="#" class="btn-control" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                            <a href="#" id="btnSave" class="btn btn-control">
+                                <svg class="icon-save"><use xlink:href="resources/images/icons.svg#icon-save"></use></svg> Save Code
+                            </a>
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-control dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <svg class="icon-list-unordered"><use xlink:href="resources/images/icons.svg#icon-list-unordered"></use></svg> Samples
                                 </a>
-                                <ul id="examples" class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel"></ul>
+                                <ul id="examples" class="dropdown-menu dropdown-menu-right" role="menu"></ul>
                             </div>
                         </div>
                     </div>
@@ -98,7 +97,7 @@
                         <img id="status" style="display:none;" src="resources/images/loader.gif" />
                         <span id="progress"></span>
                         <div class="code-editor-controls">
-                            <a href="#" id="btnRun" class="btn-control">
+                            <a href="#" id="btnRun" class="btn btn-control">
                                 <svg class="icon-run"><use xlink:href="resources/images/icons.svg#icon-run"></use></svg> Run Code
                             </a>
                         </div>
