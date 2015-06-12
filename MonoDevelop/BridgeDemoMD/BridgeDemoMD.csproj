@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{50697F76-D331-491F-90E5-6EC02BB9FD35}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BridgeDemoMD</RootNamespace>
+    <AssemblyName>BridgeDemoMD</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseMSBuildEngine>False</UseMSBuildEngine>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bridge</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+    <NoStdLib>true</NoStdLib>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="mono ${ProjectDir}/bridge/Bridge.Builder.exe -lib ${ProjectDir}/bridge/BridgeDemoMD.dll" workingdir="" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bridge</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="bridge\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bridge\Bridge.Builder.exe" />
+    <None Include="bridge\Bridge.dll" />
+    <None Include="bridge\Bridge.Html5.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Bridge">
+      <HintPath>bridge\Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="Bridge.Html5">
+      <HintPath>bridge\Bridge.Html5.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
