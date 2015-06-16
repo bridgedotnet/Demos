@@ -1,6 +1,7 @@
 ﻿using Bridge.Html5;
 using Bridge.jQuery2;
 using Bridge.Bootstrap3;
+using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace LiveApp
     {
         private const int MAX_KEYSTROKES = 10;
 
-        private const int INTERVAL_DELAY = 1000;
+        private const int INTERVAL_DELAY = 1500;
 
         private const int JS_HEADER_LINES = 13;
 
@@ -18,7 +19,7 @@ namespace LiveApp
         public static dynamic JsEditor;
 
         public static int Keystrokes;
-        public static int Interval;
+        public static int Timeout;
 
         public static string Hash
         {
@@ -200,8 +201,9 @@ namespace LiveApp
             App.CsEditor.setTheme("ace/theme/terminal");
             App.CsEditor.getSession().setMode("ace/mode/csharp");
             App.CsEditor.setWrapBehavioursEnabled(true);
-            // App.CsEditor.setValue(App.INIT_CS_CODE, 1);
-            App.HookCsEditorInputEvent();
+            
+            App.HookCsEditorKeyupEvent();
+            App.HookCsEditorKeydownEvent();
 
             // Initialize ace js editor
             App.JsEditor = ace.edit("JsEditor");
@@ -262,6 +264,7 @@ namespace LiveApp
 
             if (App.HasHash)
             {
+                Global.Alert("Shareable link already in the browser's address bar.");
                 return;
             }
 
@@ -279,7 +282,7 @@ namespace LiveApp
                     Success = delegate(object data, string textStatus, jqXHR request)
                     {
                         App.Hash = data["id"].ToString();
-                        Global.Alert("Code saved successfully.");
+                        Global.Alert("Shareable link now in the browser's address bar.");
                     }
                 }
             );            
@@ -314,45 +317,46 @@ namespace LiveApp
             };
         }
 
-        protected static void OnInterval()
+        protected static void OnTimeout()
         {
-            // Translate every INTERVAL_DELAY ms unless there are no changes to the C# editor content
+            // Translate every INTERVAL_DELAY msec since the last keyup event of the c# editor
 
-            if (App.Keystrokes > 0)
-            {
-                App.Keystrokes = App.MAX_KEYSTROKES;
-                App.OnCsEditorInput();
-            }
+            App.Translate();
+
+            // Clear url hash 
+            App.Hash = string.Empty;
+
+            // Clear filename
+            jQuery.Select("#filename").Html(string.Empty);
         }
 
-        protected static void OnCsEditorInput()
+        /// <summary>
+        /// Attach keyup event handler to the c# editor
+        /// </summary>
+        protected static void HookCsEditorKeyupEvent()
         {
-            // Translate every MAX_KEYSTROKES keystrokes or after INTERVAL_DELAY msecs since the last keystroke
-            Global.ClearInterval(App.Interval);
-
-            if (App.Keystrokes >= App.MAX_KEYSTROKES)
+            // On c# editor keyup event start the timeout countdown
+            jQuery.Select("#CsEditor").KeyUp((Action<KeyboardEvent>)((KeyboardEvent evt) =>
             {
-                App.Keystrokes = 0;
-                App.Translate();
-
-                // Clear url hash 
-                App.Hash = string.Empty; 
-
-                // Clear filename
-                jQuery.Select("#filename").Html(string.Empty);
-            }
-            else
-            {
-                App.Keystrokes++;
-                App.Interval = Global.SetInterval(App.OnInterval, App.INTERVAL_DELAY);
-            }
+                // except for arrow keys
+                if (evt.Which < 37 || evt.Which > 40)
+                {
+                    Global.ClearTimeout(App.Timeout);
+                    App.Timeout = Global.SetTimeout(App.OnTimeout, App.INTERVAL_DELAY);
+                }
+            }));            
         }
 
-        protected static void HookCsEditorInputEvent()
+        /// <summary>
+        /// Attach keydown event handler to the c# editor
+        /// </summary>
+        protected static void HookCsEditorKeydownEvent()
         {
-            // Attach input event handler to the c# editor
-
-            jQuery.Select("#CsEditor").KeyUp(App.OnCsEditorInput);
+            // On c# editor keydown clear the timeout
+            jQuery.Select("#CsEditor").KeyDown(() => 
+            {
+                Global.ClearTimeout(App.Timeout); 
+            });            
         }
 
         /// <summary>
@@ -366,10 +370,10 @@ namespace LiveApp
         }
 
         /// <summary>
-        /// Attach click event handler to the save button
+        /// Attach click event handler to the share button
         /// </summary>
-        [Bridge.jQuery2.Click("#btnSave")]
-        protected static void HookSaveEvent(Event evt)
+        [Bridge.jQuery2.Click("#btnShare")]
+        protected static void HookShareEvent(Event evt)
         {
             evt.PreventDefault();
 
