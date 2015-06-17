@@ -8,7 +8,7 @@ namespace Demo
 		[Ready]
 		public static void Main()
 		{
-			Window.Alert("Success!");
+			Global.Alert("Success!");
 		}
 	}
 }
