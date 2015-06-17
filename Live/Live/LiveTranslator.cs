@@ -162,7 +162,7 @@ namespace Live
 
                 if (p.ExitCode != 0)
                 {
-                    return string.Empty;
+                    return path;
                 }
             }
 

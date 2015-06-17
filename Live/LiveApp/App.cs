@@ -13,7 +13,7 @@ namespace LiveApp
 
         private const int INTERVAL_DELAY = 1500;
 
-        private const int JS_HEADER_LINES = 13;
+        private const int JS_HEADER_LINES = 14;
 
         public static dynamic CsEditor;
         public static dynamic JsEditor;
