@@ -8,7 +8,12 @@ namespace Demo
         public static void main()
         {
             Console.Log("Demo. Logged on console.");
-            Document.Body.AppendChild(new SpanElement() { InnerHTML = "Check results on the console log." });
+
+            var spanEl = new SpanElement()
+            {
+                InnerHTML = "If you can read this line, then bridge is working!"
+            };
+            Document.Body.AppendChild(spanEl);
         }
     }
 }
