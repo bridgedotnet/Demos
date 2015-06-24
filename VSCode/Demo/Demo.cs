@@ -8,7 +8,16 @@ namespace Demo
 		[Ready]
 		public static void Main()
 		{
-			Global.Alert("Success!");
+			var button = new ButtonElement
+			{
+				InnerHTML = "Submit",
+				OnClick = (ev) =>
+				{
+					Global.Alert("Welcome to Bridge.NET");
+				}
+			}
+			
+			Document.Body.AppendChild(button);		
 		}
 	}
 }
