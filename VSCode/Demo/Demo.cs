@@ -15,7 +15,7 @@ namespace Demo
 				{
 					Global.Alert("Welcome to Bridge.NET");
 				}
-			}
+			};
 			
 			Document.Body.AppendChild(button);		
 		}
