@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NoStdLib>True</NoStdLib>
-    <NuGetPackageImportStamp>09f73810</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>db557938</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,20 +48,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Bridge">
-      <HintPath>..\packages\Bridge.1.6.0\lib\net45\Bridge.dll</HintPath>
+    <Reference Include="Bridge, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Bridge.1.7.0\lib\net45\Bridge.dll</HintPath>
     </Reference>
     <Reference Include="Bridge.Html5">
-      <HintPath>..\packages\Bridge.1.6.0\lib\net45\Bridge.Html5.dll</HintPath>
+      <HintPath>..\packages\Bridge.1.7.0\lib\net45\Bridge.Html5.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Bridge.1.6.0\build\Bridge.targets" Condition="Exists('..\packages\Bridge.1.6.0\build\Bridge.targets')" />
+  <Import Project="..\packages\Bridge.1.7.0\build\Bridge.targets" Condition="Exists('..\packages\Bridge.1.7.0\build\Bridge.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Bridge.1.6.0\build\Bridge.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bridge.1.6.0\build\Bridge.targets'))" />
+    <Error Condition="!Exists('..\packages\Bridge.1.7.0\build\Bridge.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bridge.1.7.0\build\Bridge.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
