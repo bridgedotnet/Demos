@@ -3,9 +3,10 @@ How to successfully open this on VSCode
 -= Requirements =-
 ==================
 
-- Windows 7+, OS X with XCode and mono installed or Linux with Mono.
-- If on Windows, Visual Studio 2013 + .NET 4.0+ (msbuild)
-- Mono (xbuild) - http://www.mono-project.com/
+- Windows 7+, OS X or Linux operating system.
+- Building environment:
+ - If Windows, Visual Studio 2013 + .NET 4.0 (msbuild)
+ - If OS X or Linux, Mono (xbuild) http://www.mono-project.com/
 - Visual Studio Code - http://code.visualstudio.com/
 
 -= Opening the project =-
@@ -58,10 +59,6 @@ dio on the platforms it runs.
 Xamarin Studio (or MonoDevelop) can be obtained from:
 http://www.mono-project.com/
 
-On OS X it might be necessary to have XCode installed. If so, follow
-the instructions here:
-https://guide.macports.org/chunked/installing.xcode.html#installing.xcode
-
 -= Troubleshooting =-
 =====================
 
@@ -81,7 +78,7 @@ The guide for installing mono on OS X is here:
 http://www.mono-project.com/docs/getting-started/install/mac/
 
 You may also use HomeBrew to install packages on OS X (community software
-package for OS X).
+package manager for OS X).
 - HomeBrew Installation: http://brew.sh/
 - Mono Installation: http://brewformulas.org/Mono
 
