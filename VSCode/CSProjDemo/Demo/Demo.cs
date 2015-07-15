@@ -5,7 +5,7 @@ namespace Demo
     public class DemoClass
     {
         [Ready]
-        public static void main()
+        public static void Main()
         {
             Console.Log("Demo. Logged on console.");
 
