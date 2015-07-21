@@ -45,8 +45,10 @@
     <Content Include="resources\css\bootstrap.min.css" />
     <Content Include="resources\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="resources\images\objectdotnet-logo-black.svg" />
+    <Content Include="resources\js\bootstrap.min.js" />
     <Content Include="resources\js\bridge\bridge.min.js" />
     <Content Include="resources\js\bridge\weatherApp.min.js" />
+    <Content Include="resources\js\jquery.min.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bridge.json" />
