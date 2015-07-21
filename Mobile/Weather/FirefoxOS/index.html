@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Weather App</title>
+    <link href="resources/css/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="resources/js/jquery.min.js"></script>
+    <script src="resources/js/bootstrap.min.js"></script>
+
+    <script src="resources/js/bridge/bridge.min.js"></script>
+    <script src="resources/js/bridge/weatherApp.min.js"></script>
+     
+</head>
+<body style="padding: 20px;">
+
+    <div class="main-wrapper">
+
+        <div class="container-fluid site-main">
+            <div id="forecast" class="container">
+                <div class="row">
+                    <span class="col-*-2">
+                        <img id="img" src="" />
+                    </span>
+                    <span id="desc" class="col-*-4">
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-*-12">
+                        <h1><span id="temp"> </span><sup>o</sup></h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-*-12">
+                        <h3><span id="location"> </span></h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-*-12">
+                        Wind: <span id="wind"></span>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 10px">
+                    <span class="col-*-9">
+                        <span class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="radio" id="c" name="metric" value="c" /> C
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="radio" id="f" name="metric" value="f" /> F
+                            </label>
+                        </span>
+                    </span>
+                    <span class="col-*-3" id="btnDiv">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-*-4" style="padding-top: 10px;">
+                        A Product of <a href="http://object.net/"><img src="resources/images/objectdotnet-logo-black.svg" alt="Object.NET logo" scale="0"></a>
+                        <span class="sep">|</span>
+                        &copy; 2008 - 2015 <a href="http://object.net/">Object.NET, Inc.</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
