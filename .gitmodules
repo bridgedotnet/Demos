@@ -1,0 +1,3 @@
+[submodule "AngularJS/AngularJSDemo"]
+	path = AngularJS/AngularJSDemo
+	url = https://github.com/fabriciomurta/AngularJSDemo
