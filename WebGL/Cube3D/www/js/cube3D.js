@@ -1,94 +1,6 @@
 ﻿/* global Bridge */
 
-Bridge.define('Cube3D.App', {
-    statics: {
-        config: {
-            init: function () {
-                Bridge.ready(this.main);
-            }
-        },
-        main: function () {
-            Cube3D.App.initCube("canvas1");
-        },
-        initCube: function (canvasId) {
-            var cube = new Cube3D.Cube();
-
-            Cube3D.App.initSettings(cube);
-
-            cube.canvas = Cube3D.App.getCanvasEl(canvasId);
-            cube.gl = Cube3D.App.create3DContext(cube.canvas);
-
-            if (cube.gl !== null) {
-                cube.initShaders();
-                cube.initBuffers();
-                cube.initTexture();
-                cube.tick();
-
-                document.addEventListener("keydown", Bridge.fn.bind(cube, cube.handleKeyDown));
-                document.addEventListener("keyup", Bridge.fn.bind(cube, cube.handleKeyUp));
-            }
-            else  {
-                Cube3D.App.showError(cube.canvas, "<b>Either the browser doesn't support WebGL or it is disabled.<br>Please follow <a href=\"http://get.webgl.com\">Get WebGL</a>.</b>");
-            }
-        },
-        getCanvasEl: function (id) {
-            return document.getElementById(id);
-        },
-        create3DContext: function (canvas) {
-            var $t;
-            var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
-
-            var context = null;
-
-            $t = Bridge.getEnumerator(names);
-            while ($t.moveNext()) {
-                var name = $t.getCurrent();
-                try {
-                    context = canvas.getContext(name);
-                }
-                catch (ex) {
-                }
-
-                if (context !== null) {
-                    break;
-                }
-            }
-
-            return context;
-        }        ,
-        showError: function (canvas, message) {
-            canvas.parentElement.replaceChild(Bridge.merge(document.createElement('p'), {
-                innerHTML: message
-            } ), canvas);
-        },
-        initSettings: function (cube) {
-            var useSettings = document.getElementById("settings");
-
-            if (useSettings === null || !useSettings.checked) {
-                return;
-            }
-
-            cube.useBlending = document.getElementById("blending").checked;
-            cube.alpha = parseFloat(document.getElementById("alpha").value);
-
-            cube.useLighting = document.getElementById("lighting").checked;
-
-            cube.ambientR = parseFloat(document.getElementById("ambientR").value);
-            cube.ambientG = parseFloat(document.getElementById("ambientG").value);
-            cube.ambientB = parseFloat(document.getElementById("ambientB").value);
-
-            cube.lightDirectionX = parseFloat(document.getElementById("lightDirectionX").value);
-            cube.lightDirectionY = parseFloat(document.getElementById("lightDirectionY").value);
-            cube.lightDirectionZ = parseFloat(document.getElementById("lightDirectionZ").value);
-
-            cube.directionalR = parseFloat(document.getElementById("directionalR").value);
-            cube.directionalG = parseFloat(document.getElementById("directionalG").value);
-            cube.directionalB = parseFloat(document.getElementById("directionalB").value);
-
-            cube.textureImageSrc = "crate.gif";
-        }
-    }
-});
+"use strict";
 
 Bridge.define('Cube3D.Cube', {
     canvas: null,
@@ -103,6 +15,7 @@ Bridge.define('Cube3D.Cube', {
     ambientB: 0.4,
     lightDirectionX: 0,
     lightDirectionY: 0,
+    lightDirectionZ: -1,
     directionalR: 0.25,
     directionalG: 0.25,
     directionalB: 0.25,
@@ -126,15 +39,14 @@ Bridge.define('Cube3D.Cube', {
     xRotation: 0,
     xSpeed: 15,
     yRotation: 0,
+    ySpeed: -15,
+    z: -5.0,
     lastTime: 0,
     config: {
         init: function () {
-            this.lightDirectionZ = -1;
             this.mvMatrix = mat4.create();
             this.mvMatrixStack = [];
             this.pMatrix = mat4.create();
-            this.ySpeed = -15;
-            this.z = -5.0;
             this.currentlyPressedKeys = [];
         }
     },
@@ -391,3 +303,96 @@ Bridge.define('Cube3D.Cube', {
         Bridge.global.setTimeout(Bridge.fn.bind(this, this.tick), 20);
     }
 });
+
+Bridge.define('Cube3D.App', {
+    statics: {
+        config: {
+            init: function () {
+                Bridge.ready(this.main);
+            }
+        },
+        main: function () {
+            Cube3D.App.initCube("canvas1");
+        },
+        initCube: function (canvasId) {
+            var cube = new Cube3D.Cube();
+
+            Cube3D.App.initSettings(cube);
+
+            cube.canvas = Cube3D.App.getCanvasEl(canvasId);
+            cube.gl = Cube3D.App.create3DContext(cube.canvas);
+
+            if (cube.gl !== null) {
+                cube.initShaders();
+                cube.initBuffers();
+                cube.initTexture();
+                cube.tick();
+
+                document.addEventListener("keydown", Bridge.fn.bind(cube, cube.handleKeyDown));
+                document.addEventListener("keyup", Bridge.fn.bind(cube, cube.handleKeyUp));
+            }
+            else  {
+                Cube3D.App.showError(cube.canvas, "<b>Either the browser doesn't support WebGL or it is disabled.<br>Please follow <a href=\"http://get.webgl.com\">Get WebGL</a>.</b>");
+            }
+        },
+        getCanvasEl: function (id) {
+            return document.getElementById(id);
+        },
+        create3DContext: function (canvas) {
+            var $t;
+            var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+
+            var context = null;
+
+            $t = Bridge.getEnumerator(names);
+            while ($t.moveNext()) {
+                var name = $t.getCurrent();
+                try {
+                    context = canvas.getContext(name);
+                }
+                catch (ex) {
+                    ex = Bridge.Exception.create(ex);
+                }
+
+                if (context !== null) {
+                    break;
+                }
+            }
+
+            return context;
+        }        ,
+        showError: function (canvas, message) {
+            canvas.parentElement.replaceChild(Bridge.merge(document.createElement('p'), {
+                innerHTML: message
+            } ), canvas);
+        },
+        initSettings: function (cube) {
+            var useSettings = document.getElementById("settings");
+
+            if (useSettings === null || !useSettings.checked) {
+                return;
+            }
+
+            cube.useBlending = document.getElementById("blending").checked;
+            cube.alpha = parseFloat(document.getElementById("alpha").value);
+
+            cube.useLighting = document.getElementById("lighting").checked;
+
+            cube.ambientR = parseFloat(document.getElementById("ambientR").value);
+            cube.ambientG = parseFloat(document.getElementById("ambientG").value);
+            cube.ambientB = parseFloat(document.getElementById("ambientB").value);
+
+            cube.lightDirectionX = parseFloat(document.getElementById("lightDirectionX").value);
+            cube.lightDirectionY = parseFloat(document.getElementById("lightDirectionY").value);
+            cube.lightDirectionZ = parseFloat(document.getElementById("lightDirectionZ").value);
+
+            cube.directionalR = parseFloat(document.getElementById("directionalR").value);
+            cube.directionalG = parseFloat(document.getElementById("directionalG").value);
+            cube.directionalB = parseFloat(document.getElementById("directionalB").value);
+
+            cube.textureImageSrc = "crate.gif";
+        }
+    }
+});
+
+Bridge.init();
