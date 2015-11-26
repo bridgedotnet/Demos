@@ -1,3 +1,3 @@
-﻿Project          : Bridge.WebGL
-Release Date     : 2015-09-21
-Current Version  : 1.6.0
+Project          : Bridge.WebGL
+Release Date     : 2015-11-25
+Current Version  : 1.7.1
