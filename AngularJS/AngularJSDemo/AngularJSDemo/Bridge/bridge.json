@@ -1,0 +1,4 @@
+﻿{
+    output: "../WebInterface/js",
+    outputFormatting: "Formatted"
+}
