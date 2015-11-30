@@ -15,10 +15,13 @@ namespace PhoneCat
             var controllers = Angular.Module("phonecatControllers");
 
             controllers.Controller<PhoneListScopeModel, PhoneQueryModel>
-                ("PhoneListCtrl", PhoneListCtrlFn);
+                ("PhoneListCtrl", App.PhoneListCtrlFn);
+
+
+            //[Name("$scope")] PhoneListScopeModel scope, PhoneQueryModel phoneService
 
             controllers.Controller<PhoneDetailsScopeModel, PhoneModel,
-                PhoneQueryModel>("PhoneDetailCtrl", PhoneDetailCtrlFn);
+                PhoneQueryModel>("PhoneDetailCtrl", App.PhoneDetailCtrlFn);
         }
     }
 }
