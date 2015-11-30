@@ -24,9 +24,12 @@ namespace PhoneCat
                 "phonecatAnimations"
             };
 
-            var app = Angular.Module("phonecatApp", dependencies);
+            var __scope = "testing";
 
-            app.Config<RouteProvider>(App.RouteProviderFn);
+            Console.Log(__scope);
+
+            Angular.Module("phonecatApp", dependencies)
+                   .Config<RouteProvider>(App.RouteProviderFn);
 
             App.InitControllers();
             App.InitFilters();

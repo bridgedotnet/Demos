@@ -1,10 +1,4 @@
-﻿using Bridge;
-using Bridge.AngularJS;
-using Bridge.AngularJS.Resource;
-using Bridge.AngularJS.Route;
-using Bridge.Html5;
-using Bridge.jQuery2;
-using System;
+﻿using Bridge.AngularJS;
 
 namespace PhoneCat
 {
