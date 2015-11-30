@@ -12,10 +12,10 @@ namespace PhoneCat
     {
         public static void InitAnimations()
         {
-            var phonecatAnimations = Angular.Module("phonecatAnimations",
+            var animations = Angular.Module("phonecatAnimations",
                 new string[] { "ngAnimate" });
 
-            phonecatAnimations.Animation(".phone", () =>
+            animations.Animation(".phone", () =>
             {
                 Func<jQuery, string, Action, Action<bool>> animateUp =
                     (jQuery element, string className, Action done) =>

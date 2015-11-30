@@ -41,15 +41,6 @@ namespace PhoneCat
             App.InitAnimations();
         }
 
-        public static void InitServices()
-        {
-            var services = Angular.Module("phonecatServices",
-                                   new string[] { "ngResource" });
-
-            services.Factory<Func<Func<string, object, ResourceActions,
-                Resource>, Resource>>("phoneService", PhoneServicesFactoryFn);
-        }
-
         public static void RouteProviderFn([Name("$routeProvider")] RouteProvider provider)
         {
             provider.When("/phones", new MappingInformation

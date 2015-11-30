@@ -12,14 +12,14 @@ namespace PhoneCat
     {
         public static void InitFilters()
         {
-            var phonecatFilters = Angular.Module("phonecatFilters");
+            var filters = Angular.Module("phonecatFilters");
 
             // The following is equivalent to defining methods
             // - string mb(string text) { return "sometext"; }
             // and
             // - Func<string, string> ma() { return mb; }
             // Then calling .Filter("text", ma);
-            phonecatFilters.Filter("checkmark", () =>
+            filters.Filter("checkmark", () =>
             {
                 return (input) =>
                 {
