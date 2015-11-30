@@ -1,12 +1,10 @@
 ﻿using Bridge;
 using Bridge.AngularJS;
+using Bridge.AngularJS.Resource;
 using Bridge.AngularJS.Route;
-using Bridge.AngularJS.Services;
 using Bridge.Html5;
 using Bridge.jQuery2;
 using System;
-using System.Collections.Generic;
-using Bridge.AngularJS.Resource;
 
 namespace PhoneCat
 {
@@ -17,7 +15,8 @@ namespace PhoneCat
         }
 
         [Init(InitPosition.After)]
-        public static void Init() {
+        public static void Init()
+        {
             var appDepend = new string[]
             {
                 "ngRoute",
@@ -31,10 +30,10 @@ namespace PhoneCat
             app.Config<RouteProvider>(RouteProviderFn);
 
             var catCtl = Angular.Module("phonecatControllers");
-            catCtl.Controller<PhoneListScopeModel,PhoneQueryModel>
+            catCtl.Controller<PhoneListScopeModel, PhoneQueryModel>
                 ("PhoneListCtrl", PhoneListCtrlFn);
 
-            catCtl.Controller<PhoneDetailsScopeModel, PhoneModel, 
+            catCtl.Controller<PhoneDetailsScopeModel, PhoneModel,
                 PhoneQueryModel>("PhoneDetailCtrl", PhoneDetailCtrlFn);
 
             var catFlt = Angular.Module("phonecatFilters");
@@ -66,7 +65,8 @@ namespace PhoneCat
                 Resource>, Resource>>("phoneService", PhoneServicesFactoryFn);
         }
 
-        public static void InitAnimations() {
+        public static void InitAnimations()
+        {
             var anim = Angular.Module("phonecatAnimations",
                 new string[] { "ngAnimate" });
 
@@ -74,56 +74,67 @@ namespace PhoneCat
             {
                 Func<jQuery, string, Action, Action<bool>> animateUp =
                     (jQuery element, string className, Action done) =>
-                {
-                    if (className != "active") {
-                        return null;
-                    }
-
-                    element.Css(
-                    new {
-                        Position = Position.Absolute,
-                        Top = 500,
-                        Left = 0,
-                        Display = Display.Block
-                    });
-
-                    element.Animate(new { Top = 0 }, 400, "swing", done);
-
-                    return (cancel) =>
                     {
-                        if (cancel)
+                        if (className != "active")
                         {
-                            element.Stop();
+                            return null;
+                        }
+
+                        element.Css(
+                        new
+                        {
+                            Position = Position.Absolute,
+                            Top = 500,
+                            Left = 0,
+                            Display = Display.Block
+                        });
+
+                        element.Animate(new
+                        {
+                            Top = 0
+                        }, 400, "swing", done);
+
+                        return (cancel) =>
+                        {
+                            if (cancel)
+                            {
+                                element.Stop();
+                            };
                         };
                     };
-                };
 
                 Func<jQuery, string, Action, Action<bool>> animateDown =
                     (jQuery element, string className, Action done) =>
-                {
-                    if (className != "active") {
-                        return null;
-                    }
-
-                    element.Css(
-                    new {
-                        Position = Position.Absolute,
-                        Top = 0,
-                        Left = 0
-                    });
-
-                    element.Animate(new { Top = -500 }, 400, "swing", done);
-
-                    return (cancel) =>
                     {
-                        if (cancel)
+                        if (className != "active")
                         {
-                            element.Stop();
+                            return null;
+                        }
+
+                        element.Css(
+                        new
+                        {
+                            Position = Position.Absolute,
+                            Top = 0,
+                            Left = 0
+                        });
+
+                        element.Animate(new
+                        {
+                            Top = -500
+                        }, 400, "swing", done);
+
+                        return (cancel) =>
+                        {
+                            if (cancel)
+                            {
+                                element.Stop();
+                            };
                         };
                     };
-                };
 
-                return new Bridge.AngularJS.jQuery.Animation {
+                return new Bridge.AngularJS.jQuery.Animation
+                {
                     AddClass = animateUp,
                     RemoveClass = animateDown
                 };
@@ -162,7 +173,10 @@ namespace PhoneCat
             PhoneQueryModel phoneService) // this MUST match the service name
         {
             scope.Phone = phoneService.Get(
-                new { Id = routeParams.Id },
+                new
+                {
+                    Id = routeParams.Id
+                },
                 (phone) =>
                 {
                     scope.MainImageUrl = phone.Images[0];
@@ -180,20 +194,25 @@ namespace PhoneCat
             Func<string, object, ResourceActions, Resource>
             resource)
         {
-            return resource("data/:id.json", new object { },
+            return resource("data/:id.json", new object
+            {
+            },
                 new ResourceActions
             {
                 Query = new ActionInfo()
                 {
                     Method = "GET",
-                    Params = new { Id = "phones" },
+                    Params = new
+                    {
+                        Id = "phones"
+                    },
                     IsArray = true
                 }
             });
         }
     }
 
-    [Ignore]
+    [External]
     public class PhoneModel
     {
         public int Age;
@@ -203,7 +222,7 @@ namespace PhoneCat
         public string Snippet;
     }
 
-    [Ignore]
+    [External]
     public class PhoneListScopeModel
     {
         public PhoneModel[] Phones;
@@ -212,10 +231,11 @@ namespace PhoneCat
 
     // We ignore this because it is just a wrapper to the service's 'query'
     // action.
-    [Ignore]
+    [External]
     public class PhoneQueryModel
     {
-        public PhoneModel[] Query() {
+        public PhoneModel[] Query()
+        {
             return default(PhoneModel[]);
         }
 
@@ -226,7 +246,7 @@ namespace PhoneCat
         }
     }
 
-    [Ignore]
+    [External]
     public class PhoneDetailsScopeModel
     {
         public PhoneDetailsModel Phone;
@@ -245,7 +265,7 @@ namespace PhoneCat
          */
     }
 
-    [Ignore]
+    [External]
     public class PhoneDetailsModel
     {
         public string Id;
@@ -264,14 +284,14 @@ namespace PhoneCat
         public StorageInfoModel Storage;
     }
 
-    [Ignore]
+    [External]
     public class AndroidModel
     {
         public string Os;
         public string Ui;
     }
 
-    [Ignore]
+    [External]
     public class BatteryInfoModel
     {
         public string StandbyTime;
@@ -279,14 +299,14 @@ namespace PhoneCat
         public string Type;
     }
 
-    [Ignore]
+    [External]
     public class CameraInfoModel
     {
         public string[] Features;
         public string Primart;
     }
 
-    [Ignore]
+    [External]
     public class ConnectivityInfoModel
     {
         public string Bluetooth;
@@ -296,7 +316,7 @@ namespace PhoneCat
         public string Wifi;
     }
 
-    [Ignore]
+    [External]
     public class DisplayInfoModel
     {
         public string ScreenResolution;
@@ -304,7 +324,7 @@ namespace PhoneCat
         public bool TouchScreen;
     }
 
-    [Ignore]
+    [External]
     public class HardwareInfoModel
     {
         public bool Accelerometer;
@@ -315,14 +335,14 @@ namespace PhoneCat
         public string Usb;
     }
 
-    [Ignore]
+    [External]
     public class SizeAndWeightInfoModel
     {
         public string[] Dimensions;
         public string Weight;
     }
 
-    [Ignore]
+    [External]
     public class StorageInfoModel
     {
         public string Flash;
