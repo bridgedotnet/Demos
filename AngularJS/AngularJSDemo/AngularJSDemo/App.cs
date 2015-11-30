@@ -26,16 +26,9 @@ namespace PhoneCat
 
             var app = Angular.Module("phonecatApp", dependencies);
 
-            app.Config<RouteProvider>(RouteProviderFn);
+            app.Config<RouteProvider>(App.RouteProviderFn);
 
-            var controllers = Angular.Module("phonecatControllers");
-
-            controllers.Controller<PhoneListScopeModel, PhoneQueryModel>
-                ("PhoneListCtrl", PhoneListCtrlFn);
-
-            controllers.Controller<PhoneDetailsScopeModel, PhoneModel,
-                PhoneQueryModel>("PhoneDetailCtrl", PhoneDetailCtrlFn);
-
+            App.InitControllers();
             App.InitFilters();
             App.InitServices();
             App.InitAnimations();
