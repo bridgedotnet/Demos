@@ -36,24 +36,9 @@ namespace PhoneCat
             controllers.Controller<PhoneDetailsScopeModel, PhoneModel,
                 PhoneQueryModel>("PhoneDetailCtrl", PhoneDetailCtrlFn);
 
-            var filters = Angular.Module("phonecatFilters");
-
-            // The following is equivalent to defining methods
-            // - string mb(string text) { return "sometext"; }
-            // and
-            // - Func<string, string> ma() { return mb; }
-            // Then calling .Filter("text", ma);
-            filters.Filter("checkmark", () =>
-            {
-                return (input) =>
-                {
-                    return (input == "true") ? "\u2713" : "\u2718";
-                };
-            });
-
-            InitServices();
-
-            InitAnimations();
+            App.InitFilters();
+            App.InitServices();
+            App.InitAnimations();
         }
 
         public static void InitServices()
