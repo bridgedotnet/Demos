@@ -15,7 +15,7 @@ namespace PhoneCat
         [Init(InitPosition.After)]
         public static void Init()
         {
-            var appDepend = new string[]
+            var dependencies = new string[]
             {
                 "ngRoute",
                 "phonecatControllers",
@@ -23,25 +23,27 @@ namespace PhoneCat
                 "phonecatServices",
                 "phonecatAnimations"
             };
-            var app = Angular.Module("phonecatApp", appDepend);
+
+            var app = Angular.Module("phonecatApp", dependencies);
 
             app.Config<RouteProvider>(RouteProviderFn);
 
-            var catCtl = Angular.Module("phonecatControllers");
-            catCtl.Controller<PhoneListScopeModel, PhoneQueryModel>
+            var controllers = Angular.Module("phonecatControllers");
+
+            controllers.Controller<PhoneListScopeModel, PhoneQueryModel>
                 ("PhoneListCtrl", PhoneListCtrlFn);
 
-            catCtl.Controller<PhoneDetailsScopeModel, PhoneModel,
+            controllers.Controller<PhoneDetailsScopeModel, PhoneModel,
                 PhoneQueryModel>("PhoneDetailCtrl", PhoneDetailCtrlFn);
 
-            var catFlt = Angular.Module("phonecatFilters");
+            var filters = Angular.Module("phonecatFilters");
 
             // The following is equivalent to defining methods
             // - string mb(string text) { return "sometext"; }
             // and
             // - Func<string, string> ma() { return mb; }
             // Then calling .Filter("text", ma);
-            catFlt.Filter("checkmark", () =>
+            filters.Filter("checkmark", () =>
             {
                 return (input) =>
                 {
@@ -56,19 +58,19 @@ namespace PhoneCat
 
         public static void InitServices()
         {
-            var phonecatServices = Angular.Module("phonecatServices",
+            var services = Angular.Module("phonecatServices",
                                    new string[] { "ngResource" });
 
-            phonecatServices.Factory<Func<Func<string, object, ResourceActions,
+            services.Factory<Func<Func<string, object, ResourceActions,
                 Resource>, Resource>>("phoneService", PhoneServicesFactoryFn);
         }
 
         public static void InitAnimations()
         {
-            var anim = Angular.Module("phonecatAnimations",
+            var animations = Angular.Module("phonecatAnimations",
                 new string[] { "ngAnimate" });
 
-            anim.Animation(".phone", () =>
+            animations.Animation(".phone", () =>
             {
                 Func<jQuery, string, Action, Action<bool>> animateUp =
                     (jQuery element, string className, Action done) =>
@@ -139,10 +141,9 @@ namespace PhoneCat
             });
         }
 
-        public static void RouteProviderFn(
-            [Name("$routeProvider")] RouteProvider routeProvider)
+        public static void RouteProviderFn([Name("$routeProvider")] RouteProvider provider)
         {
-            routeProvider.When("/phones", new MappingInformation
+            provider.When("/phones", new MappingInformation
             {
                 TemplateUrl = "partials/phone-list.html",
                 Controller = "PhoneListCtrl"
