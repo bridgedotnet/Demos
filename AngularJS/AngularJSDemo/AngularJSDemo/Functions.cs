@@ -23,6 +23,11 @@ namespace PhoneCat
             });
         }
 
+        /*
+         * This illustrates how the same controller would be used when passing
+         * function reference only (see controllers.cs)
+         *
+
         public static void PhoneListCtrlFn(
             [Name("$scope")] PhoneListScopeModel scope,
             PhoneQueryModel phoneService) // this MUST match the service name
@@ -30,6 +35,7 @@ namespace PhoneCat
             scope.Phones = phoneService.Query();
             scope.OrderProp = "age";
         }
+        */
 
         public static void PhoneDetailCtrlFn(
             [Name("$scope")] PhoneDetailsScopeModel scope,
