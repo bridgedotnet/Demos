@@ -34,8 +34,6 @@
     <Content Include="App_Readme\Bridge.NET\README.txt" />
     <Content Include="App_Readme\Bridge.NET\README.WebGL.txt" />
     <Content Include="Bridge\bridge.json" />
-    <Content Include="Bridge\output\readme.txt" />
-    <Content Include="Bridge\www\demo.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cube.cs" />
