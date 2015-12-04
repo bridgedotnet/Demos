@@ -44,14 +44,14 @@ Bridge.define('Cube3D.Cube', {
     lastTime: 0,
     config: {
         init: function () {
-            this.mvMatrix = mat4.create();
+            this.mvMatrix = Bridge.get(mat4).create();
             this.mvMatrixStack = [];
-            this.pMatrix = mat4.create();
+            this.pMatrix = Bridge.get(mat4).create();
             this.currentlyPressedKeys = [];
         }
     },
     getShader: function (gl, id) {
-        var shaderScript = document.getElementById(id);
+        var shaderScript = Bridge.get(document).getElementById(id);
 
         if (shaderScript === null) {
             return null;
@@ -85,7 +85,7 @@ Bridge.define('Cube3D.Cube', {
         gl.compileShader(shader);
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            Bridge.global.alert(gl.getShaderInfoLog(shader));
+            Bridge.get(Bridge.global).alert(gl.getShaderInfoLog(shader));
             return null;
         }
 
@@ -97,7 +97,7 @@ Bridge.define('Cube3D.Cube', {
         var shaderProgram = this.gl.createProgram();
 
         if (Bridge.is(shaderProgram, Bridge.Int)) {
-            Bridge.global.alert("Could not initialise program");
+            Bridge.get(Bridge.global).alert("Could not initialise program");
         }
 
         this.gl.attachShader(shaderProgram, vertexShader);
@@ -105,7 +105,7 @@ Bridge.define('Cube3D.Cube', {
         this.gl.linkProgram(shaderProgram);
 
         if (!this.gl.getProgramParameter(shaderProgram, this.gl.LINK_STATUS)) {
-            Bridge.global.alert("Could not initialise shaders");
+            Bridge.get(Bridge.global).alert("Could not initialise shaders");
         }
 
         this.gl.useProgram(shaderProgram);
@@ -154,15 +154,15 @@ Bridge.define('Cube3D.Cube', {
         this.gl.uniformMatrix4fv(this.pMatrixUniform, false, this.pMatrix);
         this.gl.uniformMatrix4fv(this.mvMatrixUniform, false, this.mvMatrix);
 
-        var normalMatrix = mat3.create();
+        var normalMatrix = Bridge.get(mat3).create();
 
-        mat4.toInverseMat3(this.mvMatrix, normalMatrix);
-        mat3.transpose(normalMatrix);
+        Bridge.get(mat4).toInverseMat3(this.mvMatrix, normalMatrix);
+        Bridge.get(mat3).transpose(normalMatrix);
 
         this.gl.uniformMatrix3fv(this.nMatrixUniform, false, normalMatrix);
     },
     degToRad: function (degrees) {
-        return degrees * Math.PI / 180;
+        return degrees * Bridge.get(Math).PI / 180;
     },
     handleKeyDown: function (e) {
         this.currentlyPressedKeys[e.keyCode] = true;
@@ -228,11 +228,11 @@ Bridge.define('Cube3D.Cube', {
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-        mat4.perspective(45, Bridge.cast(this.canvas.width, Number) / this.canvas.height, 0.1, 100, this.pMatrix);
-        mat4.identity(this.mvMatrix);
-        mat4.translate(this.mvMatrix, [0.0, 0.0, this.z]);
-        mat4.rotate(this.mvMatrix, this.degToRad(this.xRotation), [1, 0, 0]);
-        mat4.rotate(this.mvMatrix, this.degToRad(this.yRotation), [0, 1, 0]);
+        Bridge.get(mat4).perspective(45, Bridge.cast(this.canvas.width, Number) / this.canvas.height, 0.1, 100, this.pMatrix);
+        Bridge.get(mat4).identity(this.mvMatrix);
+        Bridge.get(mat4).translate(this.mvMatrix, [0.0, 0.0, this.z]);
+        Bridge.get(mat4).rotate(this.mvMatrix, this.degToRad(this.xRotation), [1, 0, 0]);
+        Bridge.get(mat4).rotate(this.mvMatrix, this.degToRad(this.yRotation), [0, 1, 0]);
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
         this.gl.vertexAttribPointer(this.vertexPositionAttribute, 3, this.gl.FLOAT, false, 0, 0);
@@ -268,10 +268,10 @@ Bridge.define('Cube3D.Cube', {
             this.gl.uniform3f(this.ambientColorUniform, this.ambientR, this.ambientG, this.ambientB);
 
             var lightingDirection = [this.lightDirectionX, this.lightDirectionY, this.lightDirectionZ];
-            var adjustedLD = vec3.create();
+            var adjustedLD = Bridge.get(vec3).create();
 
-            vec3.normalize(lightingDirection, adjustedLD);
-            vec3.scale(adjustedLD, -1);
+            Bridge.get(vec3).normalize(lightingDirection, adjustedLD);
+            Bridge.get(vec3).scale(adjustedLD, -1);
 
             this.gl.uniform3fv(this.lightingDirectionUniform, adjustedLD);
             this.gl.uniform3f(this.directionalColorUniform, this.directionalR, this.directionalG, this.directionalB);
@@ -296,11 +296,11 @@ Bridge.define('Cube3D.Cube', {
         this.lastTime = timeNow;
     },
     tick: function () {
-        Cube3D.App.initSettings(this);
+        Bridge.get(Cube3D.App).initSettings(this);
         this.handleKeys();
         this.drawScene();
         this.animate();
-        Bridge.global.setTimeout(Bridge.fn.bind(this, this.tick), 20);
+        Bridge.get(Bridge.global).setTimeout(Bridge.fn.bind(this, this.tick), 20);
     }
 });
 
@@ -312,15 +312,15 @@ Bridge.define('Cube3D.App', {
             }
         },
         main: function () {
-            Cube3D.App.initCube("canvas1");
+            Bridge.get(Cube3D.App).initCube("canvas1");
         },
         initCube: function (canvasId) {
             var cube = new Cube3D.Cube();
 
-            Cube3D.App.initSettings(cube);
+            Bridge.get(Cube3D.App).initSettings(cube);
 
-            cube.canvas = Cube3D.App.getCanvasEl(canvasId);
-            cube.gl = Cube3D.App.create3DContext(cube.canvas);
+            cube.canvas = Bridge.get(Cube3D.App).getCanvasEl(canvasId);
+            cube.gl = Bridge.get(Cube3D.App).create3DContext(cube.canvas);
 
             if (cube.gl !== null) {
                 cube.initShaders();
@@ -328,15 +328,15 @@ Bridge.define('Cube3D.App', {
                 cube.initTexture();
                 cube.tick();
 
-                document.addEventListener("keydown", Bridge.fn.bind(cube, cube.handleKeyDown));
-                document.addEventListener("keyup", Bridge.fn.bind(cube, cube.handleKeyUp));
+                Bridge.get(document).addEventListener("keydown", Bridge.fn.bind(cube, cube.handleKeyDown));
+                Bridge.get(document).addEventListener("keyup", Bridge.fn.bind(cube, cube.handleKeyUp));
             }
             else  {
-                Cube3D.App.showError(cube.canvas, "<b>Either the browser doesn't support WebGL or it is disabled.<br>Please follow <a href=\"http://get.webgl.com\">Get WebGL</a>.</b>");
+                Bridge.get(Cube3D.App).showError(cube.canvas, "<b>Either the browser doesn't support WebGL or it is disabled.<br>Please follow <a href=\"http://get.webgl.com\">Get WebGL</a>.</b>");
             }
         },
         getCanvasEl: function (id) {
-            return document.getElementById(id);
+            return Bridge.get(document).getElementById(id);
         },
         create3DContext: function (canvas) {
             var $t;
@@ -350,8 +350,8 @@ Bridge.define('Cube3D.App', {
                 try {
                     context = canvas.getContext(name);
                 }
-                catch (ex) {
-                    ex = Bridge.Exception.create(ex);
+                catch ($e) {
+                    $e = Bridge.Exception.create($e);
                 }
 
                 if (context !== null) {
@@ -367,28 +367,28 @@ Bridge.define('Cube3D.App', {
             } ), canvas);
         },
         initSettings: function (cube) {
-            var useSettings = document.getElementById("settings");
+            var useSettings = Bridge.get(document).getElementById("settings");
 
             if (useSettings === null || !useSettings.checked) {
                 return;
             }
 
-            cube.useBlending = document.getElementById("blending").checked;
-            cube.alpha = parseFloat(document.getElementById("alpha").value);
+            cube.useBlending = Bridge.get(document).getElementById("blending").checked;
+            cube.alpha = parseFloat(Bridge.get(document).getElementById("alpha").value);
 
-            cube.useLighting = document.getElementById("lighting").checked;
+            cube.useLighting = Bridge.get(document).getElementById("lighting").checked;
 
-            cube.ambientR = parseFloat(document.getElementById("ambientR").value);
-            cube.ambientG = parseFloat(document.getElementById("ambientG").value);
-            cube.ambientB = parseFloat(document.getElementById("ambientB").value);
+            cube.ambientR = parseFloat(Bridge.get(document).getElementById("ambientR").value);
+            cube.ambientG = parseFloat(Bridge.get(document).getElementById("ambientG").value);
+            cube.ambientB = parseFloat(Bridge.get(document).getElementById("ambientB").value);
 
-            cube.lightDirectionX = parseFloat(document.getElementById("lightDirectionX").value);
-            cube.lightDirectionY = parseFloat(document.getElementById("lightDirectionY").value);
-            cube.lightDirectionZ = parseFloat(document.getElementById("lightDirectionZ").value);
+            cube.lightDirectionX = parseFloat(Bridge.get(document).getElementById("lightDirectionX").value);
+            cube.lightDirectionY = parseFloat(Bridge.get(document).getElementById("lightDirectionY").value);
+            cube.lightDirectionZ = parseFloat(Bridge.get(document).getElementById("lightDirectionZ").value);
 
-            cube.directionalR = parseFloat(document.getElementById("directionalR").value);
-            cube.directionalG = parseFloat(document.getElementById("directionalG").value);
-            cube.directionalB = parseFloat(document.getElementById("directionalB").value);
+            cube.directionalR = parseFloat(Bridge.get(document).getElementById("directionalR").value);
+            cube.directionalG = parseFloat(Bridge.get(document).getElementById("directionalG").value);
+            cube.directionalB = parseFloat(Bridge.get(document).getElementById("directionalB").value);
 
             cube.textureImageSrc = "crate.gif";
         }

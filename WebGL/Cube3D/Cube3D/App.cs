@@ -61,7 +61,7 @@ namespace Cube3D
                 {
                     context = canvas.GetContext(name).As<WebGLRenderingContext>();
                 }
-                catch (Exception ex) { }
+                catch { }
 
                 if (context != null)
                 {

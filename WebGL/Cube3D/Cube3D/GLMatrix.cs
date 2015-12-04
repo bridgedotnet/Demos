@@ -33,7 +33,7 @@ namespace Bridge.GLMatrix
     /// <summary>
     /// 3x3 matrix API
     /// </summary>
-    [Ignore]
+    [External]
     [Name("mat3")]
     public static class Mat3
     {
@@ -56,7 +56,7 @@ namespace Bridge.GLMatrix
     /// <summary>
     /// 4x4 matrix API
     /// </summary>
-    [Ignore]
+    [External]
     [Name("mat4")]
     public static class Mat4
     {
@@ -111,7 +111,7 @@ namespace Bridge.GLMatrix
     /// <summary>
     /// 3-dimensional vector API
     /// </summary>
-    [Ignore]
+    [External]
     [Name("vec3")]
     public static class Vec3
     {
