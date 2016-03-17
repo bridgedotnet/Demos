@@ -51,7 +51,6 @@
     <Content Include="Bridge\img\cross.png" />
     <Content Include="Bridge\img\tls-lock.png" />
     <Content Include="Bridge\js\bridge.js" />
-    <Content Include="Bridge\js\readme.txt" />
     <Content Include="Bridge\js\webSocketSample.js" />
     <Content Include="Bridge\index.html" />
   </ItemGroup>
