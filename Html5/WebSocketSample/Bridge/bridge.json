@@ -1,0 +1,6 @@
+{
+  "output": "Bridge\\js",
+  "CleanOutputFolderBeforeBuildPattern": "*.js",
+  "outputFormatting": "Formatted",
+  "outputBy": "Namespace"
+}

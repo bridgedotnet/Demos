@@ -216,3 +216,14 @@ VSCode/Demo/build/Demo.dll
 /WebGL/Cube3D/Cube3D/*.bak
 /WebGL/Cube3D/www/js/*.bak
 *.dll
+/AngularJS/AngularJSDemo/WebInterface/js/bridge.js
+/AngularJS/AngularJSDemo/WebInterface/js/phoneCat.js
+/Html5/TouchSample/.vs/config/applicationhost.config
+/Html5/TouchSample/App_Readme/Bridge.NET/LICENSE
+/Html5/TouchSample/App_Readme/Bridge.NET/README.md
+/Html5/WebSocketSample/.vs/config/applicationhost.config
+/Html5/WebSocketSample/App_Readme/Bridge.NET/LICENSE
+/Html5/WebSocketSample/App_Readme/Bridge.NET/README.md
+/Html5/WebSocketSample/Bridge/js/bridge.js
+/Html5/WebSocketSample/Bridge/js/readme.txt
+/Html5/WebSocketSample/Bridge/js/webSocketSample.js

@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="bridge.net - A C# to JavaScript compiler. Write modern mobile and web apps in C#. Run them anywhere with JavaScript.">
+    <meta name="keywords" content="HTML5, WebSocket, real-time, messaging, js, javascript, C#, csharp, mobile, ios, asp.net, aspnet, mvc, aspnetmvc, web, transpiler, compiler, object.net, bridge">
+    <meta name="author" content="Object.NET, Inc.">
+
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400,400italic,500,600,700,700,800,900italic&amp;subset=latin,greek-ext,cyrillic,latin-ext,greek,cyrillic-ext,vietnamese' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=ABeeZee:100,200,300,400,400italic,500,600,700,700,800,900italic&amp;subset=latin,greek-ext,cyrillic,latin-ext,greek,cyrillic-ext,vietnamese' rel='stylesheet' type='text/css' />
+    
+    <!-- Bootstrap loads -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!-- CSS -->
+    <link rel='stylesheet' href='css/style.css' type='text/css' />
+
+    <link rel="icon" href="img/favicon.ico">
+
+    <title>Bridge.NET WebSocket</title>
+    <script src="js/bridge.js"></script>
+    <script src="js/webSocketSample.js?v=1"></script>
+</head>
+<body>
+
+    <section id="after-intro" class="page-wrapper light-bg">
+        <div class="container">
+            <div class="row page-content article">
+                <h2>Bridge.Net WebSocket Demo</h2>
+                <p>
+                    The demo will let you do an HTML5 WebSocket test against the echo server.
+                </p>
+                <p/a>
+                    This is demo from <a href="http://www.websocket.org/echo.html">websocket.org</a> written in C# with Bridge.NET.
+                </p>
+                <p>
+                    The following KB article will walk you through creating a WebSocket application in Bridge.NET.
+                </p>
+                <p>
+                    You can also <a href="http://blog.kaazing.com/2012/05/09/inspecting-websocket-traffic-with-chrome-developer-tools/"> inspect WebSocket messages</a> using your browser.
+                </p>
+                <h3>Try it out!</h3>
+                <div id="webSocketSupp">
+                    <div style="float: left;">
+                        <img src="img/check.png" width="36" height="36" align="absmiddle">
+                    </div>
+                    <div style="float: left; width: 600px; margin-left: 10px; position:relative; top: 8px;">
+                        This browser supports WebSocket.
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="top-compat-box" style="display:none;">
+                    <p>Does your browser<br>support WebSocket?</p>
+                    <div id="top-compat-info-box">
+                        <div id="top-compat-image">
+                            <a href="index.html"><img src="img/clear.png" id="wsSupportImg" alt="" width="25" height="25" border="0"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div id="noWebSocketSupp">
+                    <div style="float: left;">
+                        <img src="img/cross.png" width="36" height="36" align="absmiddle">
+                    </div>
+                    <div style="float: left; width: 600px; margin-left: 10px;">
+                        <p>Uh-oh, the browser you're using doesn't have native support for WebSocket. That means you can't run this demo.</p>
+                        <p>The following link lists the browsers that support WebSocket:</p>
+                        <p><a href="http://caniuse.com/#feat=websockets">http://caniuse.com/#feat=websockets</a></p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="echo">
+                    <div id="echo-config" style="float: left;">
+                        <strong>Location:</strong><br>
+                        <input class="draw-border" id="wsUri" size="35">
+                        <br>
+                        <input class="draw-border echo-checkbox" type="checkbox" id="secureCb">
+                        <span id="secureCbLabel" style="font-size: smaller; color: black;">Use secure WebSocket (TLS)</span><br>
+                        <button class="echo-button" id="connect">Connect</button>
+                        <button class="echo-button" id="disconnect">Disconnect</button>
+                        <br>
+                        <br>
+                        <strong>Message:</strong><br>
+                        <input class="draw-border" id="sendMessage" size="35" value="Rock it with HTML5 WebSocket">
+                        <br>
+                        <button class="echo-button" id="send" class="wsButton">Send</button>
+                    </div>
+                    <div id="echo-log" style="float: left; margin-left: 20px; padding-left: 20px; width: 350px; border-left: solid 1px #cccccc;">
+                        <strong>Log:</strong>
+                        <div id="consoleLog"></div>
+                        <button class="echo-button" id="clearLogBut" style="position: relative; top: 3px;">Clear log</button>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <h4>Instructions</h4>
+                <ol>
+                    <li>
+                        Press the <b>Connect</b> button.
+                    </li>
+                    <li>
+                        Once connected, enter a message and press the <b>Send</b> button. The output will appear in the <b>Log</b> section. You can change the message and send again multiple times.
+                    </li>
+                    <li>
+                        Press the <b>Disconnect</b> button.
+                    </li>
+                </ol>
+                <b>Note:</b> In some environments the WebSocket connection may fail due to intermediary firewalls, proxies, routers, etc. In that case take advantage of WebSocket's secure capability and check <b>Use secure WebSocket (TLS)</b>. Even if you have no issues you can still feel free to test using a secure connection.
+                <br /><br />
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
