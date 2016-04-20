@@ -5,26 +5,29 @@
 *.asax text
 *.ashx text
 *.aspx text
-*.bat text
+*.bat text eol=lf
 *.config text
-*.cs text
-*.cshtml text
+*.cs text eol=lf
+*.cshtml text eol=lf
 *.csproj text
 *.htm text
 *.html text
-*.js eol=lf
+*.js text eol=lf
 *.jsb text
-*.json text
+*.json text eol=lf
 *.md text
-*.php text
+*.php text eol=lf
 *.ps1 text
-*.py text
+*.py text eol=lf
 *.sln text
-*.sql text
-*.d.ts eol=lf
+*.sql text eol=lf
+*.d.ts text eol=lf
 *.target text
-*.txt eol=lf
+*.txt text eol=lf
 *.xml text
+
+# forces .sh files to be checked out as LF line endings
+*.sh text eol=lf
 
 # These are expected to be always treated as binary files.
 *.bmp binary
