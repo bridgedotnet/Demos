@@ -9,13 +9,12 @@ namespace SharedBridge
 {
     public class App
     {
-
-        #if BRIDGE
+#if BRIDGE
         [Ready]
-        #endif
+#endif
         public static void Main()
         {
-            
+
         }
     }
 }
