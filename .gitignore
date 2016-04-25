@@ -211,11 +211,11 @@ Games/TicTacToe/BridgeTicTacToe/App_Readme
 Games/TicTacToe/BridgeTicTacToe/Bridge
 
 output/
-!VSCode/Demo/build/
-VSCode/Demo/build/Demo.dll
+*.dll
+!VSCode/Demo/.build/*.dll
+VSCode/Demo/.build/Demo.dll
 /WebGL/Cube3D/Cube3D/*.bak
 /WebGL/Cube3D/www/js/*.bak
-*.dll
 /AngularJS/AngularJSDemo/WebInterface/js/bridge.js
 /AngularJS/AngularJSDemo/WebInterface/js/phoneCat.js
 /Html5/TouchSample/.vs/config/applicationhost.config

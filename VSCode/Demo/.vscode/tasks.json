@@ -7,11 +7,10 @@
 // ${cwd}: the current working directory of the spawned process
 
 {
-	"version": "0.1.0",
-	"command": "build/builder.sh",
+	"command": ".build/builder.sh",
 	
 	"windows": {
-		"command": "build\\builder.bat"          
+		"command": ".build\\builder.bat"          
 	},
 
 	"showOutput": "silent"
