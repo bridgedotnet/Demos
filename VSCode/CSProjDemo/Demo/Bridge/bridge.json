@@ -1,12 +1,8 @@
 {
     "output": "Bridge/output"
     
-    // Uncomment the following option to clean the output folder of JavaScript files.
-    //, "beforeBuild": "Bridge/build/clean.bat"
-
-    // Uncomment the following option to copy generated JavaScript files to another location.
-    // Please update the destination path within the deploy.bat file. Open the file in a text editor. 
-    //, "afterBuild": "Bridge/build/deploy.bat"
+    // Uncomment to add TypeScript Definition file (.d.ts) generation to your project.
+    // , "generateTypeScript": true
 
     // More options available at: 
     // http://bridge.net/kb/global-configuration
