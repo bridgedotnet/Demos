@@ -51,6 +51,7 @@
   <ItemGroup>
     <None Include="Bridge\bridge.json" />
     <None Include="packages.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bridge\output\readme.txt" />
