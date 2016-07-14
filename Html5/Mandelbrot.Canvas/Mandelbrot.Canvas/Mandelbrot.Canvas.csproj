@@ -35,6 +35,10 @@
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DataStructures.cs" />
+    <Compile Include="Drawer.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="Mandelbrot.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,9 +58,11 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bridge\output\readme.txt" />
-    <Content Include="Bridge\www\demo.html" />
+    <Content Include="Bridge\bridge.js" />
+    <Content Include="Bridge\mandelbrot.canvas.js" />
+    <Content Include="index.html" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Bridge.Min.1.14.0\build\Bridge.Min.targets" Condition="Exists('..\packages\Bridge.Min.1.14.0\build\Bridge.Min.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
