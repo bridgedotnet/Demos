@@ -6,18 +6,7 @@ using System.Collections.Generic;
 
 namespace Mandelbrot.Canvas
 {
-    static class Extensions
-    {
-        // extension method
-        public static void SetPixel(this ImageData img, int x, int y, Color color)
-        {
-            int index = (x + y * (int)img.Width) * 4;
-            img.Data[index] = color.Red;
-            img.Data[index + 1] = color.Green;
-            img.Data[index + 2] = color.Blue;
-            img.Data[index + 3] = 255; // alpha
-        }
-    }
+
 
     class Drawer
     {
@@ -30,9 +19,15 @@ namespace Mandelbrot.Canvas
         private HTMLInputElement ColorMapCheckbox;
         private HTMLInputElement ColorOffsetElement;
         private HTMLInputElement ColorScaleElement;
+
         private HTMLInputElement JuliaSetCheckbox;
         private HTMLInputElement JuliaReElement;
         private HTMLInputElement JuliaImElement;
+
+        private HTMLInputElement XMinElement;
+        private HTMLInputElement XMaxElement;
+        private HTMLInputElement YMinElement;
+        private HTMLInputElement YMaxElement;
 
         private int CurrentY;
         private Mandelbrot Calculator;
@@ -57,38 +52,89 @@ namespace Mandelbrot.Canvas
                 }
             };
 
-            DrawButton.SetAttribute("style", "font-size:30px, height:80px; width:180px; border-radius:10px; border: 2px solid black; cursor: pointer");
+            DrawButton.SetAttribute("style", "font-size:18px;height: 60px;  width:95%; border: 2px solid black; cursor: pointer");
 
-            var parameterContainer = new HTMLDivElement();
+            // Iteration controls
+            RadiusElement = GetInputNumberElement(null, this.Settings.MaxRadius, 3, 0.5);
+            IterationCountElement = GetInputNumberElement(null, this.Settings.MaxIterations, 4, 100, 0, 100000);
+            // Color controls
+            ColorMapCheckbox = GetCheckboxElement(this.Settings.UseColorMap);
+            ColorScaleElement = GetInputNumberElement(ColorMapCheckbox, this.Settings.ColorScale, 5, 1000);
+            ColorOffsetElement = GetInputNumberElement(ColorMapCheckbox, this.Settings.ColorOffset, 4, 10);
 
-            RadiusElement = GetInputNumberElement(parameterContainer, null, this.Settings.MaxRadius, 3, "Escape radius:", 0.5);
-            IterationCountElement = GetInputNumberElement(parameterContainer, null, this.Settings.MaxIterations, 4, "Iteration count:", 100, 0, 100000);
+            // Julia sets
+            JuliaSetCheckbox = GetCheckboxElement(this.Settings.UseJuliaSet);
+            JuliaImElement = GetInputNumberElement(JuliaSetCheckbox, this.Settings.JuliaSetParameter.Im, 5, 0.005, null);
+            JuliaReElement = GetInputNumberElement(JuliaSetCheckbox, this.Settings.JuliaSetParameter.Re, 5,  0.005, null);
 
-            parameterContainer.AppendChild(new HTMLBRElement());
+            // Viewport controls
+            XMinElement = GetInputNumberElement(null, this.Settings.XMin, 5, 0.005, -5.0);
+            XMaxElement = GetInputNumberElement(null, this.Settings.XMax, 5, 0.005, 0.0);
+            YMinElement = GetInputNumberElement(null, this.Settings.YMin, 5, 0.005, -5.0);
+            YMaxElement = GetInputNumberElement(null, this.Settings.YMax, 5, 0.005, 0.0);
 
-            ColorMapCheckbox = GetCheckboxElement(parameterContainer, "Use Color map ", this.Settings.UseColorMap);
-            ColorScaleElement = GetInputNumberElement(parameterContainer, ColorMapCheckbox, this.Settings.ColorScale, 5, "Scale:", 1000);
-            ColorOffsetElement = GetInputNumberElement(parameterContainer, ColorMapCheckbox, this.Settings.ColorOffset, 4, "Offset:", 10);
+            var paramsColumn = new HTMLTableDataCellElement();
+            var canvasColumn = new HTMLTableDataCellElement();
+            paramsColumn.SetAttribute("valign", "top");
+            canvasColumn.SetAttribute("valign", "top");
+            canvasColumn.AppendChild(canvas);
 
-            parameterContainer.AppendChild(new HTMLBRElement());
+            var layoutRow = new HTMLTableRowElement();
+            layoutRow.AppendChildren(paramsColumn, canvasColumn);
 
-            JuliaSetCheckbox = GetCheckboxElement(parameterContainer, "Use Julia set ", this.Settings.UseJuliaSet);
-            JuliaImElement = GetInputNumberElement(parameterContainer, JuliaSetCheckbox, this.Settings.JuliaSetParameter.Im, 5, "Im:", 0.005, null);
-            JuliaReElement = GetInputNumberElement(parameterContainer, JuliaSetCheckbox, this.Settings.JuliaSetParameter.Re, 5, "Re:", 0.005, null);
+            var layout = new HTMLTableElement();
 
-            parameterContainer.AppendChild(new HTMLBRElement());
+            var paramsTable = new HTMLTableElement();
+            paramsTable.AppendChildren(
+                Row(Label("XMin: "), XMinElement),
+                Row(Label("XMax: "), XMaxElement),
+                Row(Label("YMin: "), YMinElement),
+                Row(Label("YMax: "), YMaxElement),
+                Row(Label("Escape radius: "), RadiusElement),
+                Row(Label("Iteration count: "), IterationCountElement),
+                Row(Label("Use color map: "), ColorMapCheckbox),
+                Row(Label("Color scale: "), ColorScaleElement),
+                Row(Label("Color offset: "), ColorOffsetElement),
+                Row(Label("Use Julia set: "), JuliaSetCheckbox),
+                Row(Label("Im: "), JuliaImElement),
+                Row(Label("Re: "), JuliaReElement),
+                Row(new HTMLHRElement(), 2),
+                Row(DrawButton, 2)
+            );
 
-            parameterContainer.AppendChild(DrawButton);
+            paramsColumn.AppendChild(paramsTable);
 
-            Document.Body.AppendChild(parameterContainer);
-
-            Document.Body.AppendChild(new HTMLHRElement());
-
-            Document.Body.AppendChild(canvas);
+            layout.AppendChild(layoutRow);
+            Document.Body.AppendChild(layout);
         }
 
+        private HTMLLabelElement Label(string value)
+        {
+            var lbl = new HTMLLabelElement();
+            lbl.InnerHTML = value;
+            lbl.Style.Margin = "5px";
+            lbl.Style.FontSize = "18px";
+            return lbl;
+        }
+        private HTMLTableRowElement Row(params HTMLElement[] elements)
+        {
+            var row = new HTMLTableRowElement();
+            foreach(var el in elements)
+                row.AppendChild(el.WithinTableDataCell());
+            return row;
+        }
 
-        private HTMLInputElement GetCheckboxElement(HTMLDivElement container, string title, bool isChecked)
+        private HTMLTableRowElement Row(HTMLElement el, int colspan)
+        {
+            var row = new HTMLTableRowElement();
+            var td = new HTMLTableDataCellElement();
+            td.SetAttribute("colspan", colspan.ToString());
+            td.AppendChild(el);
+            row.AppendChild(td);
+            return row;
+        }
+
+        private HTMLInputElement GetCheckboxElement(bool isChecked)
         {
             var checkbox = new HTMLInputElement
             {
@@ -108,18 +154,18 @@ namespace Mandelbrot.Canvas
             };
             checkbox.OnChange = enableInputs;
 
-            var label = new HTMLLabelElement
-            {
-                InnerHTML = title
-            };
+            //var label = new HTMLLabelElement
+            //{
+            //    InnerHTML = title
+            //};
 
-            label.Style.Margin = "5px";
-            label.AppendChild(checkbox);
+            //label.Style.Margin = "5px";
+            //label.AppendChild(checkbox);
 
-            if (container != null)
-            {
-                container.AppendChild(label);
-            }
+            //if (container != null)
+            //{
+            //    container.AppendChild(label);
+            //}
 
             return checkbox;
         }
@@ -138,12 +184,8 @@ namespace Mandelbrot.Canvas
             return elements;
         }
 
-        private HTMLInputElement GetInputNumberElement(HTMLElement container, HTMLInputElement enableElement, double initialValue, int widthInDigits, string title, double? step = 1, double? min = 0, double? max = null)
+        private HTMLInputElement GetInputNumberElement(HTMLInputElement enableElement, double initialValue, int widthInDigits, double? step = 1, double? min = 0, double? max = null)
         {
-            var label = new HTMLLabelElement();
-            label.InnerHTML = title;
-            label.Style.Margin = "5px";
-
             var element = new HTMLInputElement()
             {
                 Type = InputType.Number,
@@ -192,13 +234,6 @@ namespace Mandelbrot.Canvas
             element.Style.Width = widthInDigits + "em";
             element.Style.Margin = "5px";
 
-            label.AppendChild(element);
-
-            if (container != null)
-            {
-                container.AppendChild(label);
-            }
-
             return element;
         }
 
@@ -244,6 +279,31 @@ namespace Mandelbrot.Canvas
                 Window.Alert("Escape radius should be positive integer");
                 return;
             }
+
+            if (!GetInputValue(XMinElement, out this.Settings.XMin))
+            {
+                Window.Alert("XMin should be a number");
+                return;
+            }
+
+            if (!GetInputValue(XMaxElement, out this.Settings.XMax))
+            {
+                Window.Alert("XMax should be a number");
+                return;
+            }
+
+            if (!GetInputValue(YMinElement, out this.Settings.YMin))
+            {
+                Window.Alert("YMin should be a number");
+                return;
+            }
+
+            if (!GetInputValue(YMaxElement, out this.Settings.YMax))
+            {
+                Window.Alert("YMax should be a number");
+                return;
+            }
+
 
             this.Settings.UseColorMap = ColorMapCheckbox.Checked;
             if (this.Settings.UseColorMap)

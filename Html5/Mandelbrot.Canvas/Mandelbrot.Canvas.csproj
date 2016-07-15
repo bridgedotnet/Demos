@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="DataStructures.cs" />
     <Compile Include="Drawer.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Mandelbrot.cs" />
     <Compile Include="App.cs" />
