@@ -1,3 +1,4 @@
+using System;
 using Bridge;
 using Bridge.Html5;
 
@@ -5,17 +6,17 @@ namespace Demo
 {
     public class App
     {
-        [Ready]
         public static void Main()
         {
             // Create a new Button
-            var button = new ButtonElement
+            var button = new HTMLButtonElement
             {
-                InnerHTML = "Submit",
+                InnerHTML = "Click Me",
                 OnClick = (ev) =>
                 {
-                    // When Button is clicked, popup a message
-                    Global.Alert("Success!");
+                    // When Button is clicked, 
+                    // the Bridge Console should open.
+                    Console.WriteLine("Success!");
                 }
             };
 
