@@ -51,11 +51,14 @@
         juliaSetCheckbox: null,
         juliaReElement: null,
         juliaImElement: null,
+        xMinElement: null,
+        xMaxElement: null,
+        yMinElement: null,
+        yMaxElement: null,
         currentY: 0,
         calculator: null,
         settings: null,
         constructor: function (settings, calculator) {
-            this.$initialize();
             this.settings = settings;
             this.calculator = calculator;
     
@@ -67,40 +70,78 @@
             this.drawButton = Bridge.merge(document.createElement('button'), {
                 innerHTML: "Draw the Mandelbrot fractal",
                 onclick: Bridge.fn.bind(this, function (ev) {
+                    System.Console.log("Drawing");
                     this.startDraw(canvas);
                 })
             } );
     
-            this.drawButton.setAttribute("style", "font-size:30px, height:80px; width:180px; border-radius:10px; border: 2px solid black; cursor: pointer");
+            this.drawButton.setAttribute("style", "font-size:18px;height: 60px;  width:95%; border: 2px solid black; cursor: pointer");
     
-            var parameterContainer = document.createElement('div');
+            // Iteration controls
+            this.radiusElement = this.getInputNumberElement(null, this.settings.maxRadius, 3, 0.5);
+            this.iterationCountElement = this.getInputNumberElement(null, this.settings.maxIterations, 4, 100, 0, 100000);
+            // Color controls
+            this.colorMapCheckbox = this.getCheckboxElement(this.settings.useColorMap);
+            this.colorScaleElement = this.getInputNumberElement(this.colorMapCheckbox, this.settings.colorScale, 5, 1000);
+            this.colorOffsetElement = this.getInputNumberElement(this.colorMapCheckbox, this.settings.colorOffset, 4, 10);
     
-            this.radiusElement = this.getInputNumberElement(parameterContainer, null, this.settings.maxRadius, 3, "Escape radius:", 0.5);
-            this.iterationCountElement = this.getInputNumberElement(parameterContainer, null, this.settings.maxIterations, 4, "Iteration count:", 100, 0, 100000);
+            // Julia sets
+            this.juliaSetCheckbox = this.getCheckboxElement(this.settings.useJuliaSet);
+            this.juliaImElement = this.getInputNumberElement(this.juliaSetCheckbox, this.settings.juliaSetParameter.im, 5, 0.005, null);
+            this.juliaReElement = this.getInputNumberElement(this.juliaSetCheckbox, this.settings.juliaSetParameter.re, 5, 0.005, null);
     
-            parameterContainer.appendChild(document.createElement('br'));
+            // Viewport controls
+            this.xMinElement = this.getInputNumberElement(null, this.settings.xMin, 5, 0.005, -5.0);
+            this.xMaxElement = this.getInputNumberElement(null, this.settings.xMax, 5, 0.005, 0.0);
+            this.yMinElement = this.getInputNumberElement(null, this.settings.yMin, 5, 0.005, -5.0);
+            this.yMaxElement = this.getInputNumberElement(null, this.settings.yMax, 5, 0.005, 0.0);
     
-            this.colorMapCheckbox = this.getCheckboxElement(parameterContainer, "Use Color map ", this.settings.useColorMap);
-            this.colorScaleElement = this.getInputNumberElement(parameterContainer, this.colorMapCheckbox, this.settings.colorScale, 5, "Scale:", 1000);
-            this.colorOffsetElement = this.getInputNumberElement(parameterContainer, this.colorMapCheckbox, this.settings.colorOffset, 4, "Offset:", 10);
+            var paramsColumn = document.createElement('td');
+            var canvasColumn = document.createElement('td');
+            paramsColumn.setAttribute("valign", "top");
+            canvasColumn.setAttribute("valign", "top");
+            canvasColumn.appendChild(canvas);
     
-            parameterContainer.appendChild(document.createElement('br'));
+            var layoutRow = document.createElement('tr');
+            Mandelbrot.Canvas.Extensions.appendChildren(layoutRow, [paramsColumn, canvasColumn]);
     
-            this.juliaSetCheckbox = this.getCheckboxElement(parameterContainer, "Use Julia set ", this.settings.useJuliaSet);
-            this.juliaImElement = this.getInputNumberElement(parameterContainer, this.juliaSetCheckbox, this.settings.juliaSetParameter.im, 5, "Im:", 0.005, null);
-            this.juliaReElement = this.getInputNumberElement(parameterContainer, this.juliaSetCheckbox, this.settings.juliaSetParameter.re, 5, "Re:", 0.005, null);
+            var layout = document.createElement('table');
     
-            parameterContainer.appendChild(document.createElement('br'));
+            var paramsTable = document.createElement('table');
+            Mandelbrot.Canvas.Extensions.appendChildren(paramsTable, [this.row$1([this.label("XMin: "), this.xMinElement]), this.row$1([this.label("XMax: "), this.xMaxElement]), this.row$1([this.label("YMin: "), this.yMinElement]), this.row$1([this.label("YMax: "), this.yMaxElement]), this.row$1([this.label("Escape radius: "), this.radiusElement]), this.row$1([this.label("Iteration count: "), this.iterationCountElement]), this.row$1([this.label("Use color map: "), this.colorMapCheckbox]), this.row$1([this.label("Color scale: "), this.colorScaleElement]), this.row$1([this.label("Color offset: "), this.colorOffsetElement]), this.row$1([this.label("Use Julia set: "), this.juliaSetCheckbox]), this.row$1([this.label("Im: "), this.juliaImElement]), this.row$1([this.label("Re: "), this.juliaReElement]), this.row(document.createElement('hr'), 2), this.row(this.drawButton, 2)]);
     
-            parameterContainer.appendChild(this.drawButton);
+            paramsColumn.appendChild(paramsTable);
     
-            document.body.appendChild(parameterContainer);
-    
-            document.body.appendChild(document.createElement('hr'));
-    
-            document.body.appendChild(canvas);
+            layout.appendChild(layoutRow);
+            document.body.appendChild(layout);
         },
-        getCheckboxElement: function (container, title, isChecked) {
+        label: function (value) {
+            var lbl = document.createElement('label');
+            lbl.innerHTML = value;
+            lbl.style.margin = "5px";
+            lbl.style.fontSize = "18px";
+            return lbl;
+        },
+        row$1: function (elements) {
+            var $t;
+            if (elements === void 0) { elements = []; }
+            var row = document.createElement('tr');
+            $t = Bridge.getEnumerator(elements);
+            while ($t.moveNext()) {
+                var el = $t.getCurrent();
+                row.appendChild(Mandelbrot.Canvas.Extensions.withinTableDataCell(el));
+            }
+            return row;
+        },
+        row: function (el, colspan) {
+            var row = document.createElement('tr');
+            var td = document.createElement('td');
+            td.setAttribute("colspan", colspan.toString());
+            td.appendChild(el);
+            row.appendChild(td);
+            return row;
+        },
+        getCheckboxElement: function (isChecked) {
             var checkbox = Bridge.merge(document.createElement('input'), {
                 type: "checkbox",
                 checked: isChecked
@@ -119,16 +160,18 @@
             };
             checkbox.onchange = enableInputs;
     
-            var label = Bridge.merge(document.createElement('label'), {
-                innerHTML: title
-            } );
+            //var label = new HTMLLabelElement
+            //{
+            //    InnerHTML = title
+            //};
     
-            label.style.margin = "5px";
-            label.appendChild(checkbox);
+            //label.Style.Margin = "5px";
+            //label.AppendChild(checkbox);
     
-            if (container != null) {
-                container.appendChild(label);
-            }
+            //if (container != null)
+            //{
+            //    container.AppendChild(label);
+            //}
     
             return checkbox;
         },
@@ -137,20 +180,16 @@
             var elements;
     
             if (ce == null || ((elements = Bridge.as(ce, System.Collections.Generic.List$1(HTMLInputElement)))) == null) {
-                elements = new (System.Collections.Generic.List$1(HTMLInputElement))();
+                elements = new System.Collections.Generic.List$1(HTMLInputElement)();
                 element.toEnable = elements;
             }
     
             return elements;
         },
-        getInputNumberElement: function (container, enableElement, initialValue, widthInDigits, title, step, min, max) {
+        getInputNumberElement: function (enableElement, initialValue, widthInDigits, step, min, max) {
             if (step === void 0) { step = 1.0; }
             if (min === void 0) { min = 0.0; }
             if (max === void 0) { max = null; }
-            var label = document.createElement('label');
-            label.innerHTML = title;
-            label.style.margin = "5px";
-    
             var element = Bridge.merge(document.createElement('input'), {
                 type: "number",
                 value: System.Double.format(initialValue, 'G'),
@@ -178,12 +217,6 @@
     
             element.style.width = widthInDigits + "em";
             element.style.margin = "5px";
-    
-            label.appendChild(element);
-    
-            if (container != null) {
-                container.appendChild(label);
-            }
     
             return element;
         },
@@ -221,6 +254,27 @@
                 window.alert("Escape radius should be positive integer");
                 return;
             }
+    
+            if (!Mandelbrot.Canvas.Drawer.getInputValue(this.xMinElement, Bridge.ref(this.settings, "xMin"))) {
+                window.alert("XMin should be a number");
+                return;
+            }
+    
+            if (!Mandelbrot.Canvas.Drawer.getInputValue(this.xMaxElement, Bridge.ref(this.settings, "xMax"))) {
+                window.alert("XMax should be a number");
+                return;
+            }
+    
+            if (!Mandelbrot.Canvas.Drawer.getInputValue(this.yMinElement, Bridge.ref(this.settings, "yMin"))) {
+                window.alert("YMin should be a number");
+                return;
+            }
+    
+            if (!Mandelbrot.Canvas.Drawer.getInputValue(this.yMaxElement, Bridge.ref(this.settings, "yMax"))) {
+                window.alert("YMax should be a number");
+                return;
+            }
+    
     
             this.settings.useColorMap = this.colorMapCheckbox.checked;
             if (this.settings.useColorMap) {
@@ -301,6 +355,20 @@
                 img.data[((index + 1) | 0)] = color.green;
                 img.data[((index + 2) | 0)] = color.blue;
                 img.data[((index + 3) | 0)] = 255; // alpha
+            },
+            withinTableDataCell: function (el) {
+                var td = document.createElement('td');
+                td.appendChild(el);
+                return td;
+            },
+            appendChildren: function (parent, elems) {
+                var $t;
+                if (elems === void 0) { elems = []; }
+                $t = Bridge.getEnumerator(elems);
+                while ($t.moveNext()) {
+                    var element = $t.getCurrent();
+                    parent.appendChild(element);
+                }
             }
         }
     });
@@ -312,7 +380,6 @@
             }
         },
         constructor: function (settings) {
-            this.$initialize();
             this.setSettings(settings);
         },
         magnitude: function (z) {
@@ -413,10 +480,10 @@
         },
         calculatePoint: function (x, y, height, width) {
             // complex plain viewport
-            var xmin = -1.5;
-            var xmax = 1.0;
-            var ymin = -2.0;
-            var ymax = 2.0;
+            var xmin = this.getSettings().xMin;
+            var xmax = this.getSettings().xMax;
+            var ymin = this.getSettings().yMin;
+            var ymax = this.getSettings().yMax;
     
             var point = { x: x, y: y };
             var complex = this.fromPointOnCanvas(point, xmin, xmax, ymin, ymax, height, width);
@@ -435,6 +502,10 @@
     });
     
     Bridge.define('Mandelbrot.Canvas.Options', {
+        xMin: -2.0,
+        xMax: 2.0,
+        yMin: -2.0,
+        yMax: 2.0,
         maxIterations: 1000,
         maxRadius: 10,
         useColorMap: true,

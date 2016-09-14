@@ -158,10 +158,10 @@ namespace Mandelbrot.Canvas
         public Color CalculatePoint(int x, int y, int height, int width)
         {
             // complex plain viewport
-            var xmin = -1.5;
-            var xmax = 1.0;
-            var ymin = -2.0;
-            var ymax = 2.0;
+            var xmin = this.Settings.XMin;
+            var xmax = this.Settings.XMax;
+            var ymin = this.Settings.YMin;
+            var ymax = this.Settings.YMax;
 
             var point = new Point { X = x, Y = y };
             var complex = FromPointOnCanvas(point, xmin, xmax, ymin, ymax, height, width);
