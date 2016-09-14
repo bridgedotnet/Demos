@@ -59,6 +59,7 @@
         calculator: null,
         settings: null,
         constructor: function (settings, calculator) {
+            this.$initialize();
             this.settings = settings;
             this.calculator = calculator;
     
@@ -70,7 +71,6 @@
             this.drawButton = Bridge.merge(document.createElement('button'), {
                 innerHTML: "Draw the Mandelbrot fractal",
                 onclick: Bridge.fn.bind(this, function (ev) {
-                    System.Console.log("Drawing");
                     this.startDraw(canvas);
                 })
             } );
@@ -180,7 +180,7 @@
             var elements;
     
             if (ce == null || ((elements = Bridge.as(ce, System.Collections.Generic.List$1(HTMLInputElement)))) == null) {
-                elements = new System.Collections.Generic.List$1(HTMLInputElement)();
+                elements = new (System.Collections.Generic.List$1(HTMLInputElement))();
                 element.toEnable = elements;
             }
     
@@ -380,6 +380,7 @@
             }
         },
         constructor: function (settings) {
+            this.$initialize();
             this.setSettings(settings);
         },
         magnitude: function (z) {
