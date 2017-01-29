@@ -36,7 +36,7 @@ This project comes pre-shipped with the build task necessary to build it
 using **xbuild** on the solution file (**msbuild** if windows).
 
 Once loaded on Visual Studio Code, to build the solution run the build
-task (shift+command+B on OS X and ctrl+shift+B anywhere else -- or via
+task (<kbd>shift</kbd> + <kbd>command</kbd> + <kbd>B</kbd> on OS X and <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>B</kbd> anywhere else -- or via
 the VSCode's command palette).
 
 ## Testing The Results
