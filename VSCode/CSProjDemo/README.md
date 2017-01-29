@@ -3,8 +3,8 @@
 - Windows 7+, OS X or Linux operating system.
 - Building environment:
  - If Windows, Visual Studio 2013 + .NET 4.0 (msbuild)
- - If OS X or Linux, Mono (xbuild) http://www.mono-project.com/
-- Visual Studio Code - http://code.visualstudio.com/
+ - If OS X or Linux, [Mono](http://www.mono-project.com/) (xbuild)
+- [Visual Studio Code](http://code.visualstudio.com/)
 
 ## Opening The Project
 
@@ -28,7 +28,7 @@ supported project types and finally load the .sln file, enabling intelli-
 sense correctly and enabling you to build the project using **xbuild**.
 
 On Windows platform, MSBuild from microsoft .NET is used. On the other
-platforms, xbuild from mono (www.mono-project.com) is used.
+platforms, xbuild from [mono](http://www.mono-project.com) is used.
 
 ## Building The Solution
 
@@ -51,8 +51,7 @@ with Xamarin Studio (MonoDevelop), so it works with VSCode on Windows,
 Linux and OS X, and also with Visual Studio on Windows, and Xamarin Stu-
 dio on the platforms it runs.
 
-Xamarin Studio (or MonoDevelop) can be obtained from:
-http://www.mono-project.com/
+Xamarin Studio (or MonoDevelop) can be obtained from [here](http://www.mono-project.com/).
 
 ## Troubleshooting
 
@@ -68,22 +67,19 @@ things might break if not set up correctly. If your mono installation is
 not on path (/opt, for example), there might be a **env.sh** file to load
 this information.
 
-The guide for installing mono on OS X is here:
-http://www.mono-project.com/docs/getting-started/install/mac/
+The guide for installing mono on OS X is [here](http://www.mono-project.com/docs/getting-started/install/mac/).
 
 You may also use HomeBrew to install packages on OS X (community software
 package manager for OS X).
 
-- HomeBrew Installation: http://brew.sh/
-- Mono Installation: http://brewformulas.org/Mono
+- HomeBrew [Installation](http://brew.sh/)
+- Mono [Installation](http://brewformulas.org/Mono)
 
-For linux, it depends on your distribution, so a starting point is here:
-http://www.mono-project.com/download/#download-lin
+For linux, it depends on your distribution, so a starting point is [here](http://www.mono-project.com/download/#download-lin).
 
 ## More information
 
 For anything not covered in this document, please refer to:
-- Bridge.NET Knowledge base: http://bridge.net/kb/
-- Bridge.NET Forums: http://forums.bridge.net/
-- Bridge.NET Github Issue tracker:
-  https://github.com/bridgedotnet/Bridge/issues/
+- [Documentation](http://bridge.net/docs)
+- [Forums](http://forums.bridge.net/)
+- [Github Issues](https://github.com/bridgedotnet/Bridge/issues/)
