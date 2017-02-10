@@ -78,11 +78,11 @@
   </PropertyGroup>
   <ItemGroup Condition="'$(BridgeMode)' == '1'">
     <Reference Include="Bridge">
-      <HintPath>..\packages\Bridge.1.12.1\lib\net40\Bridge.dll</HintPath>
+      <HintPath>..\packages\Bridge.Core.15.7.0\lib\net40\Bridge.dll</HintPath>
     </Reference>
     <Reference Include="Bridge.Html5">
-      <HintPath>..\packages\Bridge.1.12.1\lib\net40\Bridge.Html5.dll</HintPath>
+      <HintPath>..\packages\Bridge.Html5.15.7.0\lib\net40\Bridge.Html5.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <Import Condition="'$(BridgeMode)' == '1'" Project="..\packages\Bridge.1.12.1\build\Bridge.targets" />
+  <Import Condition="'$(BridgeMode)' == '1'" Project="..\packages\Bridge.Min.15.7.0\build\Bridge.Min.targets" />
 </Project>
