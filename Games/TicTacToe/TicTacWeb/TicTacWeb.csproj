@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,14 +66,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.html" />
+    <Content Include="index.html" />
     <Content Include="js\bridge.js" />
     <Content Include="js\bridge.min.js" />
     <Content Include="js\bridgeTicTacToe.js" />
     <Content Include="js\bridgeTicTacToe.min.js" />
-    <Content Include="js\jquery-1.8.3.js" />
-    <Content Include="js\jquery-1.8.3.min.js" />
-    <Content Include="js\originalTicTacToe.js" />
+    <Content Include="lib\originalTicTacToe.js" />
     <Content Include="original.html" />
     <Content Include="Web.config" />
   </ItemGroup>
