@@ -11,18 +11,18 @@ namespace WebSocketSample
     {
         #region UI elements
 
-        private DivElement ConsoleLog;
-        private PreElement LastLogMessage;
-        private DivElement WebSocketSupported;
-        private DivElement WebSocketNotSupported;
-        private ImageElement WebSocketSupportImage;
-        private InputElement UseSecureWebSocketInput;
-        private InputElement LocationInput;
-        private InputElement MessageInput;
-        private ButtonElement ConnectButton;
-        private ButtonElement DisconnectButton;
-        private ButtonElement SendButton;
-        private ButtonElement ClearLogButton;
+        private HTMLDivElement ConsoleLog;
+        private HTMLPreElement LastLogMessage;
+        private HTMLDivElement WebSocketSupported;
+        private HTMLDivElement WebSocketNotSupported;
+        private HTMLImageElement WebSocketSupportImage;
+        private HTMLInputElement UseSecureWebSocketInput;
+        private HTMLInputElement LocationInput;
+        private HTMLInputElement MessageInput;
+        private HTMLButtonElement ConnectButton;
+        private HTMLButtonElement DisconnectButton;
+        private HTMLButtonElement SendButton;
+        private HTMLButtonElement ClearLogButton;
 
         #endregion UI elements
 
@@ -40,7 +40,7 @@ namespace WebSocketSample
 
         #region UI event handlers
 
-        private void OnClick_UseSecureWebSocket(MouseEvent<InputElement> e)
+        private void OnClick_UseSecureWebSocket(MouseEvent<HTMLInputElement> e)
         {
             if (OnViewUseSecureWebSocketChanged != null)
             {
@@ -48,7 +48,7 @@ namespace WebSocketSample
             }
         }
 
-        private void OnClick_ConnectButton(MouseEvent<ButtonElement> e)
+        private void OnClick_ConnectButton(MouseEvent<HTMLButtonElement> e)
         {
             if (OnViewConnecting != null)
             {
@@ -56,7 +56,7 @@ namespace WebSocketSample
             }
         }
 
-        private void OnClick_DisconnectButton(MouseEvent<ButtonElement> e)
+        private void OnClick_DisconnectButton(MouseEvent<HTMLButtonElement> e)
         {
             if (OnViewDisconnecting != null)
             {
@@ -64,7 +64,7 @@ namespace WebSocketSample
             }
         }
 
-        private void OnClick_SendButton(MouseEvent<ButtonElement> e)
+        private void OnClick_SendButton(MouseEvent<HTMLButtonElement> e)
         {
             if (OnViewSending != null)
             {
@@ -72,7 +72,7 @@ namespace WebSocketSample
             }
         }
 
-        private void OnClick_ClearLogButton(MouseEvent<ButtonElement> e)
+        private void OnClick_ClearLogButton(MouseEvent<HTMLButtonElement> e)
         {
             if (OnViewLogClearing != null)
             {
@@ -95,32 +95,32 @@ namespace WebSocketSample
 
         public void Initialize()
         {
-            ConsoleLog = Document.GetElementById<DivElement>("consoleLog");
+            ConsoleLog = Document.GetElementById<HTMLDivElement>("consoleLog");
 
-            WebSocketSupportImage = Document.GetElementById<ImageElement>("wsSupportImg");
+            WebSocketSupportImage = Document.GetElementById<HTMLImageElement>("wsSupportImg");
 
-            WebSocketSupported = Document.GetElementById<DivElement>("webSocketSupp");
+            WebSocketSupported = Document.GetElementById<HTMLDivElement>("webSocketSupp");
 
-            WebSocketNotSupported = Document.GetElementById<DivElement>("noWebSocketSupp");
+            WebSocketNotSupported = Document.GetElementById<HTMLDivElement>("noWebSocketSupp");
 
-            UseSecureWebSocketInput = Document.GetElementById<InputElement>("secureCb");
+            UseSecureWebSocketInput = Document.GetElementById<HTMLInputElement>("secureCb");
             UseSecureWebSocketInput.Checked = false;
             UseSecureWebSocketInput.OnClick += OnClick_UseSecureWebSocket;
 
-            LocationInput = Document.GetElementById<InputElement>("wsUri");
+            LocationInput = Document.GetElementById<HTMLInputElement>("wsUri");
 
-            MessageInput = Document.GetElementById<InputElement>("sendMessage");
+            MessageInput = Document.GetElementById<HTMLInputElement>("sendMessage");
 
-            ConnectButton = Document.GetElementById<ButtonElement>("connect");
+            ConnectButton = Document.GetElementById<HTMLButtonElement>("connect");
             ConnectButton.OnClick += OnClick_ConnectButton;
 
-            DisconnectButton = Document.GetElementById<ButtonElement>("disconnect");
+            DisconnectButton = Document.GetElementById<HTMLButtonElement>("disconnect");
             DisconnectButton.OnClick += OnClick_DisconnectButton;
 
-            SendButton = Document.GetElementById<ButtonElement>("send");
+            SendButton = Document.GetElementById<HTMLButtonElement>("send");
             SendButton.OnClick += OnClick_SendButton;
 
-            ClearLogButton = Document.GetElementById<ButtonElement>("clearLogBut");
+            ClearLogButton = Document.GetElementById<HTMLButtonElement>("clearLogBut");
             ClearLogButton.OnClick += OnClick_ClearLogButton;
 
             Window.OnBeforeUnload += (e) => { if (OnViewShuttingUp != null) { OnViewShuttingUp(this, new EventArgs()); } };
@@ -178,7 +178,7 @@ namespace WebSocketSample
             var createdNew = false;
             if (LastLogMessage == null || newLine)
             {
-                LastLogMessage = Document.CreateElement<PreElement>("p");
+                LastLogMessage = Document.CreateElement<HTMLPreElement>("p");
                 LastLogMessage.Style.WordWrap = WordWrap.Normal;
                 LastLogMessage.Style.Margin = "5px";
                 createdNew = true;
