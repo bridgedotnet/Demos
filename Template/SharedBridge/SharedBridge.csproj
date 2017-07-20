@@ -61,11 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(BridgeMode)' == '0'">
-    <Content Include="Bridge\output\readme.txt" />
-    <Content Include="Bridge\www\demo.html" />
-    <None Include="App_Readme\Bridge.NET\LICENSE" />
-    <None Include="App_Readme\Bridge.NET\README.md" />
-    <None Include="Bridge\bridge.json" />
+    <None Include="bridge.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -77,12 +73,14 @@
     <AdditionalExplicitAssemblyReferences />
   </PropertyGroup>
   <ItemGroup Condition="'$(BridgeMode)' == '1'">
-    <Reference Include="Bridge">
-      <HintPath>..\packages\Bridge.Core.15.7.0\lib\net40\Bridge.dll</HintPath>
+    <Reference Include="Bridge, Version=16.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.Core.16.0.0-beta5\lib\net40\Bridge.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Bridge.Html5">
-      <HintPath>..\packages\Bridge.Html5.15.7.0\lib\net40\Bridge.Html5.dll</HintPath>
+    <Reference Include="Bridge.Html5, Version=16.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.Html5.16.0.0-beta5\lib\net40\Bridge.Html5.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <Import Condition="'$(BridgeMode)' == '1'" Project="..\packages\Bridge.Min.15.7.0\build\Bridge.Min.targets" />
+  <Import Condition="'$(BridgeMode)' == '1'" Project="..\packages\Bridge.Min.16.0.0-beta5\build\Bridge.Min.targets" />
 </Project>
