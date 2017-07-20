@@ -22,7 +22,7 @@ namespace FormBuilder
                     Cache = false,
                     Success = delegate(object data, string str, jqXHR jqXHR)
                     {
-                        Form template = new Form(data);                        
+                        Form template = new Form(data);
                         App.CreateForm(jQuery.Select(FORM_CONTAINER), template);
                     }
                 }
@@ -40,7 +40,7 @@ namespace FormBuilder
                 .AddClass("form-group")
                 .Append(new jQuery("<div>")
                     .AddClass("col-sm-offset-2 col-sm-10")
-                    .Append(new jQuery(new InputElement
+                    .Append(new jQuery(new HTMLInputElement
                     {
                         Type = InputType.Submit,
                         Value = "Submit",
@@ -71,7 +71,7 @@ namespace FormBuilder
                 divRadio
                     .Append(new jQuery("<label>")
                         .AddClass("radio-inline")
-                        .Append(new InputElement
+                        .Append(new HTMLInputElement
                         {
                             Type = InputType.Radio,
                             Id = id + "-" + i,
@@ -84,7 +84,7 @@ namespace FormBuilder
 
             return new jQuery("<div>")
                 .AddClass("form-group")
-                .Append(new LabelElement
+                .Append(new HTMLLabelElement
                 {
                     ClassName = "control-label col-sm-2",
                     HtmlFor = id,
@@ -97,7 +97,7 @@ namespace FormBuilder
         {
             return new jQuery("<div>")
                 .AddClass("form-group")
-                .Append(new LabelElement
+                .Append(new HTMLLabelElement
                 {
                     ClassName = "control-label col-sm-2",
                     HtmlFor = id,
@@ -105,7 +105,7 @@ namespace FormBuilder
                 })
                 .Append(new jQuery("<div>")
                     .AddClass("col-sm-10")
-                    .Append(new InputElement
+                    .Append(new HTMLInputElement
                     {
                         Type = InputType.Text,
                         Id = id,

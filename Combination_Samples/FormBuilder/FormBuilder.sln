@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormWebApp", "FormWebApp\FormWebApp.csproj", "{7BCE3D06-AB50-4A1D-9642-491167969AB6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{020708A6-5D30-4BAD-9EBD-C29B564F7FD1} = {020708A6-5D30-4BAD-9EBD-C29B564F7FD1}
+		{FF8790D4-75F9-4478-8E7D-2DAF1EDDF9EA} = {FF8790D4-75F9-4478-8E7D-2DAF1EDDF9EA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTO", "DTO\DTO.csproj", "{020708A6-5D30-4BAD-9EBD-C29B564F7FD1}"
 EndProject
