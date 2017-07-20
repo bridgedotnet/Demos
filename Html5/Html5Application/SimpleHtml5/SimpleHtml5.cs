@@ -14,11 +14,11 @@ namespace SimpleHtml5
         {
             // A root container for the elements we will use in this example -
             // text input and two buttons
-            var div = new Bridge.Html5.DivElement();
+            var div = new Bridge.Html5.HTMLDivElement();
 
             // Create an input element, with Placeholder text
             // and KeyPress listener to call Save method after Enter key pressed
-            var input = new Bridge.Html5.InputElement()
+            var input = new Bridge.Html5.HTMLInputElement()
             {
                 Id = "number",
                 Type = InputType.Text,
@@ -33,7 +33,7 @@ namespace SimpleHtml5
             div.AppendChild(input);
 
             // Add a Save button to save entered number into Storage
-            var buttonSave = new Bridge.Html5.ButtonElement()
+            var buttonSave = new Bridge.Html5.HTMLButtonElement()
             {
                 Id = "save",
                 InnerHTML = "Save"
@@ -44,7 +44,7 @@ namespace SimpleHtml5
 
             // Add a Restore button to get saved number and populate
             // the text input with its value
-            var buttonRestore = new Bridge.Html5.ButtonElement()
+            var buttonRestore = new Bridge.Html5.HTMLButtonElement()
             {
                 Id = "restore",
                 InnerHTML = "Restore",
@@ -75,7 +75,7 @@ namespace SimpleHtml5
 
         private static void Save()
         {
-            var input = Document.GetElementById<InputElement>("number");
+            var input = Document.GetElementById<HTMLInputElement>("number");
             int i = Window.ParseInt(input.Value);
 
             if (!Window.IsNaN(i))
@@ -92,7 +92,7 @@ namespace SimpleHtml5
 
         private static void Restore()
         {
-            var input = Document.GetElementById<InputElement>("number");
+            var input = Document.GetElementById<HTMLInputElement>("number");
             var o = Window.LocalStorage[KEY];
 
             if (o != null)
