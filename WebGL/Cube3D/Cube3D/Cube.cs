@@ -8,7 +8,7 @@ namespace Cube3D
 {
     public class Cube
     {
-        public CanvasElement canvas;
+        public HTMLCanvasElement canvas;
         public WebGLRenderingContext gl;
         public WebGLProgram program;
         public WebGLTexture texture;
@@ -63,7 +63,7 @@ namespace Cube3D
 
         public WebGLShader GetShader(WebGLRenderingContext gl, string id)
         {
-            var shaderScript = Document.GetElementById(id).As<ScriptElement>();
+            var shaderScript = Document.GetElementById(id).As<HTMLScriptElement>();
 
             if (shaderScript == null)
             {
@@ -153,7 +153,7 @@ namespace Cube3D
             this.program = shaderProgram;
         }
 
-        public void HandleLoadedTexture(ImageElement image)
+        public void HandleLoadedTexture(HTMLImageElement image)
         {
             gl.PixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
             gl.BindTexture(gl.TEXTURE_2D, this.texture);
@@ -168,14 +168,14 @@ namespace Cube3D
         {
             this.texture = gl.CreateTexture();
 
-            var textureImageElement = new ImageElement();
+            var textureHTMLImageElement = new HTMLImageElement();
 
-            textureImageElement.OnLoad = (ev) =>
+            textureHTMLImageElement.OnLoad = (ev) =>
             {
-                this.HandleLoadedTexture(textureImageElement);
+                this.HandleLoadedTexture(textureHTMLImageElement);
             };
 
-            textureImageElement.Src = this.textureImageSrc;
+            textureHTMLImageElement.Src = this.textureImageSrc;
         }
 
         public void SetMatrixUniforms()
