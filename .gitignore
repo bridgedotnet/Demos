@@ -230,3 +230,5 @@ VSCode/Demo/.build/Demo.dll
 /WebGL/Cube3D/www/js/bridge.meta.min.js
 /Games/TicTacToe/TicTacWeb/js/jquery-2.2.4.js
 /Games/TicTacToe/TicTacWeb/js/jquery-2.2.4.min.js
+/Html5/Mandelbrot.Canvas/Bridge/Mandelbrot.Canvas.meta.js
+/Html5/Mandelbrot.Canvas/Bridge/bridge.meta.js
