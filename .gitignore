@@ -236,3 +236,6 @@ VSCode/Demo/.build/Demo.dll
 /Html5/TouchSample/Bridge/bridge.meta.js
 /Html5/WebSocketSample/Bridge/js/WebSocketSample.meta.js
 /Html5/WebSocketSample/Bridge/js/bridge.meta.js
+/Mobile/Weather/WeatherApp/resources/js/bridge/Bridge.WeatherApp.meta.min.js
+/Mobile/Weather/WeatherApp/resources/js/bridge/bridge.meta.min.js
+/Mobile/Weather/WeatherApp/resources/js/bridge/jquery-2.2.4.js
