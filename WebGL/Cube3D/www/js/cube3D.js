@@ -200,18 +200,18 @@ Bridge.assembly("Cube3D", function ($asm, globals) {
                 var shader;
 
                 if (Bridge.referenceEquals(shaderScript.type, "x-shader/x-fragment")) {
-                    shader = gl.CreateShader(gl.FRAGMENT_SHADER);
+                    shader = gl.createShader(gl.FRAGMENT_SHADER);
                 } else if (Bridge.referenceEquals(shaderScript.type, "x-shader/x-vertex")) {
-                    shader = gl.CreateShader(gl.VERTEX_SHADER);
+                    shader = gl.createShader(gl.VERTEX_SHADER);
                 } else {
                     return null;
                 }
 
-                gl.ShaderSource(shader, str);
-                gl.CompileShader(shader);
+                gl.shaderSource(shader, str);
+                gl.compileShader(shader);
 
-                if (!gl.GetShaderParameter(shader, gl["COMPILE_STATUS"])) {
-                    Bridge.global.alert(gl.GetShaderInfoLog(shader));
+                if (!gl.getShaderParameter(shader, gl["COMPILE_STATUS"])) {
+                    Bridge.global.alert(gl.getShaderInfoLog(shader));
                     return null;
                 }
 
@@ -220,53 +220,53 @@ Bridge.assembly("Cube3D", function ($asm, globals) {
             initShaders: function () {
                 var fragmentShader = this.getShader(this.gl, "shader-fs");
                 var vertexShader = this.getShader(this.gl, "shader-vs");
-                var shaderProgram = this.gl.CreateProgram();
+                var shaderProgram = this.gl.createProgram();
 
                 if (Bridge.is(shaderProgram, System.Int32)) {
                     Bridge.global.alert("Could not initialise program");
                 }
 
-                this.gl.AttachShader(shaderProgram, vertexShader);
-                this.gl.AttachShader(shaderProgram, fragmentShader);
-                this.gl.LinkProgram(shaderProgram);
+                this.gl.attachShader(shaderProgram, vertexShader);
+                this.gl.attachShader(shaderProgram, fragmentShader);
+                this.gl.linkProgram(shaderProgram);
 
-                if (!this.gl.GetProgramParameter(shaderProgram, this.gl["LINK_STATUS"])) {
+                if (!this.gl.getProgramParameter(shaderProgram, this.gl["LINK_STATUS"])) {
                     Bridge.global.alert("Could not initialise shaders");
                 }
 
-                this.gl.UseProgram(shaderProgram);
+                this.gl.useProgram(shaderProgram);
 
-                this.vertexPositionAttribute = this.gl.GetAttribLocation(shaderProgram, "aVertexPosition");
-                this.vertexNormalAttribute = this.gl.GetAttribLocation(shaderProgram, "aVertexNormal");
-                this.textureCoordAttribute = this.gl.GetAttribLocation(shaderProgram, "aTextureCoord");
+                this.vertexPositionAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexPosition");
+                this.vertexNormalAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexNormal");
+                this.textureCoordAttribute = this.gl.getAttribLocation(shaderProgram, "aTextureCoord");
 
-                this.gl.EnableVertexAttribArray(this.vertexPositionAttribute);
-                this.gl.EnableVertexAttribArray(this.vertexNormalAttribute);
-                this.gl.EnableVertexAttribArray(this.textureCoordAttribute);
+                this.gl.enableVertexAttribArray(this.vertexPositionAttribute);
+                this.gl.enableVertexAttribArray(this.vertexNormalAttribute);
+                this.gl.enableVertexAttribArray(this.textureCoordAttribute);
 
-                this.pMatrixUniform = this.gl.GetUniformLocation(shaderProgram, "uPMatrix");
-                this.mvMatrixUniform = this.gl.GetUniformLocation(shaderProgram, "uMVMatrix");
-                this.nMatrixUniform = this.gl.GetUniformLocation(shaderProgram, "uNMatrix");
-                this.samplerUniform = this.gl.GetUniformLocation(shaderProgram, "uSampler");
-                this.useLightingUniform = this.gl.GetUniformLocation(shaderProgram, "uUseLighting");
-                this.ambientColorUniform = this.gl.GetUniformLocation(shaderProgram, "uAmbientColor");
-                this.lightingDirectionUniform = this.gl.GetUniformLocation(shaderProgram, "uLightingDirection");
-                this.directionalColorUniform = this.gl.GetUniformLocation(shaderProgram, "uDirectionalColor");
-                this.alphaUniform = this.gl.GetUniformLocation(shaderProgram, "uAlpha");
+                this.pMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uPMatrix");
+                this.mvMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uMVMatrix");
+                this.nMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uNMatrix");
+                this.samplerUniform = this.gl.getUniformLocation(shaderProgram, "uSampler");
+                this.useLightingUniform = this.gl.getUniformLocation(shaderProgram, "uUseLighting");
+                this.ambientColorUniform = this.gl.getUniformLocation(shaderProgram, "uAmbientColor");
+                this.lightingDirectionUniform = this.gl.getUniformLocation(shaderProgram, "uLightingDirection");
+                this.directionalColorUniform = this.gl.getUniformLocation(shaderProgram, "uDirectionalColor");
+                this.alphaUniform = this.gl.getUniformLocation(shaderProgram, "uAlpha");
 
                 this.program = shaderProgram;
             },
             handleLoadedTexture: function (image) {
-                this.gl.PixelStorei(this.gl["UNPACK_FLIP_Y_WEBGL"], true);
-                this.gl.BindTexture(this.gl.TEXTURE_2D, this.texture);
-                this.gl.TexImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl["UNSIGNED_BYTE"], image);
-                this.gl.TexParameteri(this.gl.TEXTURE_2D, this.gl["TEXTURE_MAG_FILTER"], this.gl["LINEAR"]);
-                this.gl.TexParameteri(this.gl.TEXTURE_2D, this.gl["TEXTURE_MIN_FILTER"], this.gl["LINEAR_MIPMAP_NEAREST"]);
-                this.gl.GenerateMipmap(this.gl.TEXTURE_2D);
-                this.gl.BindTexture(this.gl.TEXTURE_2D, null);
+                this.gl.pixelStorei(this.gl["UNPACK_FLIP_Y_WEBGL"], true);
+                this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+                this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl["UNSIGNED_BYTE"], image);
+                this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl["TEXTURE_MAG_FILTER"], this.gl["LINEAR"]);
+                this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl["TEXTURE_MIN_FILTER"], this.gl["LINEAR_MIPMAP_NEAREST"]);
+                this.gl.generateMipmap(this.gl.TEXTURE_2D);
+                this.gl.bindTexture(this.gl.TEXTURE_2D, null);
             },
             initTexture: function () {
-                this.texture = this.gl.CreateTexture();
+                this.texture = this.gl.createTexture();
 
                 var textureHTMLImageElement = new Image();
 
@@ -277,15 +277,15 @@ Bridge.assembly("Cube3D", function ($asm, globals) {
                 textureHTMLImageElement.src = this["textureImageSrc"];
             },
             setMatrixUniforms: function () {
-                this.gl.UniformMatrix4fv(this.pMatrixUniform, false, this.pMatrix);
-                this.gl.UniformMatrix4fv(this.mvMatrixUniform, false, this.mvMatrix);
+                this.gl.uniformMatrix4fv(this.pMatrixUniform, false, this.pMatrix);
+                this.gl.uniformMatrix4fv(this.mvMatrixUniform, false, this.mvMatrix);
 
                 var normalMatrix = mat3.create();
 
                 mat4.toInverseMat3(this.mvMatrix, normalMatrix);
                 mat3.transpose(normalMatrix);
 
-                this.gl.UniformMatrix3fv(this.nMatrixUniform, false, normalMatrix);
+                this.gl.uniformMatrix3fv(this.nMatrixUniform, false, normalMatrix);
             },
             degToRad: function (degrees) {
                 return degrees * Math["PI"] / 180;
@@ -322,37 +322,37 @@ Bridge.assembly("Cube3D", function ($asm, globals) {
                 }
             },
             initBuffers: function () {
-                this.cubeVertexPositionBuffer = this.gl.CreateBuffer();
-                this.gl.BindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
+                this.cubeVertexPositionBuffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
 
                 var vertices = System.Array.init([-1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0], System.Double);
 
-                this.gl.BufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl["STATIC_DRAW"]);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl["STATIC_DRAW"]);
 
-                this.cubeVertexNormalBuffer = this.gl.CreateBuffer();
-                this.gl.BindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
+                this.cubeVertexNormalBuffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
 
                 var vertexNormals = System.Array.init([0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0], System.Double);
 
-                this.gl.BufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertexNormals), this.gl["STATIC_DRAW"]);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertexNormals), this.gl["STATIC_DRAW"]);
 
-                this.cubeVertexTextureCoordBuffer = this.gl.CreateBuffer();
-                this.gl.BindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
+                this.cubeVertexTextureCoordBuffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
 
                 var textureCoords = System.Array.init([0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0], System.Double);
 
-                this.gl.BufferData(this.gl.ARRAY_BUFFER, new Float32Array(textureCoords), this.gl["STATIC_DRAW"]);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(textureCoords), this.gl["STATIC_DRAW"]);
 
-                this["cubeVertexIndexBuffer"] = this.gl.CreateBuffer();
-                this.gl.BindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this["cubeVertexIndexBuffer"]);
+                this["cubeVertexIndexBuffer"] = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this["cubeVertexIndexBuffer"]);
 
                 var cubeVertexIndices = System.Array.init([0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23], System.Int32);
 
-                this.gl.BufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), this.gl["STATIC_DRAW"]);
+                this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), this.gl["STATIC_DRAW"]);
             },
             drawScene: function () {
-                this.gl.Viewport(0, 0, this.canvas.width, this.canvas.height);
-                this.gl.Clear(this.gl["COLOR_BUFFER_BIT"] | this.gl["DEPTH_BUFFER_BIT"]);
+                this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+                this.gl.clear(this.gl["COLOR_BUFFER_BIT"] | this.gl["DEPTH_BUFFER_BIT"]);
 
                 mat4.perspective(45, this.canvas.width / this.canvas.height, 0.1, 100, this.pMatrix);
                 mat4.identity(this.mvMatrix);
@@ -360,37 +360,37 @@ Bridge.assembly("Cube3D", function ($asm, globals) {
                 mat4.rotate(this.mvMatrix, this.degToRad(this.xRotation), System.Array.init([1, 0, 0], System.Double));
                 mat4.rotate(this.mvMatrix, this.degToRad(this.yRotation), System.Array.init([0, 1, 0], System.Double));
 
-                this.gl.BindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
-                this.gl.VertexAttribPointer(this.vertexPositionAttribute, 3, this.gl.FLOAT, false, 0, 0);
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
+                this.gl.vertexAttribPointer(this.vertexPositionAttribute, 3, this.gl.FLOAT, false, 0, 0);
 
-                this.gl.BindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
-                this.gl.VertexAttribPointer(this.vertexNormalAttribute, 3, this.gl.FLOAT, false, 0, 0);
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
+                this.gl.vertexAttribPointer(this.vertexNormalAttribute, 3, this.gl.FLOAT, false, 0, 0);
 
-                this.gl.BindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
-                this.gl.VertexAttribPointer(this.textureCoordAttribute, 2, this.gl.FLOAT, false, 0, 0);
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
+                this.gl.vertexAttribPointer(this.textureCoordAttribute, 2, this.gl.FLOAT, false, 0, 0);
 
-                this.gl.ActiveTexture(this.gl.TEXTURE0);
-                this.gl.BindTexture(this.gl.TEXTURE_2D, this.texture);
+                this.gl.activeTexture(this.gl.TEXTURE0);
+                this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
 
-                this.gl.Uniform1i(this.samplerUniform, 0);
+                this.gl.uniform1i(this.samplerUniform, 0);
 
                 // Add Blending
                 if (this.useBlending) {
-                    this.gl.BlendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-                    this.gl.Enable(this.gl.BLEND);
-                    this.gl.Disable(this.gl.DEPTH_TEST);
-                    this.gl.Uniform1f(this.alphaUniform, this.alpha);
+                    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+                    this.gl.enable(this.gl.BLEND);
+                    this.gl.disable(this.gl.DEPTH_TEST);
+                    this.gl.uniform1f(this.alphaUniform, this.alpha);
                 } else {
-                    this.gl.Disable(this.gl.BLEND);
-                    this.gl.Enable(this.gl.DEPTH_TEST);
-                    this.gl.Uniform1f(this.alphaUniform, 1);
+                    this.gl.disable(this.gl.BLEND);
+                    this.gl.enable(this.gl.DEPTH_TEST);
+                    this.gl.uniform1f(this.alphaUniform, 1);
                 }
 
                 // Add Lighting
-                this.gl.Uniform1i(this.useLightingUniform, this.useLighting);
+                this.gl.uniform1i(this.useLightingUniform, this.useLighting);
 
                 if (this.useLighting) {
-                    this.gl.Uniform3f(this.ambientColorUniform, this.ambientR, this.ambientG, this.ambientB);
+                    this.gl.uniform3f(this.ambientColorUniform, this.ambientR, this.ambientG, this.ambientB);
 
                     var lightingDirection = System.Array.init([this.lightDirectionX, this.lightDirectionY, this.lightDirectionZ], System.Double);
                     var adjustedLD = vec3.create();
@@ -398,15 +398,15 @@ Bridge.assembly("Cube3D", function ($asm, globals) {
                     vec3.normalize(lightingDirection, adjustedLD);
                     vec3.scale(adjustedLD, -1);
 
-                    this.gl.Uniform3fv(this.lightingDirectionUniform, adjustedLD);
-                    this.gl.Uniform3f(this.directionalColorUniform, this.directionalR, this.directionalG, this.directionalB);
+                    this.gl.uniform3fv(this.lightingDirectionUniform, adjustedLD);
+                    this.gl.uniform3f(this.directionalColorUniform, this.directionalR, this.directionalG, this.directionalB);
                 }
 
-                this.gl.BindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this["cubeVertexIndexBuffer"]);
+                this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this["cubeVertexIndexBuffer"]);
 
                 this.setMatrixUniforms();
 
-                this.gl.DrawElements(this.gl["TRIANGLES"], 36, this.gl["UNSIGNED_SHORT"], 0);
+                this.gl.drawElements(this.gl["TRIANGLES"], 36, this.gl["UNSIGNED_SHORT"], 0);
             },
             animate: function () {
                 var timeNow = new Date().getTime();

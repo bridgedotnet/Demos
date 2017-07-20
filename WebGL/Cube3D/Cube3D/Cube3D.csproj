@@ -52,7 +52,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Bridge.WebGL">
-      <HintPath>..\packages\Bridge.WebGL.1.8.3\lib\net40\Bridge.WebGL.dll</HintPath>
+      <HintPath>..\packages\Bridge.WebGL.1.8.4-beta5\lib\net40\Bridge.WebGL.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
