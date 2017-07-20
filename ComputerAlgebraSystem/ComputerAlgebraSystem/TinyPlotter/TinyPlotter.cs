@@ -100,7 +100,7 @@ namespace ComputerAlgebraSystem
             {
                 throw new ArgumentException("value is not the real range");
             }
-                
+
             var percentageOfProjection = (Math.Abs(projection.To - projection.From) * Math.Abs(value - realRange.From)) / Math.Abs(realRange.To - realRange.From);
 
             return percentageOfProjection + projection.From;
@@ -114,7 +114,7 @@ namespace ComputerAlgebraSystem
                 X = Rescale(p.X,
                          new Interval { From = xmin, To = xmax },
                          new Interval { From = 0, To = width }),
-                       
+
 
                 Y = height - Rescale(p.Y,
                                 new Interval { From = ymin, To = ymax },
@@ -125,9 +125,16 @@ namespace ComputerAlgebraSystem
         void SetPixel(ImageData img, int x, int y, Color color)
         {
             int index = (x + y * (int)img.Width) * 4;
+
+            if (index > img.Data.Length - 4)
+            {
+                return;
+            }
+
             img.Data[index] = color.Red;
             img.Data[index + 1] = color.Green;
             img.Data[index + 2] = color.Blue;
+
             img.Data[index + 3] = 255; // alpha
         }
     }
