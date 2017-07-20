@@ -12,7 +12,7 @@ namespace Demo
         {
             Document.Body.Style.Padding = "20px";
 
-            var form = new FormElement
+            var form = new HTMLFormElement
             {
                 ClassName = "col-md-6"
             };
@@ -25,9 +25,9 @@ namespace Demo
             UpdateButton_Click(null);
         }
 
-        public static DivElement CreatePanel()
+        public static HTMLDivElement CreatePanel()
         {
-            var panel = new DivElement
+            var panel = new HTMLDivElement
             {
                 ClassName = "panel panel-default"
             };
@@ -43,14 +43,14 @@ namespace Demo
             return panel;
         }
 
-        public static DivElement CreatePanelHeader()
+        public static HTMLDivElement CreatePanelHeader()
         {
-            var header = new DivElement
+            var header = new HTMLDivElement
             {
                 ClassName = "panel-heading logo"
             };
 
-            var title = new HeadingElement
+            var title = new HTMLHeadingElement
             {
                 InnerHTML = "Bridge.NET HTML5 Demo"
             };
@@ -60,9 +60,9 @@ namespace Demo
             return header;
         }
 
-        public static DivElement CreatePanelBody()
+        public static HTMLDivElement CreatePanelBody()
         {
-            var body = new DivElement
+            var body = new HTMLDivElement
             {
                 ClassName = "panel-body"
             };
@@ -81,14 +81,14 @@ namespace Demo
             return body;
         }
 
-        public static DivElement CreatePanelFooter()
+        public static HTMLDivElement CreatePanelFooter()
         {
-            var footer = new DivElement
+            var footer = new HTMLDivElement
             {
                 ClassName = "panel-footer text-right"
             };
 
-            var button = new InputElement
+            var button = new  HTMLInputElement
             {
                 Type = InputType.Submit,
                 Value = "Submit",
@@ -102,9 +102,9 @@ namespace Demo
             return footer;
         }
 
-        public static DivElement CreateFormField(string name, string glyph)
+        public static HTMLDivElement CreateFormField(string name, string glyph)
         {
-            var div = new DivElement
+            var div = new HTMLDivElement
             {
                 ClassName = "input-group",
                 Style =
@@ -113,7 +113,7 @@ namespace Demo
                 }
             };
 
-            var span = new SpanElement
+            var span = new HTMLSpanElement
             {
                 ClassName = "glyphicon glyphicon-" + glyph + " input-group-addon"
             };
@@ -123,7 +123,7 @@ namespace Demo
 
             if (name == "Message")
             {
-                input = new TextAreaElement
+                input = new HTMLTextAreaElement
                 {
                     Name = name.ToLowerCase(),
                     Placeholder = placeholder,
@@ -133,7 +133,7 @@ namespace Demo
             }
             else
             {
-                input = new InputElement
+                input = new  HTMLInputElement
                 {
                     Type = InputType.Text,
                     Name = name.ToLowerCase(),
@@ -151,28 +151,28 @@ namespace Demo
 
         public static Element[] CreateDateTimeField()
         {
-            var label = new LabelElement
+            var label = new HTMLLabelElement
             {
                 HtmlFor = "dateTimeInput",
                 InnerHTML = "Server Date and Time:"
             };
 
-            var div = new DivElement
+            var div = new HTMLDivElement
             {
                 ClassName = "input-group"
             };
 
-            var spanPrefix = new SpanElement
+            var spanPrefix = new HTMLSpanElement
             {
                 ClassName = "input-group-addon glyphicon glyphicon-time"
             };
 
-            var spanSuffix = new SpanElement
+            var spanSuffix = new HTMLSpanElement
             {
                 ClassName = "input-group-btn"
             };
 
-            var button = new ButtonElement
+            var button = new HTMLButtonElement
             {
                 Type = ButtonType.Button,
                 ClassName = "btn btn-primary",
@@ -180,7 +180,7 @@ namespace Demo
                 OnClick = Html5App.UpdateButton_Click
             };
 
-            var input = new InputElement
+            var input = new  HTMLInputElement
             {
                 Id = "dateTimeInput",
                 Type = InputType.Text,
@@ -208,11 +208,11 @@ namespace Demo
                 var val = JSON.Parse(request.ResponseText).As<string>();
                 var dateTime = DateTime.Parse(val);
 
-                Document.GetElementById<InputElement>("dateTimeInput").Value = dateTime.ToString("yyyy-MM-dd hh:mm:ss");
+                Document.GetElementById< HTMLInputElement>("dateTimeInput").Value = dateTime.ToString("yyyy-MM-dd hh:mm:ss");
             };
 
             request.OnLoad = onLoad;
-            request.Open("GET", Config.GET_SERVER_TIME_URL + "?" + DateTime.Now.GetTime(), true);
+            request.Open("GET", Config.GET_SERVER_TIME_URL + "?" + DateTime.Now.ToString(), true);
             request.Send();
         }
     }

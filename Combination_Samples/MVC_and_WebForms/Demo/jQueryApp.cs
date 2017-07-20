@@ -53,7 +53,7 @@ namespace Demo
         {
             return new jQuery("<div>")
                 .AddClass("panel-footer text-right")
-                .Append(new InputElement
+                .Append(new HTMLInputElement
                 {
                     Type = InputType.Submit,
                     Value = "Submit",
@@ -70,7 +70,7 @@ namespace Demo
 
             if (name == "Message")
             {
-                input = new TextAreaElement
+                input = new HTMLTextAreaElement
                 {
                     Name = name.ToLowerCase(),
                     Placeholder = placeholder,
@@ -80,7 +80,7 @@ namespace Demo
             }
             else
             {
-                input = new InputElement
+                input = new HTMLInputElement
                 {
                     Type = InputType.Text,
                     Name = name.ToLowerCase(),
@@ -93,7 +93,7 @@ namespace Demo
             return new jQuery("<div>")
                 .AddClass("input-group")
                 .Css("margin-bottom", "10px")
-                .Append(new SpanElement
+                .Append(new HTMLSpanElement
                 {
                     ClassName = "glyphicon glyphicon-" + glyph + " input-group-addon"
                 })
@@ -104,20 +104,20 @@ namespace Demo
         {
             return new object[] 
             { 
-                new LabelElement
+                new HTMLLabelElement
                 {
                     HtmlFor = "dateTimeInput",
                     InnerHTML = "Server Date and Time:"
                 }, 
-                new jQuery(new DivElement
+                new jQuery(new HTMLDivElement
                     {
                         ClassName = "input-group"
                     })
-                    .Append(new SpanElement
+                    .Append(new HTMLSpanElement
                     {
                         ClassName = "input-group-addon glyphicon glyphicon-time"
                     })
-                    .Append(new InputElement
+                    .Append(new HTMLInputElement
                     {
                         Id = "dateTimeInput",
                         Type = InputType.Text,
@@ -126,11 +126,11 @@ namespace Demo
                         Name = "datetime"
                     })
                     .Append(
-                        new jQuery(new SpanElement
+                        new jQuery(new HTMLSpanElement
                         {
                             ClassName = "input-group-btn"
                         })
-                        .Append(new ButtonElement
+                        .Append(new HTMLButtonElement
                         {
                             Type = ButtonType.Button,
                             ClassName = "btn btn-primary",
