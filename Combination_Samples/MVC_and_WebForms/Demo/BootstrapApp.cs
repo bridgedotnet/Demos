@@ -58,7 +58,7 @@ namespace Demo
                 .AddClass("panel-footer text-right")
                 .Append(BootstrapApp.CreateProcessButton())
                 .Append(
-                    new jQuery(new ButtonElement
+                    new jQuery(new HTMLButtonElement
                     {
                         ClassName = "btn btn-primary",
                         InnerHTML = "Collapse",
@@ -77,7 +77,7 @@ namespace Demo
                     })
                 )
                 .Append(
-                    new jQuery(new ButtonElement
+                    new jQuery(new HTMLButtonElement
                     {
                         ClassName = "btn btn-primary",
                         InnerHTML = "Toggle Tooltips and Popovers",
@@ -94,7 +94,7 @@ namespace Demo
                     })
                 )
                 .Append(
-                    new jQuery(new InputElement
+                    new jQuery(new HTMLInputElement
                     {
                         Type = InputType.Submit,
                         Value = "Submit",
@@ -108,7 +108,7 @@ namespace Demo
 
         public static jQuery CreateProcessButton()
         {
-            return new jQuery(new ButtonElement
+            return new jQuery(new HTMLButtonElement
             {
                 ClassName = "btn btn-primary",
                 InnerHTML = "Async Process",
@@ -144,7 +144,7 @@ namespace Demo
                     Url = Config.LONG_RUNNING_PROCESS,
                     Cache = false
                 }),
-                (Func<string>)(() => { return Script.Arguments[0].ToString(); }));
+                (Func<string>)(() => { return Arguments.GetArgument(0).ToString(); }));
 
                 var msg = JSON.Parse(result).As<string>();
 
@@ -210,7 +210,7 @@ namespace Demo
 
             if (name == "Message")
             {
-                input = new TextAreaElement
+                input = new HTMLTextAreaElement
                 {
                     Name = name.ToLowerCase(),
                     Placeholder = placeholder,
@@ -220,7 +220,7 @@ namespace Demo
             }
             else
             {
-                input = new InputElement
+                input = new HTMLInputElement
                 {
                     Type = InputType.Text,
                     Name = name.ToLowerCase(),
@@ -233,7 +233,7 @@ namespace Demo
             return new jQuery("<div>")
                 .AddClass("input-group")
                 .Css("margin-bottom", "10px")
-                .Append(new SpanElement
+                .Append(new HTMLSpanElement
                 {
                     ClassName = "glyphicon glyphicon-" + glyph + " input-group-addon"
                 })
@@ -250,23 +250,23 @@ namespace Demo
 
         public static Array CreateDateTimeField()
         {
-            return new object[] 
-            { 
-                new LabelElement
+            return new object[]
+            {
+                new HTMLLabelElement
                 {
                     HtmlFor = "dateTimeInput",
                     InnerHTML = "Server Date and Time:"
-                }, 
-                new jQuery(new DivElement
+                },
+                new jQuery(new HTMLDivElement
                     {
                         ClassName = "input-group"
                     })
-                    .Append(new SpanElement
+                    .Append(new HTMLSpanElement
                     {
                         ClassName = "input-group-addon glyphicon glyphicon-time"
                     })
                     .Append(
-                        new jQuery(new InputElement
+                        new jQuery(new HTMLInputElement
                         {
                             Id = "dateTimeInput",
                             Type = InputType.Text,
@@ -284,12 +284,12 @@ namespace Demo
                         })
                     )
                     .Append(
-                        new jQuery(new SpanElement
+                        new jQuery(new HTMLSpanElement
                         {
                             ClassName = "input-group-btn"
                         })
                         .Append(
-                            new jQuery(new ButtonElement
+                            new jQuery(new HTMLButtonElement
                             {
                                 Type = ButtonType.Button,
                                 ClassName = "btn btn-primary",

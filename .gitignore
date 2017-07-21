@@ -211,6 +211,7 @@ Games/TicTacToe/BridgeTicTacToe/App_Readme
 Games/TicTacToe/BridgeTicTacToe/Bridge
 
 output/
+/**/.vs/
 *.dll
 !VSCode/Demo/.build/*.dll
 VSCode/Demo/.build/Demo.dll
@@ -218,14 +219,23 @@ VSCode/Demo/.build/Demo.dll
 /WebGL/Cube3D/www/js/*.bak
 /AngularJS/AngularJSDemo/WebInterface/js/bridge.js
 /AngularJS/AngularJSDemo/WebInterface/js/phoneCat.js
-/Html5/TouchSample/.vs/config/applicationhost.config
 /Html5/TouchSample/App_Readme/Bridge.NET/LICENSE
 /Html5/TouchSample/App_Readme/Bridge.NET/README.md
-/Html5/WebSocketSample/.vs/config/applicationhost.config
 /Html5/WebSocketSample/App_Readme/Bridge.NET/LICENSE
 /Html5/WebSocketSample/App_Readme/Bridge.NET/README.md
 /Html5/WebSocketSample/Bridge/js/bridge.js
 /Html5/WebSocketSample/Bridge/js/readme.txt
 /Html5/WebSocketSample/Bridge/js/webSocketSample.js
-/Html5/Mandelbrot.Canvas/.vs/config
-/ComputerAlgebraSystem/.vs/config/applicationhost.config
+/WebGL/Cube3D/www/js/bridge.meta.js
+/WebGL/Cube3D/www/js/bridge.meta.min.js
+/Games/TicTacToe/TicTacWeb/js/jquery-2.2.4.js
+/Games/TicTacToe/TicTacWeb/js/jquery-2.2.4.min.js
+/Html5/Mandelbrot.Canvas/Bridge/Mandelbrot.Canvas.meta.js
+/Html5/Mandelbrot.Canvas/Bridge/bridge.meta.js
+/Html5/TouchSample/Bridge/TouchSample.meta.js
+/Html5/TouchSample/Bridge/bridge.meta.js
+/Html5/WebSocketSample/Bridge/js/WebSocketSample.meta.js
+/Html5/WebSocketSample/Bridge/js/bridge.meta.js
+/Mobile/Weather/WeatherApp/resources/js/bridge/Bridge.WeatherApp.meta.min.js
+/Mobile/Weather/WeatherApp/resources/js/bridge/bridge.meta.min.js
+/Mobile/Weather/WeatherApp/resources/js/bridge/jquery-2.2.4.js

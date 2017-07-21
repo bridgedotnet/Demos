@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using ReactReduxTodoApp.Models;
 using ReactReduxTodoApp.Actions;
 using System.Linq;
-using Bridge.Linq;
 
 namespace ReactReduxTodoApp.UI
 {
@@ -69,7 +68,7 @@ namespace ReactReduxTodoApp.UI
 
                     return DOM.Div(new Attributes { Style = new ReactStyle { Padding = 10 }  },
                                 DOM.H1("React + Redux todo app in C#"),
-                                DOM.UL(new Attributes { }, todoItems.Select(DOM.Li)), 
+                                DOM.UL(new Attributes { }, todoItems.Select(DOM.Li)),
                                 DOM.Hr(new HRAttributes { }),
                                 DOM.H3("Add a new Todo item"),
                                 DOM.Input(new InputAttributes
@@ -95,7 +94,7 @@ namespace ReactReduxTodoApp.UI
                                 }, "Add"),
                                 DOM.Hr(new HRAttributes { }),
                                 DOM.H3("Visibility"),
-                                DOM.Div(new Attributes { }, 
+                                DOM.Div(new Attributes { },
                                     DOM.Span("Show"),
                                     DOM.Button(new ButtonAttributes
                                     {
@@ -115,7 +114,7 @@ namespace ReactReduxTodoApp.UI
                                         ClassName = appState.Visibility == TodoVisibility.YetToComplete ? "btn btn-success" : "btn btn-default",
                                         OnClick = e => appStore.Dispatch(new SetVisibility { Visibility = TodoVisibility.YetToComplete })
                                     }, "Not finished")
-                                )           
+                                )
                            );
                 }
             });

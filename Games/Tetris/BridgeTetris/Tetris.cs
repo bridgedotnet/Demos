@@ -38,12 +38,12 @@ namespace BridgeTetris
     {
         private static void LoadPlayArea()
         {
-            var menuDiv = new DivElement
+            var menuDiv = new HTMLDivElement
             {
                 Id = "menu"
             };
 
-            var pressStartTitle = new AnchorElement
+            var pressStartTitle = new HTMLAnchorElement
             {
                 Href = "javascript:BridgeTetris.Tetris.play()",
                 InnerHTML = "Press Space to Play."
@@ -51,7 +51,7 @@ namespace BridgeTetris
 
             menuDiv.AppendChild(BridgeTetris.Tetris.InsideParagraph(pressStartTitle, "start"));
 
-            var nextPieceCanvas = new CanvasElement
+            var nextPieceCanvas = new HTMLCanvasElement
             {
                 Id = "upcoming"
             };
@@ -59,12 +59,12 @@ namespace BridgeTetris
             menuDiv.AppendChild(BridgeTetris.Tetris.InsideParagraph(nextPieceCanvas));
 
             var scoreParagraph = new List<Node>();
-            scoreParagraph.Add(new LabelElement
+            scoreParagraph.Add(new HTMLLabelElement
             {
                 InnerHTML = "score "
             });
 
-            scoreParagraph.Add(new SpanElement
+            scoreParagraph.Add(new HTMLSpanElement
             {
                 Id = "score",
                 InnerHTML = "00000"
@@ -73,12 +73,12 @@ namespace BridgeTetris
             menuDiv.AppendChild(BridgeTetris.Tetris.InsideParagraph(scoreParagraph));
 
             var rowsParagraph = new List<Node>();
-            rowsParagraph.Add(new LabelElement
+            rowsParagraph.Add(new HTMLLabelElement
             {
                 InnerHTML = "rows "
             });
 
-            rowsParagraph.Add(new SpanElement
+            rowsParagraph.Add(new HTMLSpanElement
             {
                 Id = "rows",
                 InnerHTML = "0"
@@ -86,14 +86,14 @@ namespace BridgeTetris
 
             menuDiv.AppendChild(BridgeTetris.Tetris.InsideParagraph(rowsParagraph));
 
-            var tetrisCourtCanvas = new CanvasElement
+            var tetrisCourtCanvas = new HTMLCanvasElement
             {
                 Id = "canvas",
                 Width = 200,
                 Height = 400
             };
 
-            var tetrisDiv = new DivElement
+            var tetrisDiv = new HTMLDivElement
             {
                 Id = "tetris"
             };
@@ -106,7 +106,7 @@ namespace BridgeTetris
 
         private static Node InsideParagraph(List<Node> elementList, string paragraphID = null)
         {
-            var currentParagraphElement = new ParagraphElement();
+            var currentParagraphElement = new HTMLParagraphElement();
 
             if (!String.IsNullOrWhiteSpace(paragraphID))
             {
@@ -129,7 +129,7 @@ namespace BridgeTetris
         #region base helper methods
 
         // Note: This was a shorthand for GetElementById in the original code.
-        private static Element Get(string id)
+        private static HTMLElement Get(string id)
         {
             return Document.GetElementById(id);
         }
@@ -183,17 +183,17 @@ namespace BridgeTetris
             public const short Last = 3;
         };
 
-        private static CanvasElement canvas;
-        private static CanvasElement upcomingPieceCanvas;
+        private static HTMLCanvasElement canvas;
+        private static HTMLCanvasElement upcomingPieceCanvas;
 
         private static CanvasRenderingContext2D canvasContext;
         private static CanvasRenderingContext2D upcomingPieceCanvasContext;
 
         private static void LoadCanvasContext()
         {
-            // FIXME: Shouldn't it allow returning canvasElement without a cast??
-            BridgeTetris.Tetris.canvas = Get("canvas").As<CanvasElement>();
-            BridgeTetris.Tetris.upcomingPieceCanvas = Get("upcoming").As<CanvasElement>();
+            // FIXME: Shouldn't it allow returning HTMLCanvasElement without a cast??
+            BridgeTetris.Tetris.canvas = Get("canvas").As<HTMLCanvasElement>();
+            BridgeTetris.Tetris.upcomingPieceCanvas = Get("upcoming").As<HTMLCanvasElement>();
 
             BridgeTetris.Tetris.canvasContext = canvas.GetContext(CanvasTypes.CanvasContext2DType.CanvasRenderingContext2D);
             BridgeTetris.Tetris.upcomingPieceCanvasContext = upcomingPieceCanvas.GetContext(CanvasTypes.CanvasContext2DType.CanvasRenderingContext2D);
@@ -238,7 +238,7 @@ namespace BridgeTetris
 
         private static int currentScore; // the current score
         private static int incrementalInstantaneousScore; // the currently displayed score (catches up to score in small chunks like slot machine)
-        
+
         private static int completedRowsCount; // number of completed rows in the current game
 
         // 2 dimensional array (nx*ny) representing tetris court - either empty block or occupied by a 'piece'
@@ -982,7 +982,7 @@ namespace BridgeTetris
         {
             if (BridgeTetris.Tetris.invalid.Score)
             {
-                BridgeTetris.Tetris.Html("score", ("00000" + Math.Floor(incrementalInstantaneousScore)).Slice(-5));
+                BridgeTetris.Tetris.Html("score", ("00000" + Math.Floor((double)incrementalInstantaneousScore)).Slice(-5));
                 BridgeTetris.Tetris.invalid.Score = false;
             }
         }

@@ -1,87 +1,86 @@
-﻿Bridge.define('SimpleHtml5.Storage', {
-    statics: {
-        KEY: "KEY",
-        config: {
-            init: function () {
-                Bridge.ready(this.main);
-            }
-        },
-        main: function () {
-            // A root container for the elements we will use in this example -
-            // text input and two buttons
-            var div = document.createElement('div');
+/**
+ * @version 1.0.0
+ * @author Object.NET, Inc.
+ * @copyright Copyright 2008-2015 Object.NET, Inc.
+ * @compiler Bridge.NET 16.0.0-beta5
+ */
+Bridge.assembly("SimpleHtml5", function ($asm, globals) {
+    "use strict";
 
-            // Create an input element, with Placeholder text
-            // and KeyPress listener to call Save method after Enter key pressed
-            var input = Bridge.merge(document.createElement('input'), {
-                id: "number", 
-                type: "text", 
-                placeholder: "Enter a number to store...", 
-                style: {
-                    margin: "5px"
+    Bridge.define("SimpleHtml5.Storage", {
+        statics: {
+            fields: {
+                KEY: null
+            },
+            ctors: {
+                init: function () {
+                    this.KEY = "KEY";
+                    Bridge.ready(this.Main);
                 }
-            } );
+            },
+            methods: {
+                Main: function () {
+                    var $t;
+                    // A root container for the elements we will use in this example -
+                    // text input and two buttons
+                    var div = document.createElement('div');
 
-            input.addEventListener("keypress", SimpleHtml5.Storage.inputKeyPress);
-            div.appendChild(input);
+                    // Create an input element, with Placeholder text
+                    // and KeyPress listener to call Save method after Enter key pressed
+                    var input = ($t = document.createElement('input'), $t.id = "number", $t.type = "text", $t.placeholder = "Enter a number to store...", $t.style.margin = "5px", $t);
 
-            // Add a Save button to save entered number into Storage
-            var buttonSave = Bridge.merge(document.createElement('button'), {
-                id: "save", 
-                innerHTML: "Save"
-            } );
+                    input.addEventListener("keypress", SimpleHtml5.Storage.InputKeyPress);
+                    div.appendChild(input);
 
-            buttonSave.addEventListener("click", SimpleHtml5.Storage.save);
-            div.appendChild(buttonSave);
+                    // Add a Save button to save entered number into Storage
+                    var buttonSave = ($t = document.createElement('button'), $t.id = "save", $t.innerHTML = "Save", $t);
 
-            // Add a Restore button to get saved number and populate
-            // the text input with its value
-            var buttonRestore = Bridge.merge(document.createElement('button'), {
-                id: "restore", 
-                innerHTML: "Restore", 
-                style: {
-                    margin: "5px"
+                    buttonSave.addEventListener("click", SimpleHtml5.Storage.Save);
+                    div.appendChild(buttonSave);
+
+                    // Add a Restore button to get saved number and populate
+                    // the text input with its value
+                    var buttonRestore = ($t = document.createElement('button'), $t.id = "restore", $t.innerHTML = "Restore", $t.style.margin = "5px", $t);
+
+                    buttonRestore.addEventListener("click", SimpleHtml5.Storage.Restore);
+                    div.appendChild(buttonRestore);
+
+                    // Do not forget add the elements on the page
+                    document.body.appendChild(div);
+
+                    // It is good to get the text element focused
+                    input.focus();
+                },
+                InputKeyPress: function (e) {
+                    // We added the listener to EventType.KeyPress so it should be a KeyboardEvent
+                    if (Bridge.is(e, KeyboardEvent) && e.keyCode === 13) {
+                        SimpleHtml5.Storage.Save();
+                    }
+                },
+                Save: function () {
+                    var input = document.getElementById("number");
+                    var i = parseInt(input.value);
+
+                    if (!isNaN(i)) {
+                        window.localStorage.setItem(SimpleHtml5.Storage.KEY, i);
+                        window.alert(System.String.format("Stored {0}", Bridge.box(i, System.Int32)));
+                        input.value = "";
+                    } else {
+                        window.alert("Incorrect value. Please enter a number.");
+                    }
+                },
+                Restore: function () {
+                    var input = document.getElementById("number");
+                    var o = window.localStorage[System.Array.index(SimpleHtml5.Storage.KEY, window.localStorage)];
+
+                    if (o != null) {
+                        input.value = o.toString();
+                    } else {
+                        input.value = "";
+                    }
                 }
-            } );
-
-            buttonRestore.addEventListener("click", SimpleHtml5.Storage.restore);
-            div.appendChild(buttonRestore);
-
-            // Do not forget add the elements on the page
-            document.body.appendChild(div);
-
-            // It is good to get the text element focused
-            input.focus();
-        },
-        inputKeyPress: function (e) {
-            // We added the listener to EventType.KeyPress so it should be a KeyboardEvent
-            if (Bridge.is(e, KeyboardEvent) && e.keyCode === 13) {
-                SimpleHtml5.Storage.save();
             }
         },
-        save: function () {
-            var input = document.getElementById("number");
-            var i = parseInt(input.value);
-
-            if (!isNaN(i)) {
-                window.localStorage.setItem(SimpleHtml5.Storage.KEY, i);
-                window.alert(Bridge.String.format("Stored {0}", i));
-                input.value = "";
-            }
-            else  {
-                window.alert("Incorrect value. Please enter a number.");
-            }
-        },
-        restore: function () {
-            var input = document.getElementById("number");
-            var o = window.localStorage[SimpleHtml5.Storage.KEY];
-
-            if (o !== null) {
-                input.value = o.toString();
-            }
-            else  {
-                input.value = "";
-            }
-        }
-    }
+        $entryPoint: true
+    });
 });

@@ -13,8 +13,8 @@ namespace TouchSample
     {
         #region Html element on the page
 
-        private CanvasElement canvas;
-        public CanvasElement Canvas
+        private HTMLCanvasElement canvas;
+        public HTMLCanvasElement Canvas
         {
             get { return canvas; }
             set
@@ -35,7 +35,7 @@ namespace TouchSample
         private CanvasRenderingContext2D context2D;
         public CanvasRenderingContext2D Context2D { get { return context2D; } }
 
-        public PreElement Log { get; set; }
+        public HTMLPreElement Log { get; set; }
 
         #endregion Html element on the page
 
@@ -51,9 +51,9 @@ namespace TouchSample
         {
             this.OngoingTouches = new List<TouchShadow>();
 
-            this.Canvas = Document.GetElementById<CanvasElement>("canvas");
+            this.Canvas = Document.GetElementById<HTMLCanvasElement>("canvas");
 
-            this.Log = Document.GetElementById<PreElement>("log");
+            this.Log = Document.GetElementById<HTMLPreElement>("log");
 
             this.Canvas.OnClick += ClickHandler;
             this.Canvas.OnTouchStart += TouchStartHandler;
@@ -66,12 +66,12 @@ namespace TouchSample
 
         #region Events
 
-        private void ClickHandler(MouseEvent<CanvasElement> e)
+        private void ClickHandler(MouseEvent<HTMLCanvasElement> e)
         {
             this.LogMessage("ClickHandler.");
         }
 
-        private void TouchStartHandler(TouchEvent<CanvasElement> evt)
+        private void TouchStartHandler(TouchEvent<HTMLCanvasElement> evt)
         {
             var ctx = this.Context2D;
             var touches = evt.Touches;
@@ -96,7 +96,7 @@ namespace TouchSample
             }
         }
 
-        private void TouchMoveHandler(TouchEvent<CanvasElement> evt)
+        private void TouchMoveHandler(TouchEvent<HTMLCanvasElement> evt)
         {
             evt.PreventDefault();
 
@@ -141,7 +141,7 @@ namespace TouchSample
             }
         }
 
-        private void TouchEndHandler(TouchEvent<CanvasElement> evt)
+        private void TouchEndHandler(TouchEvent<HTMLCanvasElement> evt)
         {
             evt.PreventDefault();
             this.LogMessage("touchend");
@@ -178,7 +178,7 @@ namespace TouchSample
             }
         }
 
-        private void TouchCancelHandler(TouchEvent<CanvasElement> evt)
+        private void TouchCancelHandler(TouchEvent<HTMLCanvasElement> evt)
         {
             evt.PreventDefault();
 

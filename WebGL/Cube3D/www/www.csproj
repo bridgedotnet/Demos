@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,12 +59,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="crate.gif" />
-    <Content Include="js\glMatrix-0.9.5.min.js" />
     <Content Include="index.html" />
     <Content Include="js\bridge.js" />
     <Content Include="js\bridge.min.js" />
     <Content Include="js\cube3D.js" />
     <Content Include="js\cube3D.min.js" />
+    <Content Include="lib\glMatrix-0.9.5.min.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

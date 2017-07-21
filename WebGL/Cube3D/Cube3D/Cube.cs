@@ -3,12 +3,13 @@ using Bridge.GLMatrix;
 using Bridge.Html5;
 using Bridge.WebGL;
 using System;
+using System.Collections.Generic;
 
 namespace Cube3D
 {
     public class Cube
     {
-        public CanvasElement canvas;
+        public HTMLCanvasElement canvas;
         public WebGLRenderingContext gl;
         public WebGLProgram program;
         public WebGLTexture texture;
@@ -57,13 +58,13 @@ namespace Cube3D
         public int ySpeed = -15;
 
         public double z = -5.0;
-        public bool[] currentlyPressedKeys = new bool[] { };
+        public Dictionary<int, bool> currentlyPressedKeys = new Dictionary<int, bool>();
 
         public double lastTime = 0;
 
         public WebGLShader GetShader(WebGLRenderingContext gl, string id)
         {
-            var shaderScript = Document.GetElementById(id).As<ScriptElement>();
+            var shaderScript = Document.GetElementById(id).As<HTMLScriptElement>();
 
             if (shaderScript == null)
             {
@@ -153,7 +154,7 @@ namespace Cube3D
             this.program = shaderProgram;
         }
 
-        public void HandleLoadedTexture(ImageElement image)
+        public void HandleLoadedTexture(HTMLImageElement image)
         {
             gl.PixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
             gl.BindTexture(gl.TEXTURE_2D, this.texture);
@@ -168,7 +169,7 @@ namespace Cube3D
         {
             this.texture = gl.CreateTexture();
 
-            var textureImageElement = new ImageElement();
+            var textureImageElement = new HTMLImageElement();
 
             textureImageElement.OnLoad = (ev) =>
             {
@@ -208,35 +209,44 @@ namespace Cube3D
 
         public void HandleKeys()
         {
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_Q])
+            if (CheckPressedKey(KeyboardEvent.DOM_VK_Q))
             {
                 z -= 0.05;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_E])
+            if (CheckPressedKey(KeyboardEvent.DOM_VK_E))
             {
                 z += 0.05;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_A])
+            if (CheckPressedKey(KeyboardEvent.DOM_VK_A))
             {
                 ySpeed -= 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_D])
+            if (CheckPressedKey(KeyboardEvent.DOM_VK_D))
             {
                 ySpeed += 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_W])
+            if (CheckPressedKey(KeyboardEvent.DOM_VK_W))
             {
                 xSpeed -= 1;
             }
 
-            if (currentlyPressedKeys[KeyboardEvent.DOM_VK_S])
+            if (CheckPressedKey(KeyboardEvent.DOM_VK_S))
             {
                 xSpeed += 1;
             }
+        }
+
+        private bool CheckPressedKey(int key)
+        {
+            bool b = false;
+
+            currentlyPressedKeys.TryGetValue(key, out b);
+
+            return b;
         }
 
         public void InitBuffers()

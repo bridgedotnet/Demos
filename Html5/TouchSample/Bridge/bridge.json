@@ -1,8 +1,0 @@
-{
-  "output": "Bridge",
-  "CleanOutputFolderBeforeBuildPattern": "*.js",
-  "outputFormatting": "Formatted",
-  "outputBy": "Namespace"
-  //"fileName": "bridge.js",
-  //"combineScripts":  true
-}

@@ -4,4 +4,4 @@ mcs	/nostdlib \
 	/out:.build/Demo.dll \
 	/recurse:*.cs
 
-mono .build/Bridge.Builder.exe -lib .build/Demo.dll
+mono .build/bridge.exe -lib .build/Demo.dll

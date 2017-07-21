@@ -80,8 +80,7 @@ namespace BridgeTicTacToe
         /// <summary>
         /// Initializes the game flow.
         /// </summary>
-        [Ready]
-        private static void PageReady()
+        public static void Main()
         {
             jQuery.Select("#restart").Click(BridgeTicTacToe.TicTacToe.ClearBoard);
             jQuery.Select("td").Click(BridgeTicTacToe.TicTacToe.GameFlow);
@@ -397,7 +396,8 @@ namespace BridgeTicTacToe
             // There's no Enum.GetName() support yet, so we just map enum to string names
             string scoreName = "";
 
-            switch (which) {
+            switch (which)
+            {
                 case ScoreType.Win:
                     newValue = ++BridgeTicTacToe.TicTacToe.winsCount;
                     scoreName = "win";
