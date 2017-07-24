@@ -85,7 +85,7 @@ namespace BridgeTicTacToe
             jQuery.Select("#restart").Click(BridgeTicTacToe.TicTacToe.ClearBoard);
             jQuery.Select("td").Click(BridgeTicTacToe.TicTacToe.GameFlow);
 
-            BridgeTicTacToe.TicTacToe.GameFlow();
+            //BridgeTicTacToe.TicTacToe.GameFlow();
 
             jQuery.Select("#gameStatus").Css("background", "#bef");
             jQuery.Select("#gameStatus").Text("Make your move!");
@@ -379,7 +379,7 @@ namespace BridgeTicTacToe
             jQuery.Select("#gameStatus").Css("background", "#bef");
             jQuery.Select("#gameStatus").Text("Make your move!");
 
-            BridgeTicTacToe.TicTacToe.GameFlow();
+            //BridgeTicTacToe.TicTacToe.GameFlow();
 
             if (turn == Turn.Computer)
             {
