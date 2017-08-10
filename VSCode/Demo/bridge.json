@@ -32,6 +32,10 @@
   // Default is false.
   "report": {
     "enabled": true
+  },
+
+  "logging": {
+    "level": "Trace"
   }
 
   // More config options available at

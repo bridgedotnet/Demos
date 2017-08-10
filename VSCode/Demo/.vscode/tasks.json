@@ -7,11 +7,22 @@
 // ${cwd}: the current working directory of the spawned process
 
 {
-	"command": ".build/builder.sh",
+	"version": "2.0.0",
 	
-	"windows": {
-		"command": ".build\\builder.bat"          
-	},
-
-	"showOutput": "silent"
-}
+	"tasks": [{
+            "taskName": "bridge",
+			"command": "${cwd}/.build/builder.sh",
+			"windows": {
+				"command": "${cwd}\\.build\\builder.bat"          
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+} 
