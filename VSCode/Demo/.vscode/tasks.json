@@ -11,9 +11,9 @@
 	
 	"tasks": [{
             "taskName": "bridge",
-			"command": "${cwd}/.build/bridge.sh",
+			"command": "${cwd}/.build/tools/bridge.sh",
 			"windows": {
-                "command": "${cwd}\\.build\\bridge.bat"
+                "command": "${cwd}\\.build\\tools\\bridge.bat"
             },
             "group": {
                 "kind": "build",
