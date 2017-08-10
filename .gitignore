@@ -214,6 +214,7 @@ output/
 /**/.vs/
 *.dll
 !VSCode/Demo/.build/libs/*.dll
+!VSCode/Demo/.build/tools/*.dll
 !VSCode/Demo/.build/*.dll
 VSCode/Demo/.build/Demo.dll
 /WebGL/Cube3D/Cube3D/*.bak
