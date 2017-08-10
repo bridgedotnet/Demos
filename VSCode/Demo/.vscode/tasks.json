@@ -11,17 +11,17 @@
 	
 	"tasks": [{
             "taskName": "bridge",
-			"command": "${cwd}/.build/builder.sh",
+			"command": "${cwd}/.build/bridge.sh",
 			"windows": {
-				"command": "${cwd}\\.build\\builder.bat"          
+                "command": "${cwd}\\.build\\bridge.bat"
             },
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "presentation": {
-                "reveal": "always",
-                "panel": "new"
+                "reveal": "never",
+                "panel": "shared"
             }
         }
     ]

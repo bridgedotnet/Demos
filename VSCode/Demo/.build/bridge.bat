@@ -5,4 +5,4 @@ start /wait C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe ^
 	/out:.build\Demo.dll ^
 	/recurse:*.cs
 	
-start /b .build\bridge.exe -lib .build\Demo.dll
+start .build\bridge.exe -lib .build\Demo.dll
