@@ -239,3 +239,4 @@ VSCode/Demo/.build/Demo.dll
 /Mobile/Weather/WeatherApp/resources/js/bridge/Bridge.WeatherApp.meta.min.js
 /Mobile/Weather/WeatherApp/resources/js/bridge/bridge.meta.min.js
 /Mobile/Weather/WeatherApp/resources/js/bridge/jquery-2.2.4.js
+VSCode/Demo/bridge/*
