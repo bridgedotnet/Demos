@@ -1,7 +1,7 @@
 start /wait C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe ^
 	/nostdlib ^
 	/warn:0 ^
-	/reference:.build\libs\Bridge.dll;.build\libs\Bridge.Html5.dll ^
+	/reference:.build\libs\Bridge.dll;.build\libs\Bridge.Html5.dll;.build\libs\Newtonsoft.Json.dll; ^
 	/out:.build\libs\Demo.dll ^
 	/recurse:*.cs
 	

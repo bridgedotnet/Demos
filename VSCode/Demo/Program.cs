@@ -1,6 +1,7 @@
 using System;
 using Bridge;
 using Bridge.Html5;
+using Newtonsoft.Json;
 
 namespace Demo
 {
@@ -8,31 +9,36 @@ namespace Demo
     {
         public static void Main()
         {
-            // Create a new HTML Button
-            var button = Document.CreateElement("button");
+            Product product = new Product();
 
-            // Set the Button text
-            button.InnerHTML = "Click Me";
+            product.Name = "Apple";
+            product.ExpiryDate = new DateTime(2008, 12, 28);
+            product.Price = 3.99;
+            product.Sizes = new string[] { "Small", "Medium", "Large" };
 
-            // Add a Click event handler
-            button.OnClick = (ev) =>
-            {
-                // Write a message to the Console
-                Console.WriteLine("Welcome to Bridge.NET");
-            };
+            string output = JsonConvert.SerializeObject(product, Formatting.Indented);
 
-            // Add the button to the document body
-            Document.Body.AppendChild(button);
+            // Write the json string
+            Console.WriteLine(output);
 
-            // After building (Ctrl + Shift + B) this project, 
-            // browse to the /bridge folder which contains
-            // your projects JavaScript files. 
+            // Deserialize the json back into a real Product
+            Product deserializedProduct = JsonConvert.DeserializeObject<Product>(output);
 
-            // Open the bridge/index.html file in a brower by
-            // Right-Click > Open With..., then choose a
-            // web browser from the list
-
-            // This application will then run in a browser.
+            // Write the rehydrated values
+            var msg = $"An {deserializedProduct.Name} for ${deserializedProduct.Price}";
+            Console.WriteLine(msg);
         }
+    }
+
+    [ObjectLiteral]
+    public class Product
+    {
+        public string Name { get; set; }
+        
+        public DateTime ExpiryDate { get; set; }
+
+        public double Price { get; set; }
+
+        public string[] Sizes { get; set; }
     }
 }
