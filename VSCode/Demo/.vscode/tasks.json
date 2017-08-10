@@ -20,7 +20,7 @@
                 "isDefault": true
             },
             "presentation": {
-                "reveal": "never",
+                "reveal": "always",
                 "panel": "shared"
             }
         }
