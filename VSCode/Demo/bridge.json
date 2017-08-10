@@ -35,7 +35,7 @@
   },
 
   "logging": {
-    "level": "Trace" // Try using "Trace"
+    "level": "None" // Try using "Trace"
   }
 
   // More config options available at

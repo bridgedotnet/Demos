@@ -216,7 +216,7 @@ output/
 !VSCode/Demo/.build/libs/*.dll
 !VSCode/Demo/.build/tools/*.dll
 !VSCode/Demo/.build/*.dll
-VSCode/Demo/.build/Demo.dll
+VSCode/Demo/.build/libs/Demo.dll
 /WebGL/Cube3D/Cube3D/*.bak
 /WebGL/Cube3D/www/js/*.bak
 /AngularJS/AngularJSDemo/WebInterface/js/bridge.js
