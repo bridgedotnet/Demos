@@ -4,7 +4,7 @@ using Bridge.Html5;
 
 namespace Demo
 {
-    public class App
+    public class Program
     {
         public static void Main()
         {
