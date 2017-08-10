@@ -33,6 +33,11 @@
   "report": {
     "enabled": true
   },
+
+  "html": {
+    "title": "Bridge.NET - Build Something"
+  },
+
   "logging":{
     "level": "Trace"
   }
