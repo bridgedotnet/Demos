@@ -25,9 +25,8 @@ namespace Demo
             Product deserializedProduct = JsonConvert.DeserializeObject<Product>(output);
 
             // Write the rehydrated values
-            // var msg = $"An {deserializedProduct.Name} for ${deserializedProduct.Price}";
-            var msg = "An " + deserializedProduct.Name + " for " + deserializedProduct.Price;
-            
+            var msg = $"An {deserializedProduct.Name} for ${deserializedProduct.Price}";
+
             Console.WriteLine(msg);
         }
     }
