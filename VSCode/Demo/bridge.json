@@ -39,8 +39,9 @@
     "title": "Bridge.NET - Build Something"
   },
 
+  // Use "Trace" level for full logging
   "logging": {
-    "level": "Trace" // Use Trace" for full logging
+    "level": "None"
   }
 
   // More config options available at
