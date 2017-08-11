@@ -41,7 +41,7 @@
 
   // Use "Trace" level for full logging
   "logging": {
-    "level": "None"
+    "level": "Trace"
   }
 
   // More config options available at
