@@ -1,6 +1,6 @@
 mcs	/nostdlib \
 	/warn:0 \
-	/reference:".build/libs/Bridge.dll;.build/libs/Bridge.Html5.dll" \
+	/reference:".build/libs/Bridge.dll;.build/libs/Bridge.Html5.dll;.build/libs/Newtonsoft.Json.dll;" \
 	/out:.build/libs/Demo.dll \
 	/recurse:*.cs
 
