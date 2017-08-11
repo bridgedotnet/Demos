@@ -213,10 +213,10 @@ Games/TicTacToe/BridgeTicTacToe/Bridge
 output/
 /**/.vs/
 *.dll
-!VSCode/Demo/.build/libs/*.dll
+!VSCode/Demo/.build/lib/*.dll
 !VSCode/Demo/.build/tools/*.dll
 !VSCode/Demo/.build/*.dll
-VSCode/Demo/.build/libs/Demo.dll
+VSCode/Demo/.build/lib/Demo.dll
 /WebGL/Cube3D/Cube3D/*.bak
 /WebGL/Cube3D/www/js/*.bak
 /AngularJS/AngularJSDemo/WebInterface/js/bridge.js
