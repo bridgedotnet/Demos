@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="bridge.js"></script>
+    <script src="bridge.console.js"></script>
+    <script src="DemoWindow.js"></script>
+    <script src="TwitterListener.js"></script>
+</head>
+<body style="background: ivory">
+<div>
+    <div style="margin: 10px; padding: 10px; border: 2px solid brown">
+        
+        To get started create a twitter application <a href="https://apps.twitter.com/app/new" onclick="Electron.shell.openExternal('https://apps.twitter.com/app/new'); return false;">here</a>.<br/>
+        On "Keys and Access Tokens" tab create Access Tokens. <br/>
+        Fill out the fields below with the generated keys: <br/><br />
+        
+        Consumer Key (API Key): <input id="apiKeyInput" /><br />
+        Consumer Secret (API Secret): <input id="apiSecretInput" /><br />
+        Access Token: <input id="accessTokenInput" /><br />
+        Access Token Secret: <input id="accessTokenSecretInput" /><br />
+        <br />
+        <br />
+
+        Tweet filter:<br/>
+        <input id="captFilterInput"/><br/>
+
+        Notify if a tweet contains:<br/>
+        <input id="notifFilterInput"/><br/>
+
+    </div>
+    
+    <div id="capturedItemsDiv">
+    </div>
+</div>
+
+</body>
+</html>
