@@ -116,14 +116,14 @@ namespace TwitterElectron.RendererProcess
             {
                 var tweetUrl = $"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id_str}";
                 Electron.shell.openExternal(tweetUrl);
+
                 return null;
             };
         }
 
         private static void AddRecord(Tweet tweet)
         {
-            var div = (HTMLDivElement)document.createElement("div");
-
+            var div = new HTMLDivElement();
             div.style.padding = "10px";
             div.style.margin = "10px";
             div.style.backgroundColor = "rgba(133, 181, 249, 0.33)";
@@ -132,21 +132,22 @@ namespace TwitterElectron.RendererProcess
             {
                 var tweetUrl = $"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id_str}";
                 Electron.shell.openExternal(tweetUrl);
+
                 return null;
             };
 
-            var img = (HTMLImageElement) document.createElement("img");
+            var img = new HTMLImageElement(); 
             img.width = 48;
             img.height = 48;
             img.src = tweet.user.profile_image_url;
 
-            var nameDiv = (HTMLDivElement)document.createElement("div");
+            var nameDiv = new HTMLDivElement();
             nameDiv.style.marginTop = "-50px";
             nameDiv.style.marginLeft = "60px";
             nameDiv.style.fontStyle = "italic";
             nameDiv.innerHTML = tweet.user.name + " is tweeting..";
 
-            var textDiv = (HTMLDivElement)document.createElement("div");
+            var textDiv = new HTMLDivElement();
             textDiv.style.marginTop = "10px";
             textDiv.style.marginLeft = "60px";
             textDiv.innerHTML = tweet.text;
