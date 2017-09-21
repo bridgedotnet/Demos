@@ -1,6 +1,6 @@
 using System;
 
-namespace TwitterElectron
+namespace TwitterElectron.RendererProcess
 {
     public class TwitterListener
     {

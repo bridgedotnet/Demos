@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Bridge;
+using TwitterElectron.RendererProcess;
 using static Retyped.electron.Electron;
 using static Retyped.node;
 using static Retyped.node.url;
 using Platform = Retyped.node.Literals.Options.Platform;
 using lit = Retyped.electron.Literals;
 
-namespace TwitterElectron
+namespace TwitterElectron.MainProcess
 {
     public class App
     {
@@ -16,6 +17,7 @@ namespace TwitterElectron
         {
             require.Self("./bridge.js");
 
+            // The call bellow is required to initialize a global var 'Electron'.
             var Electron = (AllElectron)require.Self("electron");
 
             // Keep a global reference of the window object, if you don't, the window will
@@ -27,10 +29,12 @@ namespace TwitterElectron
         public static AllElectron Electron;
 
         [Template("win")]
-        public static BrowserWindow win;
+        public static BrowserWindow Win;
 
-        public static Tray appIcon;
-        public static Menu contextMenu;
+        public static Tray AppIcon;
+        public static Menu ContextMenu;
+
+        private static TwitterCredentials _credentials;
 
         public static void Main()
         {
@@ -39,8 +43,7 @@ namespace TwitterElectron
             // This method will be called when Electron has finished
             // initialization and is ready to create browser windows.
             // Some APIs can only be used after this event occurs.
-            app.on(lit.ready, CreateWindow);
-
+            app.on(lit.ready, StartApp);
 
             // Quit when all windows are closed.
             app.on(lit.window_all_closed, () =>
@@ -52,57 +55,137 @@ namespace TwitterElectron
                     app.quit();
                 }
 
-                appIcon?.destroy();
+                AppIcon?.destroy();
             });
 
             // On macOS it's common to re-create a window in the app when the
             // dock icon is clicked and there are no other windows open.
             app.on(lit.activate, (ev, hasVisibleWindows) =>
             {
-                if (win == null)
+                if (Win == null)
                 {
-                    CreateWindow(null);
+                    StartApp(null);
                 }
             });
+
+            // Init IPC message handlers:
+            InitIPC();
         }
 
-        private static void CreateWindow(dynamic launchInfo)
+        private static void InitIPC()
+        {
+            Electron.ipcMain.on(Constants.IPC.OptionsUpdated, new Action<Event, TwitterCredentials>((e, cred) =>
+            {
+                _credentials = cred;
+                Win.webContents.send(Constants.IPC.OptionsUpdated, cred);
+            }));
+        }
+
+        private static void StartApp(object launchInfo)
+        {
+            var splash = CreateSplashScreen();
+            splash.once(lit.ready_to_show, () =>
+            {
+                // to prevent showing not rendered window:
+                splash.show();
+            });
+
+            setTimeout(args =>
+            {
+                CreateMainWindow();
+                Win.once(lit.ready_to_show, () =>
+                {
+                    // to prevent showing not rendered window:
+                    Win.show();
+
+                    // Splash screen should be closed after the main window is created
+                    // to prevent application from being terminated.
+                    splash.close();
+                    splash = null;
+
+                    Win.focus();
+                });
+
+            }, 2000);
+        }
+
+        private static BrowserWindow CreateSplashScreen()
+        {
+            var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
+            options.width = 505;
+            options.height = 330;
+            options.icon = path.join(__dirname, "Assets/app_icon.png");
+            options.title = Constants.AppTitle;
+            options.frame = false;
+            options.skipTaskbar = true;
+            options.show = false;
+
+            // Create the browser window.
+            var splash = new BrowserWindow(options);
+            LoadWindow(splash, "Forms/SplashScreen.html");
+            return splash;
+        }
+
+        private static void CreateMainWindow()
         {
             var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
             options.width = 800;
             options.height = 600;
-            options.icon = path.join(__dirname, "../../../app_icon.png");
-            options.title = "Retyped: Electron Demo";
+            options.icon = path.join(__dirname, "Assets/app_icon.png");
+            options.title = Constants.AppTitle;
+            options.show = false;
 
             // Create the browser window.
-            win = new BrowserWindow(options);
+            Win = new BrowserWindow(options);
             SetMainMenu();
 
-            LoadWindow("DemoWindow.html");
+            LoadWindow(Win, "Forms/MainForm.html");
 
-            win.on(lit.closed, () => 
+            Win.on(lit.closed, () =>
             {
                 // Dereference the window object, usually you would store windows
                 // in an array if your app supports multi windows, this is the time
                 // when you should delete the corresponding element.
-                win = null;
+                Win = null;
             });
 
-            win.on(lit.minimize, () =>
+            Win.on(lit.minimize, () =>
             {
-                win.setSkipTaskbar(true);
+                Win.setSkipTaskbar(true);
                 ShowTrayIcon();
             });
         }
 
-        private static void LoadWindow(string page)
+        private static BrowserWindow CreateOptionsWindow()
         {
-            var mainUrl = ObjectLiteral.Create<Url>();
-            mainUrl.pathname = path.join(__dirname, page);
-            mainUrl.protocol = "file:";
-            mainUrl.slashes = true;
+            var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
+            options.width = 440;
+            options.height = 453;
+            options.title = "Settings";
+            options.skipTaskbar = true;
+            options.parent = Win;
+            options.modal = true;
+            options.show = false;
+            options.maximizable = false;
+            options.minimizable = false;
+            options.resizable = false;
 
-            var formattedUrl = url.format(mainUrl);
+            // Create the browser window.
+            var optionsWin = new BrowserWindow(options);
+            LoadWindow(optionsWin, "Forms/OptionsForm.html");
+            optionsWin.setMenuBarVisibility(false);
+
+            return optionsWin;
+        }
+
+        private static void LoadWindow(BrowserWindow win, string page)
+        {
+            var windowUrl = ObjectLiteral.Create<Url>();
+            windowUrl.pathname = path.join(__dirname, page);
+            windowUrl.protocol = "file:";
+            windowUrl.slashes = true;
+
+            var formattedUrl = url.format(windowUrl);
 
             // and load the index.html of the app.
             win.loadURL(formattedUrl);
@@ -112,15 +195,15 @@ namespace TwitterElectron
         {
             Action showFn = () =>
             {
-                if (win.isMinimized())
+                if (Win.isMinimized())
                 {
-                    win.show();
-                    win.focus();
+                    Win.show();
+                    Win.focus();
                 }
 
-                win.setSkipTaskbar(false);
-                appIcon.destroy();
-                appIcon = null;
+                Win.setSkipTaskbar(false);
+                AppIcon.destroy();
+                AppIcon = null;
             };
 
             var openMenuItem = new MenuItemConstructorOptions
@@ -139,7 +222,7 @@ namespace TwitterElectron
                         label = "Start",
                         click = delegate
                         {
-                            win.webContents.send("cmd-start-capture");
+                            Win.webContents.send(Constants.IPC.StartCapture);
                             ToggleStartStopMenuItems();
                         }
                     },
@@ -149,7 +232,7 @@ namespace TwitterElectron
                         enabled = false,
                         click = delegate
                         {
-                            win.webContents.send("cmd-stop-capture");
+                            Win.webContents.send(Constants.IPC.StopCapture);
                             ToggleStartStopMenuItems();
                         }
                     }
@@ -168,12 +251,12 @@ namespace TwitterElectron
                 role = "quit"
             };
 
-            contextMenu = Menu.buildFromTemplate(new[] { openMenuItem, captureMenuItem, visitMenuItem, exitMenuItem });
+            ContextMenu = Menu.buildFromTemplate(new[] { openMenuItem, captureMenuItem, visitMenuItem, exitMenuItem });
 
-            appIcon = new Tray(path.join(__dirname, "../../../app_icon.png"));
-            appIcon.setToolTip("Retyped: Electron Demo");
-            appIcon.setContextMenu(contextMenu);
-            appIcon.on("click", () =>
+            AppIcon = new Tray(path.join(__dirname, "Assets/app_icon.png"));
+            AppIcon.setToolTip(Constants.AppTitle);
+            AppIcon.setContextMenu(ContextMenu);
+            AppIcon.on("click", () =>
             {
                 showFn();
             });
@@ -186,6 +269,26 @@ namespace TwitterElectron
                 label = "File",
                 submenu = new []
                 {
+                    new MenuItemConstructorOptions
+                    {
+                        label = "Options",
+                        accelerator = "F2".As<Accelerator>(),
+                        click = (i, w, e) =>
+                        {
+                            var optionsWin = CreateOptionsWindow();
+                            optionsWin.once(lit.ready_to_show, () =>
+                            {
+                                optionsWin.webContents.send(Constants.IPC.RestoreOptions, _credentials);
+
+                                // to prevent showing not rendered window:
+                                optionsWin.show();
+                            });
+                        }
+                    },
+                    new MenuItemConstructorOptions
+                    {
+                        type = lit.separator
+                    },
                     new MenuItemConstructorOptions
                     {
                         label = "Exit",
@@ -224,7 +327,7 @@ namespace TwitterElectron
                         accelerator = "F5".As<Accelerator>(),
                         click = (i, w, e) =>
                         {
-                            win.webContents.send("cmd-start-capture");
+                            Win.webContents.send(Constants.IPC.StartCapture);
                             ToggleStartStopMenuItems();
                         }
                     },
@@ -235,7 +338,7 @@ namespace TwitterElectron
                         enabled = false,
                         click = (i, w, e) =>
                         {
-                            win.webContents.send("cmd-stop-capture");
+                            Win.webContents.send(Constants.IPC.StopCapture);
                             ToggleStartStopMenuItems();
                         }
                     },
@@ -249,7 +352,7 @@ namespace TwitterElectron
                         accelerator = "F7".As<Accelerator>(),
                         click = (i, w, e) =>
                         {
-                            win.webContents.send("cmd-clear-capture");
+                            Win.webContents.send(Constants.IPC.ClearCapture);
                         }
                     }
                 }
@@ -301,7 +404,7 @@ namespace TwitterElectron
                             msgBoxOpts.type = "info";
                             msgBoxOpts.title = "About";
                             msgBoxOpts.buttons = new[] {"OK"};
-                            msgBoxOpts.message = @"Retyped: Electron demo application.
+                            msgBoxOpts.message = Constants.AppTitle + @".
 
 Node: " + process.versions.node + @"
 Chrome: " + process.versions["chrome"] + @"
@@ -332,9 +435,9 @@ Electron: " + process.versions["electron"];
             startMenuItem.enabled = isStarted;
             stopMenuItem.enabled = !isStarted;
 
-            if (appIcon != null && contextMenu != null)
+            if (AppIcon != null && ContextMenu != null)
             {
-                var captureCtxMenu = contextMenu.items
+                var captureCtxMenu = ContextMenu.items
                     .First(x => x.label == "Capture")
                     ["submenu"]
                     .As<Menu>();
@@ -346,7 +449,7 @@ Electron: " + process.versions["electron"];
                 stopMenuCtxItem.enabled = !isStarted;
             }
 
-            win.setTitle($"Retyped: Electron Demo ({(isStarted ? "Stopped" : "Running")})");
+            Win.setTitle($"{Constants.AppTitle} ({(isStarted ? "Stopped" : "Running")})");
         }
     }
 }

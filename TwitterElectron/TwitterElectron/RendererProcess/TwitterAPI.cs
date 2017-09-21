@@ -1,7 +1,7 @@
 ﻿using System;
 using Bridge;
 
-namespace TwitterElectron
+namespace TwitterElectron.RendererProcess
 {
     [Bridge.External]
     [Bridge.ObjectLiteral]

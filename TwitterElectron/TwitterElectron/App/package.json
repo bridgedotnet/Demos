@@ -1,0 +1,7 @@
+{
+  "name": "twitter-electron",
+  "version": "1.0.0",
+  "description": "Electron + Twitter API demo built with Bridge.NET and Retyped.",
+  "main": "App.js",
+  "author": "Object.NET, Inc."
+}

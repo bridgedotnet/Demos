@@ -1,11 +1,12 @@
-﻿using Bridge;
+﻿using System;
+using Bridge;
 using static Retyped.dom;
 using static Retyped.electron;
 using static Retyped.node;
 
-namespace TwitterElectron
+namespace TwitterElectron.RendererProcess
 {
-    public static class DemoWindow
+    public static class MainForm
     {
         [Init(InitPosition.Top)]
         public static void InitGlobals()
@@ -18,31 +19,35 @@ namespace TwitterElectron
 
         private static TwitterListener _listener;
 
-        private static string _notifFilter;
+        private static DateTime? _lastNotificationDate;
+
+        private static TwitterCredentials _credentials;
 
         public static void Main()
         {
-            Electron.ipcRenderer.on("cmd-start-capture", () =>
+            Electron.ipcRenderer.on(Constants.IPC.OptionsUpdated, new Action<Electron.Event, TwitterCredentials>((ev, cred) =>
+            {
+                _credentials = cred;
+            }));
+
+            Electron.ipcRenderer.on(Constants.IPC.StartCapture, () =>
             {
                 _listener = InitListener();
+
                 if (_listener != null)
                 {
-
-                    var notifFilterInput = (HTMLInputElement) document.getElementById("notifFilterInput");
-                    _notifFilter = notifFilterInput.value.ToLower();
-
-                    var captFilterInput = (HTMLInputElement) document.getElementById("captFilterInput");
-                    _listener.Filter = captFilterInput.value;
+                    var captureFilterInput = (HTMLInputElement) document.getElementById("captureFilterInput");
+                    _listener.Filter = captureFilterInput.value;
                     _listener.Start();
                 }
             });
 
-            Electron.ipcRenderer.on("cmd-stop-capture", () =>
+            Electron.ipcRenderer.on(Constants.IPC.StopCapture, () =>
             {
                 _listener?.Stop();
             });
 
-            Electron.ipcRenderer.on("cmd-clear-capture", () =>
+            Electron.ipcRenderer.on(Constants.IPC.ClearCapture, () =>
             {
                 var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
                 capturedItemsDiv.innerHTML = "";
@@ -51,33 +56,42 @@ namespace TwitterElectron
 
         private static TwitterListener InitListener()
         {
-            var apiKey = ((HTMLInputElement)document.getElementById("apiKeyInput")).value;
-            var apiSecret = ((HTMLInputElement)document.getElementById("apiSecretInput")).value;
-            var accessToken = ((HTMLInputElement)document.getElementById("accessTokenInput")).value;
-            var accessTokenSecret = ((HTMLInputElement)document.getElementById("accessTokenSecretInput")).value;
-
-            if (string.IsNullOrEmpty(apiKey) ||
-                string.IsNullOrEmpty(apiSecret) ||
-                string.IsNullOrEmpty(accessToken) ||
-                string.IsNullOrEmpty(accessTokenSecret))
+            if (_credentials == null ||
+                string.IsNullOrEmpty(_credentials.ApiKey) ||
+                string.IsNullOrEmpty(_credentials.ApiSecret) ||
+                string.IsNullOrEmpty(_credentials.AccessToken) ||
+                string.IsNullOrEmpty(_credentials.AccessTokenSecret))
             {
                 alert("Please specify API keys and Access tokens before starting.");
                 return null;
             }
 
             var listener = new TwitterListener(
-                consumerKey: apiKey,
-                consumerSecret: apiSecret,
-                accessTokenKey: accessToken,
-                accessTokenSecret: accessTokenSecret);
+                consumerKey: _credentials.ApiKey,
+                consumerSecret: _credentials.ApiSecret,
+                accessTokenKey: _credentials.AccessToken,
+                accessTokenSecret: _credentials.AccessTokenSecret);
 
             listener.OnReceived += (sender, tweet) =>
             {
                 AddRecord(tweet);
 
-                if (tweet.text.ToLower().Contains(_notifFilter))
+                // Notify:
+                var notificationEnabledCheckbox = (HTMLInputElement)document.getElementById("notificationEnabledCheckbox");
+                var notificationEnabled = notificationEnabledCheckbox.@checked;
+                if (notificationEnabled)
                 {
-                    CreateNotification(tweet);
+                    // Use 20 seconds buffer to not create too many notifications:
+                    if (_lastNotificationDate == null ||
+                        (DateTime.UtcNow - _lastNotificationDate.Value).TotalSeconds > 20)
+                    {
+                        _lastNotificationDate = DateTime.UtcNow;
+                        CreateNotification(tweet);
+                    }
+                }
+                else
+                {
+                    _lastNotificationDate = null;
                 }
             };
 
@@ -142,7 +156,19 @@ namespace TwitterElectron
             div.appendChild(textDiv);
 
             var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
-            capturedItemsDiv.appendChild(div);
+            if (capturedItemsDiv.children.length >= 20)
+            {
+                capturedItemsDiv.removeChild(capturedItemsDiv.children[19]);
+            }
+
+            if (capturedItemsDiv.children.length > 0)
+            {
+                capturedItemsDiv.insertBefore(div, capturedItemsDiv.children[0]);
+            }
+            else
+            {
+                capturedItemsDiv.appendChild(div);
+            }
         }
     }
 }
