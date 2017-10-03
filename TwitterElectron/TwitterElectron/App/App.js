@@ -35,7 +35,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     app.quit();
                 }
 
-                TwitterElectron.MainProcess.App.AppIcon != null ? TwitterElectron.MainProcess.App.AppIcon.destroy() : null;
+                TwitterElectron.MainProcess.App["AppIcon"] != null ? TwitterElectron.MainProcess.App["AppIcon"].destroy() : null;
             });
 
             // On macOS it's common to re-create a window in the app when the
@@ -49,7 +49,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             fields: {
                 Electron: null,
                 Win: null,
-                AppIcon: null,
+                "AppIcon": null,
                 ContextMenu: null,
                 _credentials: null
             },
@@ -84,7 +84,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     var options = { };
                     options.width = 505;
                     options.height = 330;
-                    options.icon = path.join(__dirname, "Assets/app_icon.png");
+                    options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
                     options.title = "Retyped: Electron + Twitter API Demo";
                     options.frame = false;
                     options.skipTaskbar = true;
@@ -99,7 +99,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     var options = { };
                     options.width = 800;
                     options.height = 600;
-                    options.icon = path.join(__dirname, "Assets/app_icon.png");
+                    options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
                     options.title = "Retyped: Electron + Twitter API Demo";
                     options.show = false;
 
@@ -160,10 +160,10 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     TwitterElectron.MainProcess.App.ContextMenu = Electron.Menu.buildFromTemplate(System.Array.init([openMenuItem, captureMenuItem, visitMenuItem, exitMenuItem], Bridge.virtualc("Electron.MenuItemConstructorOptions")));
 
-                    TwitterElectron.MainProcess.App.AppIcon = new Electron.Tray(path.join(__dirname, "Assets/app_icon.png"));
-                    TwitterElectron.MainProcess.App.AppIcon.setToolTip("Retyped: Electron + Twitter API Demo");
-                    TwitterElectron.MainProcess.App.AppIcon.setContextMenu(TwitterElectron.MainProcess.App.ContextMenu);
-                    TwitterElectron.MainProcess.App.AppIcon.on("click", function () {
+                    TwitterElectron.MainProcess.App["AppIcon"] = new Electron.Tray(path.join(__dirname, "Assets/Images/app_icon.png"));
+                    TwitterElectron.MainProcess.App["AppIcon"].setToolTip("Retyped: Electron + Twitter API Demo");
+                    TwitterElectron.MainProcess.App["AppIcon"].setContextMenu(TwitterElectron.MainProcess.App.ContextMenu);
+                    TwitterElectron.MainProcess.App["AppIcon"].on("click", function () {
                         showFn();
                     });
                 },
@@ -192,7 +192,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     startMenuItem.enabled = isStarted;
                     stopMenuItem.enabled = !isStarted;
 
-                    if (TwitterElectron.MainProcess.App.AppIcon != null && TwitterElectron.MainProcess.App.ContextMenu != null) {
+                    if (TwitterElectron.MainProcess.App["AppIcon"] != null && TwitterElectron.MainProcess.App.ContextMenu != null) {
                         var captureCtxMenu = Bridge.unbox(System.Linq.Enumerable.from(TwitterElectron.MainProcess.App.ContextMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f18).submenu);
 
                         var startMenuCtxItem = System.Linq.Enumerable.from(captureCtxMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f19);
@@ -237,8 +237,8 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             }
 
             win.setSkipTaskbar(false);
-            TwitterElectron.MainProcess.App.AppIcon.destroy();
-            TwitterElectron.MainProcess.App.AppIcon = null;
+            TwitterElectron.MainProcess.App["AppIcon"].destroy();
+            TwitterElectron.MainProcess.App["AppIcon"] = null;
         },
         f6: function () {
             win.webContents.send("cmd-start-capture");
@@ -288,7 +288,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             msgBoxOpts.type = "info";
             msgBoxOpts.title = "About";
             msgBoxOpts.buttons = System.Array.init(["OK"], System.String);
-            msgBoxOpts.message = System.String.concat("Retyped: Electron + Twitter API Demo.\r\n\r\nNode: ", process.versions.node, "\r\nChrome: ", process.versions.chrome, "\r\nElectron: ", process.versions.electron);
+            msgBoxOpts.message = System.String.concat("Retyped: Electron + Twitter API Demo.\n\nNode: ", process.versions.node, "\nChrome: ", process.versions.chrome, "\nElectron: ", process.versions.electron);
 
             Electron.dialog.showMessageBox(msgBoxOpts);
         },

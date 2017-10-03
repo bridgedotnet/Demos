@@ -114,7 +114,7 @@ namespace TwitterElectron.MainProcess
             var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
             options.width = 505;
             options.height = 330;
-            options.icon = path.join(__dirname, "Assets/app_icon.png");
+            options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
             options.title = Constants.AppTitle;
             options.frame = false;
             options.skipTaskbar = true;
@@ -131,7 +131,7 @@ namespace TwitterElectron.MainProcess
             var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
             options.width = 800;
             options.height = 600;
-            options.icon = path.join(__dirname, "Assets/app_icon.png");
+            options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
             options.title = Constants.AppTitle;
             options.show = false;
 
@@ -253,7 +253,7 @@ namespace TwitterElectron.MainProcess
 
             ContextMenu = Menu.buildFromTemplate(new[] { openMenuItem, captureMenuItem, visitMenuItem, exitMenuItem });
 
-            AppIcon = new Tray(path.join(__dirname, "Assets/app_icon.png"));
+            AppIcon = new Tray(path.join(__dirname, "Assets/Images/app_icon.png"));
             AppIcon.setToolTip(Constants.AppTitle);
             AppIcon.setContextMenu(ContextMenu);
             AppIcon.on("click", () =>
