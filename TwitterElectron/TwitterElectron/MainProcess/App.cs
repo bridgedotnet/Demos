@@ -86,6 +86,16 @@ namespace TwitterElectron.MainProcess
 
                 Win.webContents.send(Constants.IPC.OptionsUpdated, cred);
             }));
+
+            Electron.ipcMain.on(Constants.IPC.StartCapture, new Action<Event>(e =>
+            {
+                ToggleStartStop(true);
+            }));
+
+            Electron.ipcMain.on(Constants.IPC.StopCapture, new Action<Event>(e =>
+            {
+                ToggleStartStop(false);
+            }));
         }
 
         private static void StartApp(object launchInfo)
@@ -348,8 +358,7 @@ namespace TwitterElectron.MainProcess
                         accelerator = "F5".As<Accelerator>(),
                         click = (i, w, e) =>
                         {
-                            Win.webContents.send(Constants.IPC.StartCapture);
-                            ToggleStartStopMenuItems();
+                            ToggleStartStop(true);
                         }
                     },
                     new MenuItemConstructorOptions
@@ -359,8 +368,7 @@ namespace TwitterElectron.MainProcess
                         enabled = false,
                         click = (i, w, e) =>
                         {
-                            Win.webContents.send(Constants.IPC.StopCapture);
-                            ToggleStartStopMenuItems();
+                            ToggleStartStop(false);
                         }
                     },
                     new MenuItemConstructorOptions
@@ -439,6 +447,12 @@ Electron: " + process.versions["electron"];
 
             var appMenu = Menu.buildFromTemplate(new[] { fileMenu, captureMenu, viewMenu, helpMenu });
             Menu.setApplicationMenu(appMenu);
+        }
+
+        private static void ToggleStartStop(bool isStart)
+        {
+            Win.webContents.send(isStart ? Constants.IPC.StartCapture : Constants.IPC.StopCapture);
+            ToggleStartStopMenuItems();
         }
 
         private static void ToggleStartStopMenuItems()

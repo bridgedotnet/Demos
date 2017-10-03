@@ -3,6 +3,7 @@ using Bridge;
 using static Retyped.dom;
 using static Retyped.electron;
 using static Retyped.node;
+using static Retyped.jquery;
 
 namespace TwitterElectron.RendererProcess
 {
@@ -12,6 +13,7 @@ namespace TwitterElectron.RendererProcess
         public static void InitGlobals()
         {
             var Electron = (Electron.AllElectron)require.Self("electron");
+            var jQuery = require.Self("jquery");
         }
 
         [Template("Electron")]
@@ -25,6 +27,18 @@ namespace TwitterElectron.RendererProcess
 
         public static void Main()
         {
+            jQuery.select(".play").on("click", (e, args) =>
+            {
+                Electron.ipcRenderer.send(Constants.IPC.StartCapture);
+                return null;
+            });
+
+            jQuery.select(".pause").on("click", (e, args) =>
+            {
+                Electron.ipcRenderer.send(Constants.IPC.StopCapture);
+                return null;
+            });
+
             Electron.ipcRenderer.on(Constants.IPC.OptionsUpdated, new Action<Electron.Event, TwitterCredentials>((ev, cred) =>
             {
                 _credentials = cred;
@@ -32,6 +46,9 @@ namespace TwitterElectron.RendererProcess
 
             Electron.ipcRenderer.on(Constants.IPC.StartCapture, () =>
             {
+                jQuery.select(".play").hide();
+                jQuery.select(".pause").show();
+
                 _listener = InitListener();
 
                 if (_listener != null)
@@ -44,6 +61,9 @@ namespace TwitterElectron.RendererProcess
 
             Electron.ipcRenderer.on(Constants.IPC.StopCapture, () =>
             {
+                jQuery.select(".pause").hide();
+                jQuery.select(".play").show();
+
                 _listener?.Stop();
             });
 

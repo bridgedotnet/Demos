@@ -1,17 +1,22 @@
 var Electron = require("electron");
+var jQuery = require("jquery");
 
 Bridge.assembly("TwitterElectron", function ($asm, globals) {
     "use strict";
 
     Bridge.define("TwitterElectron.RendererProcess.MainForm", {
         main: function Main () {
-            Electron.ipcRenderer.on("cmd-options-updated", $asm.$.TwitterElectron.RendererProcess.MainForm.f1);
+            jQuery(".play").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f1);
 
-            Electron.ipcRenderer.on("cmd-start-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f2);
+            jQuery(".pause").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f2);
 
-            Electron.ipcRenderer.on("cmd-stop-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f3);
+            Electron.ipcRenderer.on("cmd-options-updated", $asm.$.TwitterElectron.RendererProcess.MainForm.f3);
 
-            Electron.ipcRenderer.on("cmd-clear-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f4);
+            Electron.ipcRenderer.on("cmd-start-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f4);
+
+            Electron.ipcRenderer.on("cmd-stop-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f5);
+
+            Electron.ipcRenderer.on("cmd-clear-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f6);
         },
         statics: {
             fields: {
@@ -29,7 +34,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     var listener = new TwitterElectron.RendererProcess.TwitterListener(TwitterElectron.RendererProcess.MainForm._credentials.ApiKey, TwitterElectron.RendererProcess.MainForm._credentials.ApiSecret, TwitterElectron.RendererProcess.MainForm._credentials.AccessToken, TwitterElectron.RendererProcess.MainForm._credentials.AccessTokenSecret);
 
-                    listener.addOnReceived($asm.$.TwitterElectron.RendererProcess.MainForm.f5);
+                    listener.addOnReceived($asm.$.TwitterElectron.RendererProcess.MainForm.f7);
 
                     listener.addOnError(function (sender, err) {
                         listener.Stop();
@@ -38,7 +43,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     return listener;
                 },
                 CreateNotification: function (tweet) {
-                    var notifTitle = System.String.concat(tweet.user.name, " is tweeting..");
+                    var notifTitle = (tweet.user.name || "") + " is tweeting..";
 
                     var notifOpts = { };
                     notifOpts.body = tweet.text;
@@ -69,7 +74,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     var nameDiv = document.createElement("div");
                     nameDiv.className = "username";
-                    nameDiv.innerHTML = System.String.concat(tweet.user.name, "<span class='istweeting'> is tweeting...</span>");
+                    nameDiv.innerHTML = (tweet.user.name || "") + "<span class='istweeting'> is tweeting...</span>";
 
                     var textDiv = document.createElement("div");
                     textDiv.className = "tweet-text";
@@ -101,10 +106,21 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
     Bridge.ns("TwitterElectron.RendererProcess.MainForm", $asm.$);
 
     Bridge.apply($asm.$.TwitterElectron.RendererProcess.MainForm, {
-        f1: function (ev, cred) {
+        f1: function (e, args) {
+            Electron.ipcRenderer.send("cmd-start-capture");
+            return null;
+        },
+        f2: function (e, args) {
+            Electron.ipcRenderer.send("cmd-stop-capture");
+            return null;
+        },
+        f3: function (ev, cred) {
             TwitterElectron.RendererProcess.MainForm._credentials = cred;
         },
-        f2: function () {
+        f4: function () {
+            jQuery(".play").hide();
+            jQuery(".pause").show();
+
             TwitterElectron.RendererProcess.MainForm._listener = TwitterElectron.RendererProcess.MainForm.InitListener();
 
             if (TwitterElectron.RendererProcess.MainForm._listener != null) {
@@ -113,14 +129,17 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 TwitterElectron.RendererProcess.MainForm._listener.Start();
             }
         },
-        f3: function () {
+        f5: function () {
+            jQuery(".pause").hide();
+            jQuery(".play").show();
+
             TwitterElectron.RendererProcess.MainForm._listener != null ? TwitterElectron.RendererProcess.MainForm._listener.Stop() : null;
         },
-        f4: function () {
+        f6: function () {
             var capturedItemsDiv = Bridge.cast(document.getElementById("capturedItemsDiv"), HTMLDivElement);
             capturedItemsDiv.innerHTML = "";
         },
-        f5: function (sender, tweet) {
+        f7: function (sender, tweet) {
             TwitterElectron.RendererProcess.MainForm.AddRecord(tweet);
 
             // Notify:
