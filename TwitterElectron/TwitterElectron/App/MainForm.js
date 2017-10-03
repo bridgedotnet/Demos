@@ -54,10 +54,8 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 },
                 AddRecord: function (tweet) {
                     var div = document.createElement("div");
-                    div.style.padding = "10px";
-                    div.style.margin = "10px";
-                    div.style.backgroundColor = "rgba(133, 181, 249, 0.33)";
-                    div.style.border = "2px solid orange";
+                    div.className = "tweet-card";
+
                     div.ondblclick = Bridge.fn.combine(div.ondblclick, function (e) {
                         var tweetUrl = System.String.format("https://twitter.com/{0}/status/{1}", tweet.user.screen_name, tweet.id_str);
                         Electron.shell.openExternal(tweetUrl);
@@ -66,24 +64,24 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     });
 
                     var img = document.createElement("img");
-                    img.width = 48;
-                    img.height = 48;
+                    img.className = "avatar";
                     img.src = tweet.user.profile_image_url;
 
                     var nameDiv = document.createElement("div");
-                    nameDiv.style.marginTop = "-50px";
-                    nameDiv.style.marginLeft = "60px";
-                    nameDiv.style.fontStyle = "italic";
-                    nameDiv.innerHTML = System.String.concat(tweet.user.name, " is tweeting..");
+                    nameDiv.className = "username";
+                    nameDiv.innerHTML = System.String.concat(tweet.user.name, "<span class='istweeting'> is tweeting...</span>");
 
                     var textDiv = document.createElement("div");
-                    textDiv.style.marginTop = "10px";
-                    textDiv.style.marginLeft = "60px";
+                    textDiv.className = "tweet-text";
                     textDiv.innerHTML = tweet.text;
 
+                    var tweetContent = document.createElement("div");
+                    tweetContent.className = "tweet-content";
+                    tweetContent.appendChild(nameDiv);
+                    tweetContent.appendChild(textDiv);
+
                     div.appendChild(img);
-                    div.appendChild(nameDiv);
-                    div.appendChild(textDiv);
+                    div.appendChild(tweetContent);
 
                     var capturedItemsDiv = Bridge.cast(document.getElementById("capturedItemsDiv"), HTMLDivElement);
                     if (capturedItemsDiv.children.length >= 20) {

@@ -124,10 +124,8 @@ namespace TwitterElectron.RendererProcess
         private static void AddRecord(Tweet tweet)
         {
             var div = new HTMLDivElement();
-            div.style.padding = "10px";
-            div.style.margin = "10px";
-            div.style.backgroundColor = "rgba(133, 181, 249, 0.33)";
-            div.style.border = "2px solid orange";
+            div.className = "tweet-card";
+
             div.ondblclick += e =>
             {
                 var tweetUrl = $"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id_str}";
@@ -136,25 +134,25 @@ namespace TwitterElectron.RendererProcess
                 return null;
             };
 
-            var img = new HTMLImageElement(); 
-            img.width = 48;
-            img.height = 48;
+            var img = new HTMLImageElement();
+            img.className = "avatar";
             img.src = tweet.user.profile_image_url;
 
             var nameDiv = new HTMLDivElement();
-            nameDiv.style.marginTop = "-50px";
-            nameDiv.style.marginLeft = "60px";
-            nameDiv.style.fontStyle = "italic";
-            nameDiv.innerHTML = tweet.user.name + " is tweeting..";
+            nameDiv.className = "username";
+            nameDiv.innerHTML = tweet.user.name + "<span class='istweeting'> is tweeting...</span>";
 
             var textDiv = new HTMLDivElement();
-            textDiv.style.marginTop = "10px";
-            textDiv.style.marginLeft = "60px";
+            textDiv.className = "tweet-text";
             textDiv.innerHTML = tweet.text;
 
+            var tweetContent = new HTMLDivElement();
+            tweetContent.className = "tweet-content";
+            tweetContent.appendChild(nameDiv);
+            tweetContent.appendChild(textDiv);
+
             div.appendChild(img);
-            div.appendChild(nameDiv);
-            div.appendChild(textDiv);
+            div.appendChild(tweetContent);
 
             var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
             if (capturedItemsDiv.children.length >= 20)
