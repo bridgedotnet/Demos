@@ -72,6 +72,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     setTimeout(function (args) {
                         TwitterElectron.MainProcess.App.CreateMainWindow();
+
                         win.once("ready-to-show", function () {
                             // to prevent showing not rendered window:
                             win.show();
@@ -82,6 +83,10 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                             splash = null;
 
                             win.focus();
+
+                            if (TwitterElectron.MainProcess.App._settings != null) {
+                                win.webContents.send("cmd-options-updated", TwitterElectron.MainProcess.App._settings.Credentials);
+                            }
                         });
 
                     }, 2000);

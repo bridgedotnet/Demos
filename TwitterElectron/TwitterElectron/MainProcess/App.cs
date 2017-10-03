@@ -111,6 +111,11 @@ namespace TwitterElectron.MainProcess
                     splash = null;
 
                     Win.focus();
+
+                    if (_settings != null)
+                    {
+                        Win.webContents.send(Constants.IPC.OptionsUpdated, _settings.Credentials);
+                    }
                 });
 
             }, 2000);
