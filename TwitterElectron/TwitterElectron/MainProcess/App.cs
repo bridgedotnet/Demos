@@ -129,8 +129,8 @@ namespace TwitterElectron.MainProcess
         private static void CreateMainWindow()
         {
             var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
-            options.width = 800;
-            options.height = 600;
+            options.width = 600;
+            options.height = 800;
             options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
             options.title = Constants.AppTitle;
             options.show = false;

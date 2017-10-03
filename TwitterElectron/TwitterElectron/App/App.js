@@ -97,8 +97,8 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 },
                 CreateMainWindow: function () {
                     var options = { };
-                    options.width = 800;
-                    options.height = 600;
+                    options.width = 600;
+                    options.height = 800;
                     options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
                     options.title = "Retyped: Electron + Twitter API Demo";
                     options.show = false;
