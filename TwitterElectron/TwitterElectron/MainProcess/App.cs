@@ -304,6 +304,15 @@ namespace TwitterElectron.MainProcess
                 {
                     new MenuItemConstructorOptions
                     {
+                        label = "Reload",
+                        accelerator = "Ctrl+R".As<Accelerator>(),
+                        click = (i, w, e) =>
+                        {
+                            w?.webContents.reload();
+                        }
+                    },
+                    new MenuItemConstructorOptions
+                    {
                         label = "Toggle Developer Tools",
                         accelerator = (process.platform == Platform.darwin
                             ? "Alt+Command+I"
