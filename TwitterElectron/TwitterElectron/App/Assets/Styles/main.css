@@ -4,6 +4,7 @@
   --gray-100: #f5f6fa;
   --gray-200: #e5e9f2;
   --gray-400: #aab3c1;
+  --gray-600: #8690a5;
   --gray-700: #2b3238;
   --gray-800: #343f47;
   --gray-900: #24292d;
@@ -69,6 +70,10 @@ svg {
   background-color: transparent;
   color: #fff;
   transition: background-color 0.25s;
+}
+
+.app-toolbar .filter input::-webkit-input-placeholder {
+  color: var(--gray-600);
 }
 
 .app-toolbar .filter input:focus {
