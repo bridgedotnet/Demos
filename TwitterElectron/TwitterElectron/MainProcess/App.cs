@@ -16,6 +16,8 @@ namespace TwitterElectron.MainProcess
         public static void InitGlobals()
         {
             require.Self("./bridge.js");
+            require.Self("./UserSettings.js");
+            require.Self("./newtonsoft.json.js");
 
             // The call bellow is required to initialize a global var 'Electron'.
             var Electron = (AllElectron)require.Self("electron");
@@ -34,7 +36,7 @@ namespace TwitterElectron.MainProcess
         public static Tray AppIcon;
         public static Menu ContextMenu;
 
-        private static TwitterCredentials _credentials;
+        private static UserSettings _settings;
 
         public static void Main()
         {
@@ -68,6 +70,9 @@ namespace TwitterElectron.MainProcess
                 }
             });
 
+            // Load User Settings:
+            LoadUserSettings();
+
             // Init IPC message handlers:
             InitIPC();
         }
@@ -76,7 +81,9 @@ namespace TwitterElectron.MainProcess
         {
             Electron.ipcMain.on(Constants.IPC.OptionsUpdated, new Action<Event, TwitterCredentials>((e, cred) =>
             {
-                _credentials = cred;
+                _settings.Credentials = cred;
+                SaveUserSettings();
+
                 Win.webContents.send(Constants.IPC.OptionsUpdated, cred);
             }));
         }
@@ -278,7 +285,7 @@ namespace TwitterElectron.MainProcess
                             var optionsWin = CreateOptionsWindow();
                             optionsWin.once(lit.ready_to_show, () =>
                             {
-                                optionsWin.webContents.send(Constants.IPC.RestoreOptions, _credentials);
+                                optionsWin.webContents.send(Constants.IPC.RestoreOptions, _settings.Credentials);
 
                                 // to prevent showing not rendered window:
                                 optionsWin.show();
@@ -459,6 +466,31 @@ Electron: " + process.versions["electron"];
             }
 
             Win.setTitle($"{Constants.AppTitle} ({(isStarted ? "Stopped" : "Running")})");
+        }
+
+        private static void LoadUserSettings()
+        {
+            var userDataPath = Electron.app.getPath("userData");
+            var settingsPath = path.join(userDataPath, Constants.UserSettingsFileName);
+
+            if (fs.existsSync(settingsPath))
+            {
+                var fileData = fs.readFileSync(settingsPath, "utf8");
+                _settings = UserSettings.Deserialize(fileData);
+            }
+            else
+            {
+                _settings = new UserSettings();
+            }
+        }
+
+        private static void SaveUserSettings()
+        {
+            var userDataPath = Electron.app.getPath("userData");
+            var settingsPath = path.join(userDataPath, Constants.UserSettingsFileName);
+
+            var data = _settings.Serialize();
+            fs.writeFileSync(settingsPath, data);
         }
     }
 }

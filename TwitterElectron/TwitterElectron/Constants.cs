@@ -8,6 +8,9 @@ namespace TwitterElectron
         [InlineConst]
         public const string AppTitle = "Retyped: Electron + Twitter API Demo";
 
+        [InlineConst]
+        public const string UserSettingsFileName = "UserSettings.json";
+
         public static class IPC
         {
             [InlineConst]

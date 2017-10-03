@@ -1,4 +1,6 @@
 require("./bridge.js");
+require("./UserSettings.js");
+require("./newtonsoft.json.js");
 
 // The call bellow is required to initialize a global var 'Electron'.
 var Electron = require("electron");
@@ -17,6 +19,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
     var path = require("path");
     var url = require("url");
+    var fs = require("fs");
 
     Bridge.define("TwitterElectron.MainProcess.App", {
         main: function Main () {
@@ -42,6 +45,9 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             // dock icon is clicked and there are no other windows open.
             app.on("activate", $asm.$.TwitterElectron.MainProcess.App.f1);
 
+            // Load User Settings:
+            TwitterElectron.MainProcess.App.LoadUserSettings();
+
             // Init IPC message handlers:
             TwitterElectron.MainProcess.App.InitIPC();
         },
@@ -51,7 +57,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 Win: null,
                 AppIcon: null,
                 ContextMenu: null,
-                _credentials: null
+                _settings: null
             },
             methods: {
                 InitIPC: function () {
@@ -203,6 +209,24 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     }
 
                     win.setTitle(System.String.format("{0} ({1})", "Retyped: Electron + Twitter API Demo", (isStarted ? "Stopped" : "Running")));
+                },
+                LoadUserSettings: function () {
+                    var userDataPath = Electron.app.getPath("userData");
+                    var settingsPath = path.join(userDataPath, "UserSettings.json");
+
+                    if (fs.existsSync(settingsPath)) {
+                        var fileData = fs.readFileSync(settingsPath, "utf8");
+                        TwitterElectron.MainProcess.App._settings = TwitterElectron.MainProcess.UserSettings.Deserialize(fileData);
+                    } else {
+                        TwitterElectron.MainProcess.App._settings = { };
+                    }
+                },
+                SaveUserSettings: function () {
+                    var userDataPath = Electron.app.getPath("userData");
+                    var settingsPath = path.join(userDataPath, "UserSettings.json");
+
+                    var data = TwitterElectron.MainProcess.UserSettings.prototype.Serialize.call(TwitterElectron.MainProcess.App._settings);
+                    fs.writeFileSync(settingsPath, data);
                 }
             }
         }
@@ -217,7 +241,9 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             }
         },
         f2: function (e, cred) {
-            TwitterElectron.MainProcess.App._credentials = cred;
+            TwitterElectron.MainProcess.App._settings.Credentials = cred;
+            TwitterElectron.MainProcess.App.SaveUserSettings();
+
             win.webContents.send("cmd-options-updated", cred);
         },
         f3: function () {
@@ -254,7 +280,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
         f9: function (i, w, e) {
             var optionsWin = TwitterElectron.MainProcess.App.CreateOptionsWindow();
             optionsWin.once("ready-to-show", function () {
-                optionsWin.webContents.send("cmd-options-restore", TwitterElectron.MainProcess.App._credentials);
+                optionsWin.webContents.send("cmd-options-restore", TwitterElectron.MainProcess.App._settings.Credentials);
 
                 // to prevent showing not rendered window:
                 optionsWin.show();
