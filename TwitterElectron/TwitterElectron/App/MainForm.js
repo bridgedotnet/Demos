@@ -6,6 +6,8 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
     Bridge.define("TwitterElectron.RendererProcess.MainForm", {
         main: function Main () {
+            TwitterElectron.RendererProcess.MainForm.ToggleTheme();
+
             jQuery(".play").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f1);
 
             jQuery(".pause").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f2);
@@ -17,13 +19,23 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             Electron.ipcRenderer.on("cmd-stop-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f5);
 
             Electron.ipcRenderer.on("cmd-clear-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f6);
+
+            Electron.ipcRenderer.on("cmd-toggle-theme", $asm.$.TwitterElectron.RendererProcess.MainForm.f7);
         },
         statics: {
             fields: {
+                LightThemeCss: null,
+                DarkThemeCss: null,
                 Electron: null,
                 _listener: null,
                 _lastNotificationDate: null,
                 _credentials: null
+            },
+            ctors: {
+                init: function () {
+                    this.LightThemeCss = "../Assets/Styles/light.css";
+                    this.DarkThemeCss = "../Assets/Styles/dark.css";
+                }
             },
             methods: {
                 InitListener: function () {
@@ -34,13 +46,27 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     var listener = new TwitterElectron.RendererProcess.TwitterListener(TwitterElectron.RendererProcess.MainForm._credentials.ApiKey, TwitterElectron.RendererProcess.MainForm._credentials.ApiSecret, TwitterElectron.RendererProcess.MainForm._credentials.AccessToken, TwitterElectron.RendererProcess.MainForm._credentials.AccessTokenSecret);
 
-                    listener.addOnReceived($asm.$.TwitterElectron.RendererProcess.MainForm.f7);
+                    listener.addOnReceived($asm.$.TwitterElectron.RendererProcess.MainForm.f8);
 
                     listener.addOnError(function (sender, err) {
                         listener.Stop();
                     });
 
                     return listener;
+                },
+                ToggleTheme: function () {
+                    var lightThemeLink = jQuery(System.String.format("link[href='{0}']", TwitterElectron.RendererProcess.MainForm.LightThemeCss));
+                    var darkThemeLink = jQuery(System.String.format("link[href='{0}']", TwitterElectron.RendererProcess.MainForm.DarkThemeCss));
+
+                    var newTheme = lightThemeLink.length === 0 ? TwitterElectron.RendererProcess.MainForm.LightThemeCss : TwitterElectron.RendererProcess.MainForm.DarkThemeCss;
+
+                    if (lightThemeLink.length === 0) {
+                        darkThemeLink.remove();
+                    } else if (darkThemeLink.length === 0) {
+                        lightThemeLink.remove();
+                    }
+
+                    jQuery("head").append(System.String.format("<link rel=\"stylesheet\" href=\"{0}\" >", newTheme));
                 },
                 CreateNotification: function (tweet) {
                     var notifTitle = (tweet.user.name || "") + " is tweeting..";
@@ -141,7 +167,10 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             capturedItemsDiv.innerHTML = "";
             jQuery("#placeholder").show();
         },
-        f7: function (sender, tweet) {
+        f7: function (ev) {
+            TwitterElectron.RendererProcess.MainForm.ToggleTheme();
+        },
+        f8: function (sender, tweet) {
             TwitterElectron.RendererProcess.MainForm.AddRecord(tweet);
 
             // Notify:

@@ -344,6 +344,37 @@ namespace TwitterElectron.MainProcess
                         {
                             w?.webContents.toggleDevTools();
                         }
+                    },
+                    new MenuItemConstructorOptions
+                    {
+                        type = lit.separator
+                    },
+                    new MenuItemConstructorOptions
+                    {
+                        label = "Theme",
+                        submenu = new []
+                        {
+                            new MenuItemConstructorOptions
+                            {
+                                type = lit.radio,
+                                label = "Light",
+                                @checked = true,
+                                click = (i, w, e) =>
+                                {
+                                    Win.webContents.send(Constants.IPC.ToggleTheme);
+                                }
+
+                            },
+                            new MenuItemConstructorOptions
+                            {
+                                type = lit.radio,
+                                label = "Dark",
+                                click = (i, w, e) =>
+                                {
+                                    Win.webContents.send(Constants.IPC.ToggleTheme);
+                                }
+                            }
+                        }
                     }
                 }
             };

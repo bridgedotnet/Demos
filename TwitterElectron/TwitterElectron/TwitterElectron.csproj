@@ -44,6 +44,7 @@
     <Compile Include="RendererProcess\TwitterCredentials.cs" />
     <Compile Include="RendererProcess\TwitterListener.cs" />
     <Content Include="App\Assets\Images\app_icon.png" />
+    <Content Include="App\Assets\Styles\dark.css" />
     <Content Include="App\Assets\Styles\light.css" />
     <Content Include="App\Assets\Styles\splash.css" />
     <Content Include="App\Forms\SplashScreen.html" />

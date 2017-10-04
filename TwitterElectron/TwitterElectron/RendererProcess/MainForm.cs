@@ -9,6 +9,9 @@ namespace TwitterElectron.RendererProcess
 {
     public static class MainForm
     {
+        private const string LightThemeCss = "../Assets/Styles/light.css";
+        private const string DarkThemeCss = "../Assets/Styles/dark.css";
+
         [Init(InitPosition.Top)]
         public static void InitGlobals()
         {
@@ -27,6 +30,8 @@ namespace TwitterElectron.RendererProcess
 
         public static void Main()
         {
+            ToggleTheme();
+
             jQuery.select(".play").on("click", (e, args) =>
             {
                 Electron.ipcRenderer.send(Constants.IPC.StartCapture);
@@ -74,6 +79,11 @@ namespace TwitterElectron.RendererProcess
                 capturedItemsDiv.innerHTML = "";
                 jQuery.select("#placeholder").show();
             });
+
+            Electron.ipcRenderer.on(Constants.IPC.ToggleTheme, new Action<Electron.Event>(ev =>
+            {
+                ToggleTheme();
+            }));
         }
 
         private static TwitterListener InitListener()
@@ -123,6 +133,27 @@ namespace TwitterElectron.RendererProcess
             };
 
             return listener;
+        }
+
+        private static void ToggleTheme()
+        {
+            var lightThemeLink = jQuery.select($"link[href='{LightThemeCss}']");
+            var darkThemeLink = jQuery.select($"link[href='{DarkThemeCss}']");
+
+            var newTheme = lightThemeLink.length == 0
+                ? LightThemeCss
+                : DarkThemeCss;
+
+            if (lightThemeLink.length == 0)
+            {
+                darkThemeLink.remove();
+            }
+            else if (darkThemeLink.length == 0)
+            {
+                lightThemeLink.remove();
+            }
+
+            jQuery.select("head").append($"<link rel=\"stylesheet\" href=\"{newTheme}\" >");
         }
 
         private static void CreateNotification(Tweet tweet)

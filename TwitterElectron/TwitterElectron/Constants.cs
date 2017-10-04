@@ -27,6 +27,9 @@ namespace TwitterElectron
 
             [InlineConst]
             public const string RestoreOptions = "cmd-options-restore";
+
+            [InlineConst]
+            public const string ToggleTheme = "cmd-toggle-theme";
         }
     }
 }
