@@ -59,7 +59,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 },
                 AddRecord: function (tweet) {
                     var div = document.createElement("div");
-                    div.className = "tweet-card";
+                    div.className = "tweet-card animated slideInRight";
 
                     div.ondblclick = Bridge.fn.combine(div.ondblclick, function (e) {
                         var tweetUrl = System.String.format("https://twitter.com/{0}/status/{1}", tweet.user.screen_name, tweet.id_str);

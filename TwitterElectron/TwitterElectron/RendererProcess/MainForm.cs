@@ -144,7 +144,7 @@ namespace TwitterElectron.RendererProcess
         private static void AddRecord(Tweet tweet)
         {
             var div = new HTMLDivElement();
-            div.className = "tweet-card";
+            div.className = "tweet-card animated slideInRight";
 
             div.ondblclick += e =>
             {
