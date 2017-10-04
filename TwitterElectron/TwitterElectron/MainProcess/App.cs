@@ -182,8 +182,9 @@ namespace TwitterElectron.MainProcess
         {
             var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
             options.width = 440;
-            options.height = 453;
+            options.height = 540;
             options.title = "Settings";
+            options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
             options.skipTaskbar = true;
             options.parent = Win;
             options.modal = true;
