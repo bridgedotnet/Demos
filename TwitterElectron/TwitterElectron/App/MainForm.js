@@ -118,6 +118,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             TwitterElectron.RendererProcess.MainForm._credentials = cred;
         },
         f4: function () {
+            jQuery("#placeholder").hide();
             jQuery(".play").hide();
             jQuery(".pause").show();
 
@@ -138,6 +139,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
         f6: function () {
             var capturedItemsDiv = Bridge.cast(document.getElementById("capturedItemsDiv"), HTMLDivElement);
             capturedItemsDiv.innerHTML = "";
+            jQuery("#placeholder").show();
         },
         f7: function (sender, tweet) {
             TwitterElectron.RendererProcess.MainForm.AddRecord(tweet);

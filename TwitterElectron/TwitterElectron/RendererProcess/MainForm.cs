@@ -46,6 +46,7 @@ namespace TwitterElectron.RendererProcess
 
             Electron.ipcRenderer.on(Constants.IPC.StartCapture, () =>
             {
+                jQuery.select("#placeholder").hide();
                 jQuery.select(".play").hide();
                 jQuery.select(".pause").show();
 
@@ -71,6 +72,7 @@ namespace TwitterElectron.RendererProcess
             {
                 var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
                 capturedItemsDiv.innerHTML = "";
+                jQuery.select("#placeholder").show();
             });
         }
 
