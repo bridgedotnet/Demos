@@ -134,8 +134,8 @@ namespace TwitterElectron.MainProcess
         private static BrowserWindow CreateSplashScreen()
         {
             var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
-            options.width = 505;
-            options.height = 330;
+            options.width = 600;
+            options.height = 400;
             options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
             options.title = Constants.AppTitle;
             options.frame = false;

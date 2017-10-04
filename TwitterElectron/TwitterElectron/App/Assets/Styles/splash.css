@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+p {
+  margin-bottom: 5px;
+}
+
+.splash-screen {
+  width: 600px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  background-color: #24292d;
+}
+
+.copyright {
+  color: #8690a5;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.logomark {
+  fill: #3f4b51;
+  margin-bottom: 30px;
+}
+
+.logomark .outer-circle {
+  transform-origin: center;
+  animation: spin 3000ms infinite linear;
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+
+    to {
+        transform:rotate(360deg);
+    }
+}

@@ -96,8 +96,8 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 },
                 CreateSplashScreen: function () {
                     var options = { };
-                    options.width = 505;
-                    options.height = 330;
+                    options.width = 600;
+                    options.height = 400;
                     options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
                     options.title = "Retyped: Electron + Twitter API Demo";
                     options.frame = false;
