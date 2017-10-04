@@ -6,7 +6,7 @@
   "author": "Object.NET, Inc.",
   "dependencies": {
     "electron": "^1.7.6",
-    "twitter": "^1.7.1",
-    "jquery": "^2.2.4"
+    "jquery": "^2.2.4",
+    "twitter": "^1.7.1"
   }
 }
