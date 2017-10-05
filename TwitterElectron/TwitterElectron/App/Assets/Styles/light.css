@@ -26,6 +26,26 @@ a:active {
 
 
 /*---------------------------------------------------
+  SCROLLS
+---------------------------------------------------*/
+
+.app-content::-webkit-scrollbar-track {
+  border-left: 1px solid var(--gray-200);
+  background: white;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+  background: #b0bdd1; 
+  box-shadow: inset 1px 0 0 var(--gray-200), inset 2px 0 0 white;
+  border-right: 1px solid white;
+}
+
+.app-content::-webkit-scrollbar-thumb:window-inactive {
+  background: #c3cbd8;
+}
+
+
+/*---------------------------------------------------
   FORMS
 ---------------------------------------------------*/
   

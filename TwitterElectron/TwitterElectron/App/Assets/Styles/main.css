@@ -76,7 +76,35 @@ a:active {
 a.no-border {
   border-bottom: none;
 }
-  
+
+
+/*---------------------------------------------------
+  SCROLLS
+---------------------------------------------------*/
+
+.app-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.app-content::-webkit-scrollbar-track {
+  border-left: 1px solid var(--gray-200);
+  background: white;
+  border-radius: 0;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background: #b0bdd1; 
+  box-shadow: inset 1px 0 0 var(--gray-200), inset 2px 0 0 white;
+  border-right: 1px solid white;
+  transition: all 0.25s;
+}
+
+.app-content::-webkit-scrollbar-thumb:window-inactive {
+  background: #c3cbd8;
+}
+
+
 /*---------------------------------------------------
   MODALS
 ---------------------------------------------------*/
@@ -199,9 +227,9 @@ label {
 ---------------------------------------------------*/
   
 .app-content {
-  padding-top: var(--toolbar-height);
+  margin-top: var(--toolbar-height);
   background-color: var(--gray-100);
-  height: 100vh;
+  height: calc(100vh - var(--toolbar-height));
   overflow-x: hidden;
 }
 
