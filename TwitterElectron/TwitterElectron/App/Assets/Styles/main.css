@@ -12,8 +12,8 @@
   --gray-400: #aab3c1;
   --gray-500: #8690a5;
   --gray-600: #576172;
-  --gray-700: #343f47;
-  --gray-800: #2e373d;
+  --gray-700: #3b464c;
+  --gray-800: #2d343a;
   --gray-900: #24292d;
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
   --font-size: 15px;
@@ -58,7 +58,7 @@ a {
   color: var(--gray-900);
   text-decoration: none;
   transition: all 0.25s;
-  border-bottom: 1px dashed var(--gray-500);
+  border-bottom: 1px dotted var(--gray-500);
 }
 
 p {
@@ -121,7 +121,7 @@ label {
 ---------------------------------------------------*/
     
 .button {
-  padding: 10px 30px;
+  padding: 11px 30px 12px;
   display: inline-block;
   font-size: var(--font-size-xs);
   text-align: center;
@@ -240,7 +240,7 @@ label {
   top: 0;
   display: flex;
   flex-wrap: nowrap;
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-700);
   background-color: var(--gray-900);
   font-size: var(--font-size-sm);
   color: var(--gray-400);
@@ -295,6 +295,7 @@ label {
 .app-toolbar .notifications {
   flex: 0 0 160px;
   margin-left: auto;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -412,4 +413,5 @@ input[type="checkbox"]:checked + .switch:after {
 .tweet-card .username .istweeting {
   color: var(--gray-400);
   font-size: var(--font-size-xs);
+  margin-left: 3px;
 }

@@ -8,20 +8,20 @@
 ---------------------------------------------------*/
 
 body {
-  color: var(--gray-600);
+  color: var(--gray-200);
 }
 
 
 a {
-  color: var(--gray-900);
-  border-bottom: 1px dashed var(--gray-500);
+  color: var(--color-primary);
+  border-bottom: 1px dotted var(--color-primary);
 }
 
 a:hover,
 a:focus,
 a:active {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
 }
 
 
@@ -43,20 +43,30 @@ label {
 ---------------------------------------------------*/
 
 .app-content {
-  background-color: var(--gray-100);
+  background-color: var(--gray-800);
 }
 
 /* Placeholder */
 .placeholder {
-  color: var(--gray-400);
+  color: var(--gray-500);
 }
 
 .placeholder .logo {
-  fill: var(--gray-300);
+  fill: var(--gray-700);
 }
 
 .placeholder h1 {
-  color: var(--gray-900);
+  color: white;
+}
+
+.placeholder a {
+  color: var(--gray-300);
+  border-color: var(--gray-400);
+}
+
+.placeholder a:hover {
+  color: white;
+  border-color: var(--gray-300);
 }
 
 
@@ -65,6 +75,7 @@ label {
 --------------------------------------------------*/
 
 .app-toolbar {
+  border-bottom-color: var(--gray-700);
   background-color: var(--gray-900);
   color: var(--gray-400);
 }
@@ -138,14 +149,15 @@ input[type="checkbox"]:checked + .switch {
 ---------------------------------------------------*/
 
 .tweet-card {
-  border-color: var(--gray-200);
-  background-color: #fff;
+  border-color: var(--gray-700);
+  background-color: #2b3238;
+  font-weight: 300;
 }
 
 .tweet-card .username {
-  color: var(--gray-900);
+  color: white;
 }
 
 .tweet-card .username .istweeting {
-  color: var(--gray-400);
+  color: var(--gray-500);
 }
