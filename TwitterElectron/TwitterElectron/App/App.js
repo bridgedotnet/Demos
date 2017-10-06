@@ -2,7 +2,7 @@ require("./bridge.js");
 require("./UserSettings.js");
 require("./newtonsoft.json.js");
 
-// The call bellow is required to initialize a global var 'Electron'.
+// The call below is required to initialize a global var 'Electron'.
 var Electron = require("electron");
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -69,6 +69,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 },
                 StartApp: function (launchInfo) {
                     var splash = TwitterElectron.MainProcess.App.CreateSplashScreen();
+
                     splash.once("ready-to-show", function () {
                         // to prevent showing not rendered window:
                         splash.show();
@@ -76,6 +77,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     setTimeout(function (args) {
                         TwitterElectron.MainProcess.App.CreateMainWindow();
+
                         win.once("ready-to-show", function () {
                             // to prevent showing not rendered window:
                             win.show();
@@ -107,6 +109,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     // Create the browser window.
                     var splash = new Electron.BrowserWindow(options);
                     TwitterElectron.MainProcess.App.LoadWindow(splash, "Forms/SplashScreen.html");
+
                     return splash;
                 },
                 CreateMainWindow: function () {
@@ -143,6 +146,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     // Create the browser window.
                     var optionsWin = new Electron.BrowserWindow(options);
+
                     TwitterElectron.MainProcess.App.LoadWindow(optionsWin, "Forms/OptionsForm.html");
                     optionsWin.setMenuBarVisibility(false);
 
@@ -204,8 +208,8 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     var startMenuItem = System.Linq.Enumerable.from(captureMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f23);
                     var stopMenuItem = System.Linq.Enumerable.from(captureMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f24);
-
                     var isStarted = !startMenuItem.enabled;
+
                     startMenuItem.enabled = isStarted;
                     stopMenuItem.enabled = !isStarted;
 
@@ -235,8 +239,8 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 SaveUserSettings: function () {
                     var userDataPath = Electron.app.getPath("userData");
                     var settingsPath = path.join(userDataPath, "UserSettings.json");
-
                     var data = TwitterElectron.MainProcess.UserSettings.prototype.Serialize.call(TwitterElectron.MainProcess.App._settings);
+
                     fs.writeFileSync(settingsPath, data);
                 }
             }

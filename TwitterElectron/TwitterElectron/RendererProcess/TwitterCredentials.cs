@@ -2,7 +2,6 @@
 
 namespace TwitterElectron.RendererProcess
 {
-    [External]
     [ObjectLiteral]
     public class TwitterCredentials
     {

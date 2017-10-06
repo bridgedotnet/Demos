@@ -95,6 +95,7 @@ namespace TwitterElectron.RendererProcess
                 string.IsNullOrEmpty(_credentials.AccessTokenSecret))
             {
                 alert("Please specify API keys and Access tokens before starting.");
+
                 return null;
             }
 
@@ -111,6 +112,7 @@ namespace TwitterElectron.RendererProcess
                 // Notify:
                 var notificationEnabledCheckbox = (HTMLInputElement)document.getElementById("notificationEnabledCheckbox");
                 var notificationEnabled = notificationEnabledCheckbox.@checked;
+
                 if (notificationEnabled)
                 {
                     // Use 20 seconds buffer to not create too many notifications:
@@ -168,6 +170,7 @@ namespace TwitterElectron.RendererProcess
             notif.onclick = notifEv =>
             {
                 var tweetUrl = $"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id_str}";
+
                 Electron.shell.openExternal(tweetUrl);
 
                 return null;
@@ -208,6 +211,7 @@ namespace TwitterElectron.RendererProcess
             div.appendChild(tweetContent);
 
             var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
+
             if (capturedItemsDiv.children.length >= 20)
             {
                 capturedItemsDiv.removeChild(capturedItemsDiv.children[19]);

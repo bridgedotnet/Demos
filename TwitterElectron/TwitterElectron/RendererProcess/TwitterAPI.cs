@@ -3,8 +3,7 @@ using Bridge;
 
 namespace TwitterElectron.RendererProcess
 {
-    [Bridge.External]
-    [Bridge.ObjectLiteral]
+    [ObjectLiteral]
     public class TwitterConfig
     {
         public string consumer_key { get; set; }
@@ -13,9 +12,9 @@ namespace TwitterElectron.RendererProcess
         public string access_token_secret { get; set; }
     }
 
-    [Bridge.External]
-    [Bridge.Module(Bridge.ModuleType.CommonJS, "twitter", ExportAsNamespace = "Twitter")]
-    [Bridge.GlobalMethods]
+    [External]
+    [Module(Bridge.ModuleType.CommonJS, "twitter", ExportAsNamespace = "Twitter")]
+    [GlobalMethods]
     public class Twitter
     {
         public extern Twitter(TwitterConfig config);
@@ -25,7 +24,7 @@ namespace TwitterElectron.RendererProcess
         public extern void stream(string method, TwitterStreamConfig config, Action<TwitterStream> callback);
     }
 
-    [Bridge.External]
+    [External]
     public class TwitterStream
     {
         [Template("on(\"data\", {0})")]
@@ -37,14 +36,13 @@ namespace TwitterElectron.RendererProcess
         public extern void destroy();
     }
 
-    [Bridge.External]
-    [Bridge.ObjectLiteral]
+    [ObjectLiteral]
     public class TwitterStreamConfig
     {
         public string track { get; set; }
     }
 
-    [Bridge.External]
+    [External]
     public class Tweet
     {
         public string id_str { get; set; }
@@ -58,13 +56,13 @@ namespace TwitterElectron.RendererProcess
         public TweetUser user { get; set; }
     }
 
-    [Bridge.External]
+    [External]
     public class TweetEntities
     {
         public string[] hashtags { get; set; }
     }
 
-    [Bridge.External]
+    [External]
     public class TweetUser
     {
         public string name { get; set; }

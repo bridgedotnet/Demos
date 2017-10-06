@@ -41,6 +41,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 InitListener: function () {
                     if (TwitterElectron.RendererProcess.MainForm._credentials == null || System.String.isNullOrEmpty(TwitterElectron.RendererProcess.MainForm._credentials.ApiKey) || System.String.isNullOrEmpty(TwitterElectron.RendererProcess.MainForm._credentials.ApiSecret) || System.String.isNullOrEmpty(TwitterElectron.RendererProcess.MainForm._credentials.AccessToken) || System.String.isNullOrEmpty(TwitterElectron.RendererProcess.MainForm._credentials.AccessTokenSecret)) {
                         alert("Please specify API keys and Access tokens before starting.");
+
                         return null;
                     }
 
@@ -78,6 +79,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     var notif = new Notification(notifTitle, notifOpts);
                     notif.onclick = function (notifEv) {
                         var tweetUrl = System.String.format("https://twitter.com/{0}/status/{1}", tweet.user.screen_name, tweet.id_str);
+
                         Electron.shell.openExternal(tweetUrl);
 
                         return null;
@@ -115,6 +117,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     div.appendChild(tweetContent);
 
                     var capturedItemsDiv = Bridge.cast(document.getElementById("capturedItemsDiv"), HTMLDivElement);
+
                     if (capturedItemsDiv.children.length >= 20) {
                         capturedItemsDiv.removeChild(capturedItemsDiv.children[19]);
                     }
@@ -176,6 +179,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             // Notify:
             var notificationEnabledCheckbox = Bridge.cast(document.getElementById("notificationEnabledCheckbox"), HTMLInputElement);
             var notificationEnabled = notificationEnabledCheckbox.checked;
+
             if (notificationEnabled) {
                 // Use 20 seconds buffer to not create too many notifications:
                 if (Bridge.equals(TwitterElectron.RendererProcess.MainForm._lastNotificationDate, null) || (System.DateTime.subdd(System.DateTime.getUtcNow(), System.Nullable.getValue(TwitterElectron.RendererProcess.MainForm._lastNotificationDate))).getTotalSeconds() > 20) {

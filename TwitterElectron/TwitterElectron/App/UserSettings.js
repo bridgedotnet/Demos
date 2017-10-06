@@ -9,6 +9,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     var deobfuscatedDataArr = System.Convert.fromBase64String(data);
                     var serializedData = System.Text.Encoding.Default.GetString(deobfuscatedDataArr);
                     var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(serializedData, System.Object);
+
                     return obj;
                 }
             }

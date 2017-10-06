@@ -19,7 +19,7 @@ namespace TwitterElectron.MainProcess
             require.Self("./UserSettings.js");
             require.Self("./newtonsoft.json.js");
 
-            // The call bellow is required to initialize a global var 'Electron'.
+            // The call below is required to initialize a global var 'Electron'.
             var Electron = (AllElectron)require.Self("electron");
 
             // Keep a global reference of the window object, if you don't, the window will
@@ -101,6 +101,7 @@ namespace TwitterElectron.MainProcess
         private static void StartApp(object launchInfo)
         {
             var splash = CreateSplashScreen();
+
             splash.once(lit.ready_to_show, () =>
             {
                 // to prevent showing not rendered window:
@@ -110,6 +111,7 @@ namespace TwitterElectron.MainProcess
             setTimeout(args =>
             {
                 CreateMainWindow();
+
                 Win.once(lit.ready_to_show, () =>
                 {
                     // to prevent showing not rendered window:
@@ -145,6 +147,7 @@ namespace TwitterElectron.MainProcess
             // Create the browser window.
             var splash = new BrowserWindow(options);
             LoadWindow(splash, "Forms/SplashScreen.html");
+
             return splash;
         }
 
@@ -195,6 +198,7 @@ namespace TwitterElectron.MainProcess
 
             // Create the browser window.
             var optionsWin = new BrowserWindow(options);
+
             LoadWindow(optionsWin, "Forms/OptionsForm.html");
             optionsWin.setMenuBarVisibility(false);
 
@@ -497,8 +501,8 @@ Electron: " + process.versions["electron"];
 
             var startMenuItem = captureMenu.items.First(x => x.label == "Start");
             var stopMenuItem = captureMenu.items.First(x => x.label == "Stop");
-
             var isStarted = !startMenuItem.enabled;
+
             startMenuItem.enabled = isStarted;
             stopMenuItem.enabled = !isStarted;
 
@@ -539,8 +543,8 @@ Electron: " + process.versions["electron"];
         {
             var userDataPath = Electron.app.getPath("userData");
             var settingsPath = path.join(userDataPath, Constants.UserSettingsFileName);
-
             var data = _settings.Serialize();
+
             fs.writeFileSync(settingsPath, data);
         }
     }
