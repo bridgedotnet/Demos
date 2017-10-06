@@ -7,7 +7,6 @@ using TwitterElectron.RendererProcess;
 namespace TwitterElectron.MainProcess
 {
     [ObjectLiteral]
-    [Reflectable(true)]
     public class UserSettings
     {
         public TwitterCredentials Credentials { get; set; }

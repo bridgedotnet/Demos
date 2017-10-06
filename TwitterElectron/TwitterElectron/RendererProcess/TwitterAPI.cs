@@ -3,7 +3,6 @@ using Bridge;
 
 namespace TwitterElectron.RendererProcess
 {
-    [Bridge.External]
     [Bridge.ObjectLiteral]
     public class TwitterConfig
     {
@@ -37,7 +36,6 @@ namespace TwitterElectron.RendererProcess
         public extern void destroy();
     }
 
-    [Bridge.External]
     [Bridge.ObjectLiteral]
     public class TwitterStreamConfig
     {
