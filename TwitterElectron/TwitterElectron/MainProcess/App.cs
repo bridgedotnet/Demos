@@ -435,7 +435,7 @@ namespace TwitterElectron.MainProcess
                     },
                     new MenuItemConstructorOptions
                     {
-                        label = "Visit Retyped.com",
+                        label = "Visit Retyped",
                         click = delegate { Electron.shell.openExternal("https://retyped.com/"); }
                     },
                     new MenuItemConstructorOptions
@@ -444,12 +444,12 @@ namespace TwitterElectron.MainProcess
                     },
                     new MenuItemConstructorOptions
                     {
-                        label = "Visit Electron API demos",
+                        label = "Visit Electron API Demos",
                         click = delegate { Electron.shell.openExternal("https://github.com/electron/electron-api-demos"); }
                     },
                     new MenuItemConstructorOptions
                     {
-                        label = "Visit Twitter API reference",
+                        label = "Visit Twitter API Reference",
                         click = delegate { Electron.shell.openExternal("https://dev.twitter.com/streaming/overview"); }
                     },
                     new MenuItemConstructorOptions
