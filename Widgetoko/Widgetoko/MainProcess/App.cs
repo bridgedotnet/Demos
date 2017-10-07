@@ -289,12 +289,6 @@ namespace Widgetoko.MainProcess
             {
                 showFn();
             });
-
-            if (node.process.platform == Platform.darwin)
-            {
-                var pressedIcon = Electron.nativeImage.Get().createFromPath(icon32Path);
-                AppIcon.setPressedImage(pressedIcon);
-            }
         }
 
         private static void SetMainMenu()

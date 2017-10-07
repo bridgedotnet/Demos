@@ -226,11 +226,6 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     Widgetoko.MainProcess.App.AppIcon.on("click", function () {
                         showFn();
                     });
-
-                    if (process.platform === "darwin") {
-                        var pressedIcon = Electron.nativeImage.createFromPath(icon32Path);
-                        Widgetoko.MainProcess.App.AppIcon.setPressedImage(pressedIcon);
-                    }
                 },
                 SetMainMenu: function () {
                     var fileMenu = { label: "File", submenu: System.Array.init([{ label: "Options", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F2"), click: function (i, w, e) {
