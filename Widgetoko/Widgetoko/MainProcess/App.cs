@@ -135,7 +135,7 @@ namespace Widgetoko.MainProcess
             var options = ObjectLiteral.Create<electron.Electron.BrowserWindowConstructorOptions>();
             options.width = 600;
             options.height = 400;
-            options.icon = node.path.join(node.__dirname, "Assets/Images/app_icon.png");
+            options.icon = node.path.join(node.__dirname, "Assets/Images/app_icon_32.png");
             options.title = Constants.AppTitle;
             options.frame = false;
             options.skipTaskbar = true;
@@ -153,7 +153,7 @@ namespace Widgetoko.MainProcess
             var options = ObjectLiteral.Create<electron.Electron.BrowserWindowConstructorOptions>();
             options.width = 600;
             options.height = 800;
-            options.icon = node.path.join(node.__dirname, "Assets/Images/app_icon.png");
+            options.icon = node.path.join(node.__dirname, "Assets/Images/app_icon_32.png");
             options.title = Constants.AppTitle;
             options.show = false;
 
@@ -183,7 +183,7 @@ namespace Widgetoko.MainProcess
             options.width = 440;
             options.height = 540;
             options.title = "Options";
-            options.icon = node.path.join(node.__dirname, "Assets/Images/app_icon.png");
+            options.icon = node.path.join(node.__dirname, "Assets/Images/app_icon_32.png");
             options.skipTaskbar = true;
             options.parent = Win;
             options.modal = true;
@@ -217,6 +217,9 @@ namespace Widgetoko.MainProcess
 
         private static void ShowTrayIcon()
         {
+            var icon16Path = node.path.join(node.__dirname, "Assets/Images/app_icon_16.png");
+            var icon32Path = node.path.join(node.__dirname, "Assets/Images/app_icon_32.png");
+
             Action showFn = () =>
             {
                 if (!Win.isVisible())
@@ -275,13 +278,21 @@ namespace Widgetoko.MainProcess
 
             ContextMenu = electron.Electron.Menu.buildFromTemplate(new[] { openMenuItem, captureMenuItem, visitMenuItem, exitMenuItem });
 
-            AppIcon = new electron.Electron.Tray(node.path.join(node.__dirname, "Assets/Images/app_icon.png"));
+            var iconPath = node.process.platform == Platform.darwin ? icon16Path : icon32Path;
+
+            AppIcon = new electron.Electron.Tray(iconPath);
             AppIcon.setToolTip(Constants.AppTitle);
             AppIcon.setContextMenu(ContextMenu);
             AppIcon.on("click", () =>
             {
                 showFn();
             });
+
+            if (node.process.platform == Platform.darwin)
+            {
+                var pressedIcon = electron.Electron.NativeImage.createFromPath(icon32Path);
+                AppIcon.setPressedImage(pressedIcon);
+            }
         }
 
         private static void SetMainMenu()

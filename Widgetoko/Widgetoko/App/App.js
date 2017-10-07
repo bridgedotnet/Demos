@@ -112,7 +112,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     var options = { };
                     options.width = 600;
                     options.height = 400;
-                    options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
+                    options.icon = path.join(__dirname, "Assets/Images/app_icon_32.png");
                     options.title = "Widgetoko";
                     options.frame = false;
                     options.skipTaskbar = true;
@@ -128,7 +128,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     var options = { };
                     options.width = 600;
                     options.height = 800;
-                    options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
+                    options.icon = path.join(__dirname, "Assets/Images/app_icon_32.png");
                     options.title = "Widgetoko";
                     options.show = false;
 
@@ -154,7 +154,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     options.width = 440;
                     options.height = 540;
                     options.title = "Options";
-                    options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
+                    options.icon = path.join(__dirname, "Assets/Images/app_icon_32.png");
                     options.skipTaskbar = true;
                     options.parent = win;
                     options.modal = true;
@@ -184,6 +184,9 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     win.loadURL(formattedUrl);
                 },
                 ShowTrayIcon: function () {
+                    var icon16Path = path.join(__dirname, "Assets/Images/app_icon_16.png");
+                    var icon32Path = path.join(__dirname, "Assets/Images/app_icon_32.png");
+
                     var showFn = function () {
                         if (!win.isVisible()) {
                             win.show();
@@ -213,12 +216,19 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
 
                     Widgetoko.MainProcess.App.ContextMenu = Electron.Menu.buildFromTemplate(System.Array.init([openMenuItem, captureMenuItem, visitMenuItem, exitMenuItem], System.Object));
 
-                    Widgetoko.MainProcess.App.AppIcon = new Electron.Tray(path.join(__dirname, "Assets/Images/app_icon.png"));
+                    var iconPath = process.platform === "darwin" ? icon16Path : icon32Path;
+
+                    Widgetoko.MainProcess.App.AppIcon = new Electron.Tray(iconPath);
                     Widgetoko.MainProcess.App.AppIcon.setToolTip("Widgetoko");
                     Widgetoko.MainProcess.App.AppIcon.setContextMenu(Widgetoko.MainProcess.App.ContextMenu);
                     Widgetoko.MainProcess.App.AppIcon.on("click", function () {
                         showFn();
                     });
+
+                    if (process.platform === "darwin") {
+                        var pressedIcon = Electron.NativeImage.createFromPath(icon32Path);
+                        Widgetoko.MainProcess.App.AppIcon.setPressedImage(pressedIcon);
+                    }
                 },
                 SetMainMenu: function () {
                     var fileMenu = { label: "File", submenu: System.Array.init([{ label: "Options", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F2"), click: function (i, w, e) {
