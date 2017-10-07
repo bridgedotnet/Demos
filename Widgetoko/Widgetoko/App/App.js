@@ -226,7 +226,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     });
 
                     if (process.platform === "darwin") {
-                        var pressedIcon = Electron.NativeImage.createFromPath(icon32Path);
+                        var pressedIcon = Electron.nativeImage.createFromPath(icon32Path);
                         Widgetoko.MainProcess.App.AppIcon.setPressedImage(pressedIcon);
                     }
                 },

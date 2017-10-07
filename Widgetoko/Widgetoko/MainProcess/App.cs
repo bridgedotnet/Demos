@@ -290,7 +290,7 @@ namespace Widgetoko.MainProcess
 
             if (node.process.platform == Platform.darwin)
             {
-                var pressedIcon = electron.Electron.NativeImage.createFromPath(icon32Path);
+                var pressedIcon = Electron.nativeImage.Get().createFromPath(icon32Path);
                 AppIcon.setPressedImage(pressedIcon);
             }
         }
