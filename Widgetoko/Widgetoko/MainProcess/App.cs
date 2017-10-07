@@ -194,6 +194,7 @@ namespace Widgetoko.MainProcess
 
             // Create the browser window.
             var optionsWin = new electron.Electron.BrowserWindow(options);
+            SetContextMenu(optionsWin);
 
             App.LoadWindow(optionsWin, "Forms/OptionsForm.html");
             optionsWin.setMenuBarVisibility(false);
@@ -295,7 +296,7 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Options",
-                        accelerator = "F2".As<electron.Electron.Accelerator>(),
+                        accelerator = CreateMenuAccelerator("F2"),
                         click = (i, w, e) =>
                         {
                             var optionsWin = App.CreateOptionsWindow();
@@ -326,9 +327,7 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Reload",
-                        accelerator = (node.process.platform == Platform.darwin
-                            ? "Command+R"
-                            : "Ctrl+R").As<electron.Electron.Accelerator>(),
+                        accelerator = CreateMenuAccelerator("Ctrl+R"),
                         click = (i, w, e) =>
                         {
                             w?.webContents.reload();
@@ -337,7 +336,7 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Toggle Developer Tools",
-                        accelerator = "F12".As<electron.Electron.Accelerator>(),
+                        accelerator = CreateMenuAccelerator("F12"),
                         click = (i, w, e) =>
                         {
                             w?.webContents.toggleDevTools();
@@ -385,7 +384,7 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Start",
-                        accelerator = "F5".As<electron.Electron.Accelerator>(),
+                        accelerator = CreateMenuAccelerator("F5"),
                         click = (i, w, e) =>
                         {
                             App.ToggleStartStop(true);
@@ -394,7 +393,7 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Stop",
-                        accelerator = "F6".As<electron.Electron.Accelerator>(),
+                        accelerator = CreateMenuAccelerator("F6"),
                         enabled = false,
                         click = (i, w, e) =>
                         {
@@ -408,7 +407,7 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Clear captured tweets",
-                        accelerator = "F7".As<electron.Electron.Accelerator>(),
+                        accelerator = CreateMenuAccelerator("F7"),
                         click = (i, w, e) =>
                         {
                             Win.webContents.send(Constants.IPC.ClearCapture);
@@ -477,6 +476,94 @@ Electron: " + node.process.versions["electron"];
 
             var appMenu = electron.Electron.Menu.buildFromTemplate(new[] { fileMenu, captureMenu, viewMenu, helpMenu });
             electron.Electron.Menu.setApplicationMenu(appMenu);
+        }
+
+        private static void SetContextMenu(electron.Electron.BrowserWindow win)
+        {
+            var selectionMenuTemplate = new[]
+            {
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "copy",
+                    accelerator = CreateMenuAccelerator("Ctrl+C")
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    type = lit.separator
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "selectall",
+                    accelerator = CreateMenuAccelerator("Ctrl+A")
+                }
+            };
+
+            var inputMenuTemplate = new[]
+            {
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "undo",
+                    accelerator = CreateMenuAccelerator("Ctrl+Z")
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "redo",
+                    accelerator = CreateMenuAccelerator("Ctrl+Y")
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    type = lit.separator
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "cut",
+                    accelerator = CreateMenuAccelerator("Ctrl+X")
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "copy",
+                    accelerator = CreateMenuAccelerator("Ctrl+C")
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "paste",
+                    accelerator = CreateMenuAccelerator("Ctrl+V")
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    type = lit.separator
+                },
+                new electron.Electron.MenuItemConstructorOptions
+                {
+                    role = "selectall",
+                    accelerator = CreateMenuAccelerator("Ctrl+A")
+                }
+            };
+
+            var selectionMenu = electron.Electron.Menu.buildFromTemplate(selectionMenuTemplate);
+            var inputMenu = electron.Electron.Menu.buildFromTemplate(inputMenuTemplate);
+
+            win.webContents.on(lit.context_menu, (e, props) =>
+            {
+                if (props.isEditable)
+                {
+                    inputMenu.popup(win);
+                }
+                else if(props.selectionText != null && !string.IsNullOrEmpty(props.selectionText.Trim()))
+                {
+                    selectionMenu.popup(win);
+                }
+            });
+        }
+
+        private static electron.Electron.Accelerator CreateMenuAccelerator(string value)
+        {
+            if (node.process.platform == Platform.darwin)
+            {
+                value = value.Replace("Ctrl", "Command");
+            }
+
+            return value.As<electron.Electron.Accelerator>();
         }
 
         private static void ToggleStartStop(bool isStart)
