@@ -134,6 +134,8 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
 
                     // Create the browser window.
                     win = new Electron.BrowserWindow(options);
+                    Widgetoko.MainProcess.App.SetContextMenu(win);
+
                     Widgetoko.MainProcess.App.SetMainMenu();
 
                     Widgetoko.MainProcess.App.LoadWindow(win, "Forms/MainForm.html");

@@ -159,6 +159,8 @@ namespace Widgetoko.MainProcess
 
             // Create the browser window.
             Win = new electron.Electron.BrowserWindow(options);
+            SetContextMenu(Win);
+
             App.SetMainMenu();
 
             App.LoadWindow(Win, "Forms/MainForm.html");
