@@ -24,29 +24,22 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             },
             methods: {
                 ConfigureEventHandlers: function () {
-                    jQuery("#okButton").on("click", $asm.$.TwitterElectron.RendererProcess.OptionsForm.f1);
+                    jQuery("#okButton").on("click", function (e, args) {
+                        var cred = { ApiKey: Bridge.as(jQuery("#apiKeyInput").val(), System.String), ApiSecret: Bridge.as(jQuery("#apiSecretInput").val(), System.String), AccessToken: Bridge.as(jQuery("#accessTokenInput").val(), System.String), AccessTokenSecret: Bridge.as(jQuery("#accessTokenSecretInput").val(), System.String) };
 
-                    jQuery("#cancelButton").on("click", $asm.$.TwitterElectron.RendererProcess.OptionsForm.f2);
+                        Electron.ipcRenderer.send("cmd-set-credentials", cred);
+                        Electron.remote.getCurrentWindow().close();
+
+                        return null;
+                    });
+
+                    jQuery("#cancelButton").on("click", function (e, args) {
+                        Electron.remote.getCurrentWindow().close();
+
+                        return null;
+                    });
                 }
             }
-        }
-    });
-
-    Bridge.ns("TwitterElectron.RendererProcess.OptionsForm", $asm.$);
-
-    Bridge.apply($asm.$.TwitterElectron.RendererProcess.OptionsForm, {
-        f1: function (e, args) {
-            var cred = { ApiKey: Bridge.as(jQuery("#apiKeyInput").val(), System.String), ApiSecret: Bridge.as(jQuery("#apiSecretInput").val(), System.String), AccessToken: Bridge.as(jQuery("#accessTokenInput").val(), System.String), AccessTokenSecret: Bridge.as(jQuery("#accessTokenSecretInput").val(), System.String) };
-
-            Electron.ipcRenderer.send("cmd-set-credentials", cred);
-            Electron.remote.getCurrentWindow().close();
-
-            return null;
-        },
-        f2: function (e, args) {
-            Electron.remote.getCurrentWindow().close();
-
-            return null;
         }
     });
 });

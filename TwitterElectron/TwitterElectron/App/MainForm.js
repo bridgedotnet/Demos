@@ -36,18 +36,46 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             },
             methods: {
                 ConfigureEventHandlers: function () {
-                    jQuery(".play").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f1);
+                    jQuery(".play").on("click", function (e, args) {
+                        Electron.ipcRenderer.send("cmd-start-capture");
+                        return null;
+                    });
 
-                    jQuery(".pause").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f2);
+                    jQuery(".pause").on("click", function (e, args) {
+                        Electron.ipcRenderer.send("cmd-stop-capture");
+                        return null;
+                    });
                 },
                 ConfigureIPC: function () {
-                    Electron.ipcRenderer.on("cmd-start-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f3);
+                    Electron.ipcRenderer.on("cmd-start-capture", function () {
+                        jQuery("#placeholder").hide();
+                        jQuery(".play").hide();
+                        jQuery(".pause").show();
 
-                    Electron.ipcRenderer.on("cmd-stop-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f4);
+                        TwitterElectron.RendererProcess.MainForm._listener = TwitterElectron.RendererProcess.MainForm.InitListener();
+                        if (TwitterElectron.RendererProcess.MainForm._listener != null) {
+                            TwitterElectron.RendererProcess.MainForm._listener.Start();
+                        } else {
+                            // Can't start capturing due to some error (no filter, no credentials)
+                            Electron.ipcRenderer.send("cmd-stop-capture");
+                        }
+                    });
 
-                    Electron.ipcRenderer.on("cmd-clear-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f5);
+                    Electron.ipcRenderer.on("cmd-stop-capture", function () {
+                        jQuery(".pause").hide();
+                        jQuery(".play").show();
 
-                    Electron.ipcRenderer.on("cmd-toggle-theme", $asm.$.TwitterElectron.RendererProcess.MainForm.f6);
+                        TwitterElectron.RendererProcess.MainForm._listener != null ? TwitterElectron.RendererProcess.MainForm._listener.Stop() : null;
+                    });
+
+                    Electron.ipcRenderer.on("cmd-clear-capture", function () {
+                        jQuery("#capturedItemsDiv").html("");
+                        jQuery("#placeholder").show();
+                    });
+
+                    Electron.ipcRenderer.on("cmd-toggle-theme", function (ev) {
+                        TwitterElectron.RendererProcess.MainForm.ToggleTheme();
+                    });
                 },
                 InitListener: function () {
                     // Get credentials from the main process:
@@ -72,9 +100,27 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     var listener = new TwitterElectron.Twitter.TwitterListener(credentials, filter);
 
                     // Configure handlers for the created listener events:
-                    listener.addOnReceived($asm.$.TwitterElectron.RendererProcess.MainForm.f7);
+                    listener.addOnReceived(function (sender, tweet) {
+                        TwitterElectron.RendererProcess.MainForm.AddTweetToPage(tweet);
 
-                    listener.addOnError($asm.$.TwitterElectron.RendererProcess.MainForm.f8);
+                        // Notify about the obtained tweet:
+                        var notificationEnabled = jQuery("#notificationEnabledCheckbox").is(":checked");
+                        if (notificationEnabled) {
+                            // Use delay to avoid creating too many notifications:
+                            if (Bridge.equals(TwitterElectron.RendererProcess.MainForm._lastNotificationDate, null) || (System.DateTime.subdd(System.DateTime.getUtcNow(), System.Nullable.getValue(TwitterElectron.RendererProcess.MainForm._lastNotificationDate))).getTotalSeconds() > TwitterElectron.RendererProcess.MainForm.NotificationBufferTimeSec) {
+                                TwitterElectron.RendererProcess.MainForm._lastNotificationDate = System.DateTime.getUtcNow();
+                                TwitterElectron.RendererProcess.MainForm.CreateNotification(tweet);
+                            }
+                        } else {
+                            TwitterElectron.RendererProcess.MainForm._lastNotificationDate = null;
+                        }
+                    });
+
+                    listener.addOnError(function (sender, err) {
+                        // Stop capturing on error:
+                        Electron.ipcRenderer.send("cmd-stop-capture");
+                        alert(System.String.format("Error: {0}", err));
+                    });
 
                     return listener;
                 },
@@ -144,65 +190,6 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     capturedItemsDiv.prepend(div);
                 }
             }
-        }
-    });
-
-    Bridge.ns("TwitterElectron.RendererProcess.MainForm", $asm.$);
-
-    Bridge.apply($asm.$.TwitterElectron.RendererProcess.MainForm, {
-        f1: function (e, args) {
-            Electron.ipcRenderer.send("cmd-start-capture");
-            return null;
-        },
-        f2: function (e, args) {
-            Electron.ipcRenderer.send("cmd-stop-capture");
-            return null;
-        },
-        f3: function () {
-            jQuery("#placeholder").hide();
-            jQuery(".play").hide();
-            jQuery(".pause").show();
-
-            TwitterElectron.RendererProcess.MainForm._listener = TwitterElectron.RendererProcess.MainForm.InitListener();
-            if (TwitterElectron.RendererProcess.MainForm._listener != null) {
-                TwitterElectron.RendererProcess.MainForm._listener.Start();
-            } else {
-                // Can't start capturing due to some error (no filter, no credentials)
-                Electron.ipcRenderer.send("cmd-stop-capture");
-            }
-        },
-        f4: function () {
-            jQuery(".pause").hide();
-            jQuery(".play").show();
-
-            TwitterElectron.RendererProcess.MainForm._listener != null ? TwitterElectron.RendererProcess.MainForm._listener.Stop() : null;
-        },
-        f5: function () {
-            jQuery("#capturedItemsDiv").html("");
-            jQuery("#placeholder").show();
-        },
-        f6: function (ev) {
-            TwitterElectron.RendererProcess.MainForm.ToggleTheme();
-        },
-        f7: function (sender, tweet) {
-            TwitterElectron.RendererProcess.MainForm.AddTweetToPage(tweet);
-
-            // Notify about the obtained tweet:
-            var notificationEnabled = jQuery("#notificationEnabledCheckbox").is(":checked");
-            if (notificationEnabled) {
-                // Use delay to avoid creating too many notifications:
-                if (Bridge.equals(TwitterElectron.RendererProcess.MainForm._lastNotificationDate, null) || (System.DateTime.subdd(System.DateTime.getUtcNow(), System.Nullable.getValue(TwitterElectron.RendererProcess.MainForm._lastNotificationDate))).getTotalSeconds() > TwitterElectron.RendererProcess.MainForm.NotificationBufferTimeSec) {
-                    TwitterElectron.RendererProcess.MainForm._lastNotificationDate = System.DateTime.getUtcNow();
-                    TwitterElectron.RendererProcess.MainForm.CreateNotification(tweet);
-                }
-            } else {
-                TwitterElectron.RendererProcess.MainForm._lastNotificationDate = null;
-            }
-        },
-        f8: function (sender, err) {
-            // Stop capturing on error:
-            Electron.ipcRenderer.send("cmd-stop-capture");
-            alert(System.String.format("Error: {0}", err));
         }
     });
 });

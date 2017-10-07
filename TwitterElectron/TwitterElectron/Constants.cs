@@ -6,7 +6,7 @@ namespace TwitterElectron
     public static class Constants
     {
         [InlineConst]
-        public const string AppTitle = "Retyped: Electron + Twitter API Demo";
+        public const string AppTitle = "Widgetoko: Tweet Catcher";
 
         [InlineConst]
         public const string UserSettingsFileName = "UserSettings.json";

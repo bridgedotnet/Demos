@@ -25,9 +25,13 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             Start: function () {
                 this._stream = this._client.stream("statuses/filter", { track: this._filter });
 
-                this._stream.on("data", Bridge.fn.bind(this, $asm.$.TwitterElectron.Twitter.TwitterListener.f1));
+                this._stream.on("data", Bridge.fn.bind(this, function (tweet) {
+                        !Bridge.staticEquals(this.OnReceived, null) ? this.OnReceived(this, tweet) : null;
+                    }));
 
-                this._stream.on("error", Bridge.fn.bind(this, $asm.$.TwitterElectron.Twitter.TwitterListener.f2));
+                this._stream.on("error", Bridge.fn.bind(this, function (error) {
+                        !Bridge.staticEquals(this.OnError, null) ? this.OnError(this, error) : null;
+                    }));
             },
             Stop: function () {
                 if (this._stream != null) {
@@ -35,17 +39,6 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     this._stream = null;
                 }
             }
-        }
-    });
-
-    Bridge.ns("TwitterElectron.Twitter.TwitterListener", $asm.$);
-
-    Bridge.apply($asm.$.TwitterElectron.Twitter.TwitterListener, {
-        f1: function (tweet) {
-            !Bridge.staticEquals(this.OnReceived, null) ? this.OnReceived(this, tweet) : null;
-        },
-        f2: function (error) {
-            !Bridge.staticEquals(this.OnError, null) ? this.OnError(this, error) : null;
         }
     });
 });
