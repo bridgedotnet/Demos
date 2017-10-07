@@ -230,9 +230,9 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                         });
                     } }, { type: "separator" }, { label: "Exit", role: "quit" }], System.Object) };
 
-                    var viewMenu = { label: "View", submenu: System.Array.init([{ label: "Reload", accelerator: "Ctrl+R", click: function (i, w, e) {
+                    var viewMenu = { label: "View", submenu: System.Array.init([{ label: "Reload", accelerator: (process.platform === "darwin" ? "Command+R" : "Ctrl+R"), click: function (i, w, e) {
                         w != null ? w.webContents.reload() : null;
-                    } }, { label: "Toggle Developer Tools", accelerator: (process.platform === "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I"), click: function (i, w, e) {
+                    } }, { label: "Toggle Developer Tools", accelerator: "F12", click: function (i, w, e) {
                         w != null ? w.webContents.toggleDevTools() : null;
                     } }, { type: "separator" }, { label: "Theme", submenu: System.Array.init([{ type: "radio", label: "Light", checked: true, click: function (i, w, e) {
                         win.webContents.send("cmd-toggle-theme");

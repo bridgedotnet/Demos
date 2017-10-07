@@ -326,7 +326,9 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Reload",
-                        accelerator = "Ctrl+R".As<electron.Electron.Accelerator>(),
+                        accelerator = (node.process.platform == Platform.darwin
+                            ? "Command+R"
+                            : "Ctrl+R").As<electron.Electron.Accelerator>(),
                         click = (i, w, e) =>
                         {
                             w?.webContents.reload();
@@ -335,9 +337,7 @@ namespace Widgetoko.MainProcess
                     new electron.Electron.MenuItemConstructorOptions
                     {
                         label = "Toggle Developer Tools",
-                        accelerator = (node.process.platform == Platform.darwin
-                            ? "Alt+Command+I"
-                            : "Ctrl+Shift+I").As<electron.Electron.Accelerator>(),
+                        accelerator = "F12".As<electron.Electron.Accelerator>(),
                         click = (i, w, e) =>
                         {
                             w?.webContents.toggleDevTools();
