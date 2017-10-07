@@ -54,8 +54,6 @@ namespace Widgetoko.MainProcess
                 {
                     app.quit();
                 }
-
-                AppIcon?.destroy();
             });
 
             // On macOS it's common to re-create a window in the app when the
@@ -124,6 +122,9 @@ namespace Widgetoko.MainProcess
                     splash = null;
 
                     Win.focus();
+
+                    // Show the app icon in tray:
+                    App.ShowTrayIcon();
                 });
 
             }, 2000);
@@ -173,7 +174,6 @@ namespace Widgetoko.MainProcess
             Win.on(lit.minimize, () =>
             {
                 Win.setSkipTaskbar(true);
-                App.ShowTrayIcon();
             });
         }
 
@@ -219,15 +219,13 @@ namespace Widgetoko.MainProcess
         {
             Action showFn = () =>
             {
-                if (Win.isMinimized())
+                if (!Win.isVisible())
                 {
                     Win.show();
-                    Win.focus();
                 }
 
+                Win.focus();
                 Win.setSkipTaskbar(false);
-                AppIcon.destroy();
-                AppIcon = null;
             };
 
             var openMenuItem = new electron.Electron.MenuItemConstructorOptions

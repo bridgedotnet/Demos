@@ -37,8 +37,6 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                 if (process.platform !== "darwin") {
                     app.quit();
                 }
-
-                Widgetoko.MainProcess.App.AppIcon != null ? Widgetoko.MainProcess.App.AppIcon.destroy() : null;
             });
 
             // On macOS it's common to re-create a window in the app when the
@@ -103,6 +101,9 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                             splash = null;
 
                             win.focus();
+
+                            // Show the app icon in tray:
+                            Widgetoko.MainProcess.App.ShowTrayIcon();
                         });
 
                     }, 2000);
@@ -146,7 +147,6 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
 
                     win.on("minimize", function () {
                         win.setSkipTaskbar(true);
-                        Widgetoko.MainProcess.App.ShowTrayIcon();
                     });
                 },
                 CreateOptionsWindow: function () {
@@ -185,14 +185,12 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                 },
                 ShowTrayIcon: function () {
                     var showFn = function () {
-                        if (win.isMinimized()) {
+                        if (!win.isVisible()) {
                             win.show();
-                            win.focus();
                         }
 
+                        win.focus();
                         win.setSkipTaskbar(false);
-                        Widgetoko.MainProcess.App.AppIcon.destroy();
-                        Widgetoko.MainProcess.App.AppIcon = null;
                     };
 
                     var openMenuItem = { label: "Open", click: function () {
