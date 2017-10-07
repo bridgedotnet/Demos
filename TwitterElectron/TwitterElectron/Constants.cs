@@ -23,10 +23,10 @@ namespace TwitterElectron
             public const string ClearCapture = "cmd-clear-capture";
 
             [InlineConst]
-            public const string OptionsUpdated = "cmd-options-updated";
+            public const string GetCredentialsSync = "cmd-get-credentials-sync";
 
             [InlineConst]
-            public const string RestoreOptions = "cmd-options-restore";
+            public const string SetCredentials = "cmd-set-credentials";
 
             [InlineConst]
             public const string ToggleTheme = "cmd-toggle-theme";

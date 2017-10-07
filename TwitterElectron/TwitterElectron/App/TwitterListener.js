@@ -3,30 +3,31 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
     var Twitter = require("twitter");
 
-    Bridge.define("TwitterElectron.RendererProcess.TwitterListener", {
+    Bridge.define("TwitterElectron.Twitter.TwitterListener", {
         fields: {
-            _client: null,
-            _stream: null
+            _stream: null,
+            _filter: null,
+            _client: null
         },
         events: {
             OnReceived: null,
             OnError: null
         },
-        props: {
-            Filter: null
-        },
         ctors: {
-            ctor: function (consumerKey, consumerSecret, accessTokenKey, accessTokenSecret) {
+            ctor: function (credentials, filter) {
                 this.$initialize();
-                this._client = new Twitter({ consumer_key: consumerKey, consumer_secret: consumerSecret, access_token_key: accessTokenKey, access_token_secret: accessTokenSecret });
+                this._filter = filter;
+
+                this._client = new Twitter({ consumer_key: credentials.ApiKey, consumer_secret: credentials.ApiSecret, access_token_key: credentials.AccessToken, access_token_secret: credentials.AccessTokenSecret });
             }
         },
         methods: {
             Start: function () {
-                this._stream = this._client.stream("statuses/filter", { track: this.Filter });
-                this._stream.on("data", Bridge.fn.bind(this, $asm.$.TwitterElectron.RendererProcess.TwitterListener.f1));
+                this._stream = this._client.stream("statuses/filter", { track: this._filter });
 
-                this._stream.on("error", Bridge.fn.bind(this, $asm.$.TwitterElectron.RendererProcess.TwitterListener.f2));
+                this._stream.on("data", Bridge.fn.bind(this, $asm.$.TwitterElectron.Twitter.TwitterListener.f1));
+
+                this._stream.on("error", Bridge.fn.bind(this, $asm.$.TwitterElectron.Twitter.TwitterListener.f2));
             },
             Stop: function () {
                 if (this._stream != null) {
@@ -37,9 +38,9 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
         }
     });
 
-    Bridge.ns("TwitterElectron.RendererProcess.TwitterListener", $asm.$);
+    Bridge.ns("TwitterElectron.Twitter.TwitterListener", $asm.$);
 
-    Bridge.apply($asm.$.TwitterElectron.RendererProcess.TwitterListener, {
+    Bridge.apply($asm.$.TwitterElectron.Twitter.TwitterListener, {
         f1: function (tweet) {
             !Bridge.staticEquals(this.OnReceived, null) ? this.OnReceived(this, tweet) : null;
         },

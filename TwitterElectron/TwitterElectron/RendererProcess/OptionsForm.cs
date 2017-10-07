@@ -1,8 +1,8 @@
-﻿using System;
-using Bridge;
-using static Retyped.dom;
+﻿using Bridge;
+using TwitterElectron.Twitter;
 using static Retyped.electron;
 using static Retyped.node;
+using static Retyped.jquery;
 
 namespace TwitterElectron.RendererProcess
 {
@@ -11,7 +11,9 @@ namespace TwitterElectron.RendererProcess
         [Init(InitPosition.Top)]
         public static void InitGlobals()
         {
+            // Init global variables (modules):
             var Electron = (Electron.AllElectron)require.Self("electron");
+            var jQuery = require.Self("jquery");
         }
 
         [Template("Electron")]
@@ -19,34 +21,41 @@ namespace TwitterElectron.RendererProcess
 
         public static void Main()
         {
-            var okButton = (HTMLButtonElement)document.getElementById("okButton");
-            var cancelButton = (HTMLButtonElement)document.getElementById("cancelButton");
+            ConfigureEventHandlers();
 
-            Electron.ipcRenderer.on(Constants.IPC.RestoreOptions, new Action<Event, TwitterCredentials>((ev, cred) =>
-            {
-                ((HTMLInputElement) document.getElementById("apiKeyInput")).value = cred?.ApiKey;
-                ((HTMLInputElement) document.getElementById("apiSecretInput")).value = cred?.ApiSecret;
-                ((HTMLInputElement) document.getElementById("accessTokenInput")).value = cred?.AccessToken;
-                ((HTMLInputElement) document.getElementById("accessTokenSecretInput")).value = cred?.AccessTokenSecret;
-            }));
+            // Get credentials from the main process:
+            var credentials = (TwitterCredentials)Electron.ipcRenderer.sendSync(Constants.IPC.GetCredentialsSync);
 
-            okButton.addEventListener("click", () => 
+            // Display values on the form:
+            jQuery.select("#apiKeyInput").val(credentials?.ApiKey);
+            jQuery.select("#apiSecretInput").val(credentials?.ApiSecret);
+            jQuery.select("#accessTokenInput").val(credentials?.AccessToken);
+            jQuery.select("#accessTokenSecretInput").val(credentials?.AccessTokenSecret);
+        }
+
+        private static void ConfigureEventHandlers()
+        {
+            jQuery.select("#okButton").on("click", (e, args) =>
             {
                 var cred = new TwitterCredentials
                 {
-                    ApiKey = ((HTMLInputElement) document.getElementById("apiKeyInput")).value,
-                    ApiSecret = ((HTMLInputElement) document.getElementById("apiSecretInput")).value,
-                    AccessToken = ((HTMLInputElement) document.getElementById("accessTokenInput")).value,
-                    AccessTokenSecret = ((HTMLInputElement) document.getElementById("accessTokenSecretInput")).value
+                    ApiKey = jQuery.select("#apiKeyInput").val() as string,
+                    ApiSecret = jQuery.select("#apiSecretInput").val() as string,
+                    AccessToken = jQuery.select("#accessTokenInput").val() as string,
+                    AccessTokenSecret = jQuery.select("#accessTokenSecretInput").val() as string,
                 };
 
-                Electron.ipcRenderer.send(Constants.IPC.OptionsUpdated, cred);
+                Electron.ipcRenderer.send(Constants.IPC.SetCredentials, cred);
                 Electron.remote.getCurrentWindow().close();
+
+                return null;
             });
 
-            cancelButton.addEventListener("click", () =>
+            jQuery.select("#cancelButton").on("click", (e, args) =>
             {
                 Electron.remote.getCurrentWindow().close();
+
+                return null;
             });
         }
     }

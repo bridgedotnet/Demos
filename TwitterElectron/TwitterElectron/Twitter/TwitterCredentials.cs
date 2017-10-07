@@ -1,6 +1,6 @@
 ﻿using Bridge;
 
-namespace TwitterElectron.RendererProcess
+namespace TwitterElectron.Twitter
 {
     [ObjectLiteral]
     public class TwitterCredentials

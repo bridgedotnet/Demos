@@ -2,7 +2,7 @@
 using System.Text;
 using Bridge;
 using Newtonsoft.Json;
-using TwitterElectron.RendererProcess;
+using TwitterElectron.Twitter;
 
 namespace TwitterElectron.MainProcess
 {

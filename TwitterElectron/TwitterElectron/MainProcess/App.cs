@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Bridge;
-using TwitterElectron.RendererProcess;
+using TwitterElectron.Twitter;
 using static Retyped.electron.Electron;
 using static Retyped.node;
 using static Retyped.node.url;
@@ -74,17 +74,20 @@ namespace TwitterElectron.MainProcess
             LoadUserSettings();
 
             // Init IPC message handlers:
-            InitIPC();
+            ConfigureIPC();
         }
 
-        private static void InitIPC()
+        private static void ConfigureIPC()
         {
-            Electron.ipcMain.on(Constants.IPC.OptionsUpdated, new Action<Event, TwitterCredentials>((e, cred) =>
+            Electron.ipcMain.on(Constants.IPC.GetCredentialsSync, new Action<Event>(e =>
+            {
+                e.returnValue = _settings.Credentials;
+            }));
+
+            Electron.ipcMain.on(Constants.IPC.SetCredentials, new Action<Event, TwitterCredentials>((e, cred) =>
             {
                 _settings.Credentials = cred;
                 SaveUserSettings();
-
-                Win.webContents.send(Constants.IPC.OptionsUpdated, cred);
             }));
 
             Electron.ipcMain.on(Constants.IPC.StartCapture, new Action<Event>(e =>
@@ -123,11 +126,6 @@ namespace TwitterElectron.MainProcess
                     splash = null;
 
                     Win.focus();
-
-                    if (_settings != null)
-                    {
-                        Win.webContents.send(Constants.IPC.OptionsUpdated, _settings.Credentials);
-                    }
                 });
 
             }, 2000);
@@ -305,8 +303,6 @@ namespace TwitterElectron.MainProcess
                             var optionsWin = CreateOptionsWindow();
                             optionsWin.once(lit.ready_to_show, () =>
                             {
-                                optionsWin.webContents.send(Constants.IPC.RestoreOptions, _settings.Credentials);
-
                                 // to prevent showing not rendered window:
                                 optionsWin.show();
                             });

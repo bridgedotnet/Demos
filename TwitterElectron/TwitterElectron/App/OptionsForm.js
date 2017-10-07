@@ -1,22 +1,33 @@
+// Init global variables (modules):
 var Electron = require("electron");
+var jQuery = require("jquery");
 
 Bridge.assembly("TwitterElectron", function ($asm, globals) {
     "use strict";
 
     Bridge.define("TwitterElectron.RendererProcess.OptionsForm", {
         main: function Main () {
-            var okButton = Bridge.cast(document.getElementById("okButton"), HTMLButtonElement);
-            var cancelButton = Bridge.cast(document.getElementById("cancelButton"), HTMLButtonElement);
+            TwitterElectron.RendererProcess.OptionsForm.ConfigureEventHandlers();
 
-            Electron.ipcRenderer.on("cmd-options-restore", $asm.$.TwitterElectron.RendererProcess.OptionsForm.f1);
+            // Get credentials from the main process:
+            var credentials = Electron.ipcRenderer.sendSync("cmd-get-credentials-sync");
 
-            okButton.addEventListener("click", $asm.$.TwitterElectron.RendererProcess.OptionsForm.f2);
-
-            cancelButton.addEventListener("click", $asm.$.TwitterElectron.RendererProcess.OptionsForm.f3);
+            // Display values on the form:
+            jQuery("#apiKeyInput").val(credentials != null ? credentials.ApiKey : null);
+            jQuery("#apiSecretInput").val(credentials != null ? credentials.ApiSecret : null);
+            jQuery("#accessTokenInput").val(credentials != null ? credentials.AccessToken : null);
+            jQuery("#accessTokenSecretInput").val(credentials != null ? credentials.AccessTokenSecret : null);
         },
         statics: {
             fields: {
                 Electron: null
+            },
+            methods: {
+                ConfigureEventHandlers: function () {
+                    jQuery("#okButton").on("click", $asm.$.TwitterElectron.RendererProcess.OptionsForm.f1);
+
+                    jQuery("#cancelButton").on("click", $asm.$.TwitterElectron.RendererProcess.OptionsForm.f2);
+                }
             }
         }
     });
@@ -24,20 +35,18 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
     Bridge.ns("TwitterElectron.RendererProcess.OptionsForm", $asm.$);
 
     Bridge.apply($asm.$.TwitterElectron.RendererProcess.OptionsForm, {
-        f1: function (ev, cred) {
-            Bridge.cast(document.getElementById("apiKeyInput"), HTMLInputElement).value = cred != null ? cred.ApiKey : null;
-            Bridge.cast(document.getElementById("apiSecretInput"), HTMLInputElement).value = cred != null ? cred.ApiSecret : null;
-            Bridge.cast(document.getElementById("accessTokenInput"), HTMLInputElement).value = cred != null ? cred.AccessToken : null;
-            Bridge.cast(document.getElementById("accessTokenSecretInput"), HTMLInputElement).value = cred != null ? cred.AccessTokenSecret : null;
-        },
-        f2: function () {
-            var cred = { ApiKey: Bridge.cast(document.getElementById("apiKeyInput"), HTMLInputElement).value, ApiSecret: Bridge.cast(document.getElementById("apiSecretInput"), HTMLInputElement).value, AccessToken: Bridge.cast(document.getElementById("accessTokenInput"), HTMLInputElement).value, AccessTokenSecret: Bridge.cast(document.getElementById("accessTokenSecretInput"), HTMLInputElement).value };
+        f1: function (e, args) {
+            var cred = { ApiKey: Bridge.as(jQuery("#apiKeyInput").val(), System.String), ApiSecret: Bridge.as(jQuery("#apiSecretInput").val(), System.String), AccessToken: Bridge.as(jQuery("#accessTokenInput").val(), System.String), AccessTokenSecret: Bridge.as(jQuery("#accessTokenSecretInput").val(), System.String) };
 
-            Electron.ipcRenderer.send("cmd-options-updated", cred);
+            Electron.ipcRenderer.send("cmd-set-credentials", cred);
             Electron.remote.getCurrentWindow().close();
+
+            return null;
         },
-        f3: function () {
+        f2: function (e, args) {
             Electron.remote.getCurrentWindow().close();
+
+            return null;
         }
     });
 });

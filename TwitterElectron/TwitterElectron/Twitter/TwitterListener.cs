@@ -1,32 +1,31 @@
 using System;
+using TwitterElectron.Twitter.API;
 
-namespace TwitterElectron.RendererProcess
+namespace TwitterElectron.Twitter
 {
     public class TwitterListener
     {
-        private readonly Twitter _client;
         private TwitterStream _stream;
+        private readonly string _filter;
+        private readonly API.Twitter _client;
 
-        public string Filter { get; set; }
-
-        public TwitterListener(
-            string consumerKey,
-            string consumerSecret,
-            string accessTokenKey,
-            string accessTokenSecret)
+        public TwitterListener(TwitterCredentials credentials, string filter)
         {
-            _client = new Twitter(new TwitterConfig
+            _filter = filter;
+
+            _client = new API.Twitter(new TwitterConfig
             {
-                consumer_key = consumerKey,
-                consumer_secret = consumerSecret,
-                access_token_key = accessTokenKey,
-                access_token_secret = accessTokenSecret
+                consumer_key = credentials.ApiKey,
+                consumer_secret = credentials.ApiSecret,
+                access_token_key = credentials.AccessToken,
+                access_token_secret = credentials.AccessTokenSecret
             });
         }
 
         public void Start()
         {
-            _stream = _client.stream("statuses/filter", new TwitterStreamConfig { track = Filter });
+            _stream = _client.stream("statuses/filter", new TwitterStreamConfig { track = _filter });
+
             _stream.onData(tweet =>
             {
                 OnReceived?.Invoke(this, tweet);

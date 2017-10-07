@@ -49,7 +49,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             TwitterElectron.MainProcess.App.LoadUserSettings();
 
             // Init IPC message handlers:
-            TwitterElectron.MainProcess.App.InitIPC();
+            TwitterElectron.MainProcess.App.ConfigureIPC();
         },
         statics: {
             fields: {
@@ -60,12 +60,14 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 _settings: null
             },
             methods: {
-                InitIPC: function () {
-                    Electron.ipcMain.on("cmd-options-updated", $asm.$.TwitterElectron.MainProcess.App.f2);
+                ConfigureIPC: function () {
+                    Electron.ipcMain.on("cmd-get-credentials-sync", $asm.$.TwitterElectron.MainProcess.App.f2);
 
-                    Electron.ipcMain.on("cmd-start-capture", $asm.$.TwitterElectron.MainProcess.App.f3);
+                    Electron.ipcMain.on("cmd-set-credentials", $asm.$.TwitterElectron.MainProcess.App.f3);
 
-                    Electron.ipcMain.on("cmd-stop-capture", $asm.$.TwitterElectron.MainProcess.App.f4);
+                    Electron.ipcMain.on("cmd-start-capture", $asm.$.TwitterElectron.MainProcess.App.f4);
+
+                    Electron.ipcMain.on("cmd-stop-capture", $asm.$.TwitterElectron.MainProcess.App.f5);
                 },
                 StartApp: function (launchInfo) {
                     var splash = TwitterElectron.MainProcess.App.CreateSplashScreen();
@@ -88,10 +90,6 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                             splash = null;
 
                             win.focus();
-
-                            if (TwitterElectron.MainProcess.App._settings != null) {
-                                win.webContents.send("cmd-options-updated", TwitterElectron.MainProcess.App._settings.Credentials);
-                            }
                         });
 
                     }, 2000);
@@ -126,9 +124,9 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     TwitterElectron.MainProcess.App.LoadWindow(win, "Forms/MainForm.html");
 
-                    win.on("closed", $asm.$.TwitterElectron.MainProcess.App.f5);
+                    win.on("closed", $asm.$.TwitterElectron.MainProcess.App.f6);
 
-                    win.on("minimize", $asm.$.TwitterElectron.MainProcess.App.f6);
+                    win.on("minimize", $asm.$.TwitterElectron.MainProcess.App.f7);
                 },
                 CreateOptionsWindow: function () {
                     var options = { };
@@ -164,15 +162,15 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     win.loadURL(formattedUrl);
                 },
                 ShowTrayIcon: function () {
-                    var showFn = $asm.$.TwitterElectron.MainProcess.App.f7;
+                    var showFn = $asm.$.TwitterElectron.MainProcess.App.f8;
 
                     var openMenuItem = { label: "Open", click: function () {
                         showFn();
                     } };
 
-                    var captureMenuItem = { label: "Capture", submenu: System.Array.init([{ label: "Start", click: $asm.$.TwitterElectron.MainProcess.App.f8 }, { label: "Stop", enabled: false, click: $asm.$.TwitterElectron.MainProcess.App.f9 }], System.Object) };
+                    var captureMenuItem = { label: "Capture", submenu: System.Array.init([{ label: "Start", click: $asm.$.TwitterElectron.MainProcess.App.f9 }, { label: "Stop", enabled: false, click: $asm.$.TwitterElectron.MainProcess.App.f10 }], System.Object) };
 
-                    var visitMenuItem = { label: "Visit Bridge.NET", click: $asm.$.TwitterElectron.MainProcess.App.f10 };
+                    var visitMenuItem = { label: "Visit Bridge.NET", click: $asm.$.TwitterElectron.MainProcess.App.f11 };
 
                     var exitMenuItem = { label: "Exit", role: "quit" };
 
@@ -186,14 +184,14 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     });
                 },
                 SetMainMenu: function () {
-                    var fileMenu = { label: "File", submenu: System.Array.init([{ label: "Options", accelerator: "F2", click: $asm.$.TwitterElectron.MainProcess.App.f11 }, { type: "separator" }, { label: "Exit", role: "quit" }], System.Object) };
+                    var fileMenu = { label: "File", submenu: System.Array.init([{ label: "Options", accelerator: "F2", click: $asm.$.TwitterElectron.MainProcess.App.f12 }, { type: "separator" }, { label: "Exit", role: "quit" }], System.Object) };
 
-                    var viewMenu = { label: "View", submenu: System.Array.init([{ label: "Reload", accelerator: "Ctrl+R", click: $asm.$.TwitterElectron.MainProcess.App.f12 }, { label: "Toggle Developer Tools", accelerator: (process.platform === "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I"), click: $asm.$.TwitterElectron.MainProcess.App.f13 }, { type: "separator" }, { label: "Theme", submenu: System.Array.init([{ type: "radio", label: "Light", checked: true, click: $asm.$.TwitterElectron.MainProcess.App.f14 }, { type: "radio", label: "Dark", click: $asm.$.TwitterElectron.MainProcess.App.f14 }], System.Object) }], System.Object) };
+                    var viewMenu = { label: "View", submenu: System.Array.init([{ label: "Reload", accelerator: "Ctrl+R", click: $asm.$.TwitterElectron.MainProcess.App.f13 }, { label: "Toggle Developer Tools", accelerator: (process.platform === "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I"), click: $asm.$.TwitterElectron.MainProcess.App.f14 }, { type: "separator" }, { label: "Theme", submenu: System.Array.init([{ type: "radio", label: "Light", checked: true, click: $asm.$.TwitterElectron.MainProcess.App.f15 }, { type: "radio", label: "Dark", click: $asm.$.TwitterElectron.MainProcess.App.f15 }], System.Object) }], System.Object) };
 
-                    var captureMenu = { label: "Capture", submenu: System.Array.init([{ label: "Start", accelerator: "F5", click: $asm.$.TwitterElectron.MainProcess.App.f15 }, { label: "Stop", accelerator: "F6", enabled: false, click: $asm.$.TwitterElectron.MainProcess.App.f16 }, { type: "separator" }, { label: "Clear captured tweets", accelerator: "F7", click: $asm.$.TwitterElectron.MainProcess.App.f17 }], System.Object) };
+                    var captureMenu = { label: "Capture", submenu: System.Array.init([{ label: "Start", accelerator: "F5", click: $asm.$.TwitterElectron.MainProcess.App.f16 }, { label: "Stop", accelerator: "F6", enabled: false, click: $asm.$.TwitterElectron.MainProcess.App.f17 }, { type: "separator" }, { label: "Clear captured tweets", accelerator: "F7", click: $asm.$.TwitterElectron.MainProcess.App.f18 }], System.Object) };
 
 
-                    var helpMenu = { label: "Help", submenu: System.Array.init([{ label: "Visit Bridge.NET", click: $asm.$.TwitterElectron.MainProcess.App.f10 }, { label: "Visit Retyped", click: $asm.$.TwitterElectron.MainProcess.App.f18 }, { type: "separator" }, { label: "Visit Electron API Demos", click: $asm.$.TwitterElectron.MainProcess.App.f19 }, { label: "Visit Twitter API Reference", click: $asm.$.TwitterElectron.MainProcess.App.f20 }, { type: "separator" }, { label: "About", click: $asm.$.TwitterElectron.MainProcess.App.f21 }], System.Object) };
+                    var helpMenu = { label: "Help", submenu: System.Array.init([{ label: "Visit Bridge.NET", click: $asm.$.TwitterElectron.MainProcess.App.f11 }, { label: "Visit Retyped", click: $asm.$.TwitterElectron.MainProcess.App.f19 }, { type: "separator" }, { label: "Visit Electron API Demos", click: $asm.$.TwitterElectron.MainProcess.App.f20 }, { label: "Visit Twitter API Reference", click: $asm.$.TwitterElectron.MainProcess.App.f21 }, { type: "separator" }, { label: "About", click: $asm.$.TwitterElectron.MainProcess.App.f22 }], System.Object) };
 
                     var appMenu = Electron.Menu.buildFromTemplate(System.Array.init([fileMenu, captureMenu, viewMenu, helpMenu], System.Object));
                     Electron.Menu.setApplicationMenu(appMenu);
@@ -204,20 +202,20 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 },
                 ToggleStartStopMenuItems: function () {
                     var appMenu = Electron.Menu.getApplicationMenu();
-                    var captureMenu = Bridge.unbox(System.Linq.Enumerable.from(appMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f22).submenu);
+                    var captureMenu = Bridge.unbox(System.Linq.Enumerable.from(appMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f23).submenu);
 
-                    var startMenuItem = System.Linq.Enumerable.from(captureMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f23);
-                    var stopMenuItem = System.Linq.Enumerable.from(captureMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f24);
+                    var startMenuItem = System.Linq.Enumerable.from(captureMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f24);
+                    var stopMenuItem = System.Linq.Enumerable.from(captureMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f25);
                     var isStarted = !startMenuItem.enabled;
 
                     startMenuItem.enabled = isStarted;
                     stopMenuItem.enabled = !isStarted;
 
                     if (TwitterElectron.MainProcess.App.AppIcon != null && TwitterElectron.MainProcess.App.ContextMenu != null) {
-                        var captureCtxMenu = Bridge.unbox(System.Linq.Enumerable.from(TwitterElectron.MainProcess.App.ContextMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f22).submenu);
+                        var captureCtxMenu = Bridge.unbox(System.Linq.Enumerable.from(TwitterElectron.MainProcess.App.ContextMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f23).submenu);
 
-                        var startMenuCtxItem = System.Linq.Enumerable.from(captureCtxMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f23);
-                        var stopMenuCtxItem = System.Linq.Enumerable.from(captureCtxMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f24);
+                        var startMenuCtxItem = System.Linq.Enumerable.from(captureCtxMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f24);
+                        var stopMenuCtxItem = System.Linq.Enumerable.from(captureCtxMenu.items).first($asm.$.TwitterElectron.MainProcess.App.f25);
 
                         startMenuCtxItem.enabled = isStarted;
                         stopMenuCtxItem.enabled = !isStarted;
@@ -255,29 +253,30 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                 TwitterElectron.MainProcess.App.StartApp(null);
             }
         },
-        f2: function (e, cred) {
+        f2: function (e) {
+            e.returnValue = TwitterElectron.MainProcess.App._settings.Credentials;
+        },
+        f3: function (e, cred) {
             TwitterElectron.MainProcess.App._settings.Credentials = cred;
             TwitterElectron.MainProcess.App.SaveUserSettings();
-
-            win.webContents.send("cmd-options-updated", cred);
-        },
-        f3: function (e) {
-            TwitterElectron.MainProcess.App.ToggleStartStop(true);
         },
         f4: function (e) {
+            TwitterElectron.MainProcess.App.ToggleStartStop(true);
+        },
+        f5: function (e) {
             TwitterElectron.MainProcess.App.ToggleStartStop(false);
         },
-        f5: function () {
+        f6: function () {
             // Dereference the window object, usually you would store windows
             // in an array if your app supports multi windows, this is the time
             // when you should delete the corresponding element.
             win = null;
         },
-        f6: function () {
+        f7: function () {
             win.setSkipTaskbar(true);
             TwitterElectron.MainProcess.App.ShowTrayIcon();
         },
-        f7: function () {
+        f8: function () {
             if (win.isMinimized()) {
                 win.show();
                 win.focus();
@@ -287,54 +286,52 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
             TwitterElectron.MainProcess.App.AppIcon.destroy();
             TwitterElectron.MainProcess.App.AppIcon = null;
         },
-        f8: function () {
+        f9: function () {
             win.webContents.send("cmd-start-capture");
             TwitterElectron.MainProcess.App.ToggleStartStopMenuItems();
         },
-        f9: function () {
+        f10: function () {
             win.webContents.send("cmd-stop-capture");
             TwitterElectron.MainProcess.App.ToggleStartStopMenuItems();
         },
-        f10: function () {
+        f11: function () {
             Electron.shell.openExternal("http://bridge.net/");
         },
-        f11: function (i, w, e) {
+        f12: function (i, w, e) {
             var optionsWin = TwitterElectron.MainProcess.App.CreateOptionsWindow();
             optionsWin.once("ready-to-show", function () {
-                optionsWin.webContents.send("cmd-options-restore", TwitterElectron.MainProcess.App._settings.Credentials);
-
                 // to prevent showing not rendered window:
                 optionsWin.show();
             });
         },
-        f12: function (i, w, e) {
+        f13: function (i, w, e) {
             w != null ? w.webContents.reload() : null;
         },
-        f13: function (i, w, e) {
+        f14: function (i, w, e) {
             w != null ? w.webContents.toggleDevTools() : null;
         },
-        f14: function (i, w, e) {
+        f15: function (i, w, e) {
             win.webContents.send("cmd-toggle-theme");
         },
-        f15: function (i, w, e) {
+        f16: function (i, w, e) {
             TwitterElectron.MainProcess.App.ToggleStartStop(true);
         },
-        f16: function (i, w, e) {
+        f17: function (i, w, e) {
             TwitterElectron.MainProcess.App.ToggleStartStop(false);
         },
-        f17: function (i, w, e) {
+        f18: function (i, w, e) {
             win.webContents.send("cmd-clear-capture");
         },
-        f18: function () {
+        f19: function () {
             Electron.shell.openExternal("https://retyped.com/");
         },
-        f19: function () {
+        f20: function () {
             Electron.shell.openExternal("https://github.com/electron/electron-api-demos");
         },
-        f20: function () {
+        f21: function () {
             Electron.shell.openExternal("https://dev.twitter.com/streaming/overview");
         },
-        f21: function () {
+        f22: function () {
             var msgBoxOpts = { };
             msgBoxOpts.type = "info";
             msgBoxOpts.title = "About";
@@ -343,13 +340,13 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
             Electron.dialog.showMessageBox(msgBoxOpts);
         },
-        f22: function (x) {
+        f23: function (x) {
             return Bridge.referenceEquals(x.label, "Capture");
         },
-        f23: function (x) {
+        f24: function (x) {
             return Bridge.referenceEquals(x.label, "Start");
         },
-        f24: function (x) {
+        f25: function (x) {
             return Bridge.referenceEquals(x.label, "Stop");
         }
     });

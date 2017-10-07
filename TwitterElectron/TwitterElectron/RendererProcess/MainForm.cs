@@ -1,5 +1,7 @@
 ﻿using System;
 using Bridge;
+using TwitterElectron.Twitter;
+using TwitterElectron.Twitter.API;
 using static Retyped.dom;
 using static Retyped.electron;
 using static Retyped.node;
@@ -9,12 +11,16 @@ namespace TwitterElectron.RendererProcess
 {
     public static class MainForm
     {
+        private const int MaxTweetsOnPage = 20;
+        private const int NotificationBufferTimeSec = 20;
+
         private const string LightThemeCss = "../Assets/Styles/light.css";
         private const string DarkThemeCss = "../Assets/Styles/dark.css";
 
         [Init(InitPosition.Top)]
         public static void InitGlobals()
         {
+            // Init global variables (modules):
             var Electron = (Electron.AllElectron)require.Self("electron");
             var jQuery = require.Self("jquery");
         }
@@ -26,12 +32,20 @@ namespace TwitterElectron.RendererProcess
 
         private static DateTime? _lastNotificationDate;
 
-        private static TwitterCredentials _credentials;
-
         public static void Main()
         {
-            ToggleTheme();
+            // Configure handlers for IPC commands:
+            ConfigureIPC();
 
+            // Configure handlers for HtmlElement events:
+            ConfigureEventHandlers();
+
+            // Set Theme:
+            ToggleTheme();
+        }
+
+        private static void ConfigureEventHandlers()
+        {
             jQuery.select(".play").on("click", (e, args) =>
             {
                 Electron.ipcRenderer.send(Constants.IPC.StartCapture);
@@ -43,12 +57,10 @@ namespace TwitterElectron.RendererProcess
                 Electron.ipcRenderer.send(Constants.IPC.StopCapture);
                 return null;
             });
+        }
 
-            Electron.ipcRenderer.on(Constants.IPC.OptionsUpdated, new Action<Electron.Event, TwitterCredentials>((ev, cred) =>
-            {
-                _credentials = cred;
-            }));
-
+        private static void ConfigureIPC()
+        {
             Electron.ipcRenderer.on(Constants.IPC.StartCapture, () =>
             {
                 jQuery.select("#placeholder").hide();
@@ -56,12 +68,14 @@ namespace TwitterElectron.RendererProcess
                 jQuery.select(".pause").show();
 
                 _listener = InitListener();
-
                 if (_listener != null)
                 {
-                    var captureFilterInput = (HTMLInputElement) document.getElementById("captureFilterInput");
-                    _listener.Filter = captureFilterInput.value;
                     _listener.Start();
+                }
+                else
+                {
+                    // Can't start capturing due to some error (no filter, no credentials)
+                    Electron.ipcRenderer.send(Constants.IPC.StopCapture);
                 }
             });
 
@@ -75,8 +89,7 @@ namespace TwitterElectron.RendererProcess
 
             Electron.ipcRenderer.on(Constants.IPC.ClearCapture, () =>
             {
-                var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
-                capturedItemsDiv.innerHTML = "";
+                jQuery.select("#capturedItemsDiv").html("");
                 jQuery.select("#placeholder").show();
             });
 
@@ -88,36 +101,45 @@ namespace TwitterElectron.RendererProcess
 
         private static TwitterListener InitListener()
         {
-            if (_credentials == null ||
-                string.IsNullOrEmpty(_credentials.ApiKey) ||
-                string.IsNullOrEmpty(_credentials.ApiSecret) ||
-                string.IsNullOrEmpty(_credentials.AccessToken) ||
-                string.IsNullOrEmpty(_credentials.AccessTokenSecret))
+            // Get credentials from the main process:
+            var credentials = (TwitterCredentials) Electron.ipcRenderer.sendSync(Constants.IPC.GetCredentialsSync);
+
+            // Check credentials:
+            if (credentials == null ||
+                string.IsNullOrEmpty(credentials.ApiKey) ||
+                string.IsNullOrEmpty(credentials.ApiSecret) ||
+                string.IsNullOrEmpty(credentials.AccessToken) ||
+                string.IsNullOrEmpty(credentials.AccessTokenSecret))
             {
                 alert("Please specify API keys and Access tokens before starting.");
 
                 return null;
             }
 
-            var listener = new TwitterListener(
-                consumerKey: _credentials.ApiKey,
-                consumerSecret: _credentials.ApiSecret,
-                accessTokenKey: _credentials.AccessToken,
-                accessTokenSecret: _credentials.AccessTokenSecret);
+            // Check filter value:
+            var filter = (string) jQuery.select("#captureFilterInput").val();
+            if (string.IsNullOrEmpty(filter))
+            {
+                alert("Please specify filter value.");
 
+                return null;
+            }
+
+            // Create Twitter stream listener:
+            var listener = new TwitterListener(credentials, filter);
+
+            // Configure handlers for the created listener events:
             listener.OnReceived += (sender, tweet) =>
             {
-                AddRecord(tweet);
+                AddTweetToPage(tweet);
 
-                // Notify:
-                var notificationEnabledCheckbox = (HTMLInputElement)document.getElementById("notificationEnabledCheckbox");
-                var notificationEnabled = notificationEnabledCheckbox.@checked;
-
+                // Notify about the obtained tweet:
+                var notificationEnabled = jQuery.select("#notificationEnabledCheckbox").@is(":checked");
                 if (notificationEnabled)
                 {
-                    // Use 20 seconds buffer to not create too many notifications:
+                    // Use delay to avoid creating too many notifications:
                     if (_lastNotificationDate == null ||
-                        (DateTime.UtcNow - _lastNotificationDate.Value).TotalSeconds > 20)
+                        (DateTime.UtcNow - _lastNotificationDate.Value).TotalSeconds > NotificationBufferTimeSec)
                     {
                         _lastNotificationDate = DateTime.UtcNow;
                         CreateNotification(tweet);
@@ -131,7 +153,9 @@ namespace TwitterElectron.RendererProcess
 
             listener.OnError += (sender, err) =>
             {
-                listener.Stop();
+                // Stop capturing on error:
+                Electron.ipcRenderer.send(Constants.IPC.StopCapture);
+                alert($"Error: {err}");
             };
 
             return listener;
@@ -177,10 +201,12 @@ namespace TwitterElectron.RendererProcess
             };
         }
 
-        private static void AddRecord(Tweet tweet)
+        private static void AddTweetToPage(Tweet tweet)
         {
-            var div = new HTMLDivElement();
-            div.className = "tweet-card animated slideInRight";
+            var div = new HTMLDivElement
+            {
+                className = "tweet-card animated slideInRight"
+            };
 
             div.ondblclick += e =>
             {
@@ -190,41 +216,43 @@ namespace TwitterElectron.RendererProcess
                 return null;
             };
 
-            var img = new HTMLImageElement();
-            img.className = "avatar";
-            img.src = tweet.user.profile_image_url;
+            var img = new HTMLImageElement
+            {
+                className = "avatar",
+                src = tweet.user.profile_image_url
+            };
 
-            var nameDiv = new HTMLDivElement();
-            nameDiv.className = "username";
-            nameDiv.innerHTML = tweet.user.name + "<span class='istweeting'> is tweeting...</span>";
+            var nameDiv = new HTMLDivElement
+            {
+                className = "username",
+                innerHTML = tweet.user.name + "<span class='istweeting'> is tweeting...</span>"
+            };
 
-            var textDiv = new HTMLDivElement();
-            textDiv.className = "tweet-text";
-            textDiv.innerHTML = tweet.text;
+            var textDiv = new HTMLDivElement
+            {
+                className = "tweet-text",
+                innerHTML = tweet.text
+            };
 
-            var tweetContent = new HTMLDivElement();
-            tweetContent.className = "tweet-content";
+            var tweetContent = new HTMLDivElement {className = "tweet-content"};
             tweetContent.appendChild(nameDiv);
             tweetContent.appendChild(textDiv);
 
             div.appendChild(img);
             div.appendChild(tweetContent);
 
-            var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
+            var capturedItemsDiv = jQuery.select("#capturedItemsDiv");
+            var capturedItems = capturedItemsDiv.children();
 
-            if (capturedItemsDiv.children.length >= 20)
+            if (capturedItems.length > 0)
             {
-                capturedItemsDiv.removeChild(capturedItemsDiv.children[19]);
+                if (capturedItems.length >= MaxTweetsOnPage)
+                {
+                    capturedItems[MaxTweetsOnPage - 1].remove();
+                }
             }
 
-            if (capturedItemsDiv.children.length > 0)
-            {
-                capturedItemsDiv.insertBefore(div, capturedItemsDiv.children[0]);
-            }
-            else
-            {
-                capturedItemsDiv.appendChild(div);
-            }
+            capturedItemsDiv.prepend(div);
         }
     }
 }
