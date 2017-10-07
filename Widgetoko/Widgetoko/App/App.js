@@ -165,6 +165,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
 
                     // Create the browser window.
                     var optionsWin = new Electron.BrowserWindow(options);
+                    Widgetoko.MainProcess.App.SetContextMenu(optionsWin);
 
                     Widgetoko.MainProcess.App.LoadWindow(optionsWin, "Forms/OptionsForm.html");
                     optionsWin.setMenuBarVisibility(false);
@@ -222,7 +223,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     });
                 },
                 SetMainMenu: function () {
-                    var fileMenu = { label: "File", submenu: System.Array.init([{ label: "Options", accelerator: "F2", click: function (i, w, e) {
+                    var fileMenu = { label: "File", submenu: System.Array.init([{ label: "Options", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F2"), click: function (i, w, e) {
                         var optionsWin = Widgetoko.MainProcess.App.CreateOptionsWindow();
                         optionsWin.once("ready-to-show", function () {
                             // to prevent showing not rendered window:
@@ -230,9 +231,9 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                         });
                     } }, { type: "separator" }, { label: "Exit", role: "quit" }], System.Object) };
 
-                    var viewMenu = { label: "View", submenu: System.Array.init([{ label: "Reload", accelerator: "Ctrl+R", click: function (i, w, e) {
+                    var viewMenu = { label: "View", submenu: System.Array.init([{ label: "Reload", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+R"), click: function (i, w, e) {
                         w != null ? w.webContents.reload() : null;
-                    } }, { label: "Toggle Developer Tools", accelerator: (process.platform === "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I"), click: function (i, w, e) {
+                    } }, { label: "Toggle Developer Tools", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F12"), click: function (i, w, e) {
                         w != null ? w.webContents.toggleDevTools() : null;
                     } }, { type: "separator" }, { label: "Theme", submenu: System.Array.init([{ type: "radio", label: "Light", checked: true, click: function (i, w, e) {
                         win.webContents.send("cmd-toggle-theme");
@@ -240,11 +241,11 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                         win.webContents.send("cmd-toggle-theme");
                     } }], System.Object) }], System.Object) };
 
-                    var captureMenu = { label: "Capture", submenu: System.Array.init([{ label: "Start", accelerator: "F5", click: function (i, w, e) {
+                    var captureMenu = { label: "Capture", submenu: System.Array.init([{ label: "Start", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F5"), click: function (i, w, e) {
                         Widgetoko.MainProcess.App.ToggleStartStop(true);
-                    } }, { label: "Stop", accelerator: "F6", enabled: false, click: function (i, w, e) {
+                    } }, { label: "Stop", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F6"), enabled: false, click: function (i, w, e) {
                         Widgetoko.MainProcess.App.ToggleStartStop(false);
-                    } }, { type: "separator" }, { label: "Clear captured tweets", accelerator: "F7", click: function (i, w, e) {
+                    } }, { type: "separator" }, { label: "Clear captured tweets", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F7"), click: function (i, w, e) {
                         win.webContents.send("cmd-clear-capture");
                     } }], System.Object) };
 
@@ -269,6 +270,29 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
 
                     var appMenu = Electron.Menu.buildFromTemplate(System.Array.init([fileMenu, captureMenu, viewMenu, helpMenu], System.Object));
                     Electron.Menu.setApplicationMenu(appMenu);
+                },
+                SetContextMenu: function (win) {
+                    var selectionMenuTemplate = System.Array.init([{ role: "copy", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+C") }, { type: "separator" }, { role: "selectall", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+A") }], System.Object);
+
+                    var inputMenuTemplate = System.Array.init([{ role: "undo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Z") }, { role: "redo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Y") }, { type: "separator" }, { role: "cut", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+X") }, { role: "copy", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+C") }, { role: "paste", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+V") }, { type: "separator" }, { role: "selectall", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+A") }], System.Object);
+
+                    var selectionMenu = Electron.Menu.buildFromTemplate(selectionMenuTemplate);
+                    var inputMenu = Electron.Menu.buildFromTemplate(inputMenuTemplate);
+
+                    win.webContents.on("context-menu", function (e, props) {
+                        if (props.isEditable) {
+                            inputMenu.popup(win);
+                        } else if (props.selectionText != null && !System.String.isNullOrEmpty(props.selectionText.trim())) {
+                            selectionMenu.popup(win);
+                        }
+                    });
+                },
+                CreateMenuAccelerator: function (value) {
+                    if (process.platform === "darwin") {
+                        value = System.String.replaceAll(value, "Ctrl", "Command");
+                    }
+
+                    return value;
                 },
                 ToggleStartStop: function (isStart) {
                     win.webContents.send(isStart ? "cmd-start-capture" : "cmd-stop-capture");
