@@ -49,9 +49,11 @@
     <Compile Include="Twitter\TwitterListener.cs" />
     <Compile Include="Twitter\API\TwitterStream.cs" />
     <Compile Include="Twitter\API\TwitterStreamConfig.cs" />
-    <Content Include="App\Assets\Images\app_icon.png" />
+    <Content Include="App\Assets\Images\app_icon_16.png" />
+    <Content Include="App\Assets\Images\app_icon_32.png" />
     <Content Include="App\Assets\Styles\dark.css" />
     <Content Include="App\Assets\Styles\light.css" />
+    <Content Include="App\Assets\Styles\main.css" />
     <Content Include="App\Assets\Styles\splash.css" />
     <Content Include="App\Forms\SplashScreen.html" />
     <Content Include="App\Forms\OptionsForm.html" />
