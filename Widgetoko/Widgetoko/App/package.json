@@ -1,5 +1,6 @@
 {
   "name": "widgetoko",
+  "productName": "Widgetoko",
   "version": "1.0.0",
   "description": "Widgetoko: Tweet Catcher",
   "main": "App.js",

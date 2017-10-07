@@ -242,3 +242,5 @@ VSCode/Demo/.build/lib/Demo.dll
 /Mobile/Weather/WeatherApp/resources/js/bridge/bridge.meta.min.js
 /Mobile/Weather/WeatherApp/resources/js/bridge/jquery-2.2.4.js
 VSCode/Demo/bridge/*
+*.userprefs
+Widgetoko/Widgetoko/App/Widgetoko-darwin-x64/
