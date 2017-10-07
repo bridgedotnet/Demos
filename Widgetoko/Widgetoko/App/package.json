@@ -8,5 +8,8 @@
     "electron": "^1.7.6",
     "jquery": "^2.2.4",
     "twitter": "^1.7.1"
+  },
+  "scripts": {
+    "start": "electron ."
   }
 }
