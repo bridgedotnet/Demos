@@ -9,7 +9,7 @@ namespace Widgetoko.RendererProcess
     public static class MainForm
     {
         private const int MaxTweetsOnPage = 20;
-        private const int NotificationBufferTimeSec = 20;
+        private const int NotificationBufferTimeSec = 10;
 
         private const string LightThemeCss = "../Assets/Styles/light.css";
         private const string DarkThemeCss = "../Assets/Styles/dark.css";

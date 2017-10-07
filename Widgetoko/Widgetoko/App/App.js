@@ -112,7 +112,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     options.width = 600;
                     options.height = 400;
                     options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
-                    options.title = "Widgetoko: Tweet Catcher";
+                    options.title = "Widgetoko";
                     options.frame = false;
                     options.skipTaskbar = true;
                     options.show = false;
@@ -128,7 +128,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     options.width = 600;
                     options.height = 800;
                     options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
-                    options.title = "Widgetoko: Tweet Catcher";
+                    options.title = "Widgetoko";
                     options.show = false;
 
                     // Create the browser window.
@@ -215,7 +215,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                     Widgetoko.MainProcess.App.ContextMenu = Electron.Menu.buildFromTemplate(System.Array.init([openMenuItem, captureMenuItem, visitMenuItem, exitMenuItem], System.Object));
 
                     Widgetoko.MainProcess.App.AppIcon = new Electron.Tray(path.join(__dirname, "Assets/Images/app_icon.png"));
-                    Widgetoko.MainProcess.App.AppIcon.setToolTip("Widgetoko: Tweet Catcher");
+                    Widgetoko.MainProcess.App.AppIcon.setToolTip("Widgetoko");
                     Widgetoko.MainProcess.App.AppIcon.setContextMenu(Widgetoko.MainProcess.App.ContextMenu);
                     Widgetoko.MainProcess.App.AppIcon.on("click", function () {
                         showFn();
@@ -262,7 +262,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                         msgBoxOpts.type = "info";
                         msgBoxOpts.title = "About";
                         msgBoxOpts.buttons = System.Array.init(["OK"], System.String);
-                        msgBoxOpts.message = System.String.concat(System.String.concat("Widgetoko: Tweet Catcher.\n\nNode: " + (process.versions.node || "") + "\nChrome: ", process.versions.chrome) + "\nElectron: ", process.versions.electron);
+                        msgBoxOpts.message = System.String.concat(System.String.concat("Widgetoko.\n\nNode: " + (process.versions.node || "") + "\nChrome: ", process.versions.chrome) + "\nElectron: ", process.versions.electron);
 
                         Electron.dialog.showMessageBox(msgBoxOpts);
                     } }], System.Object) };
@@ -307,7 +307,7 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                         stopMenuCtxItem.enabled = !isStarted;
                     }
 
-                    win.setTitle(System.String.format("{0} ({1})", "Widgetoko: Tweet Catcher", (isStarted ? "Stopped" : "Running")));
+                    win.setTitle(System.String.format("{0} ({1})", "Widgetoko", (isStarted ? "Stopped" : "Running")));
                 },
                 LoadUserSettings: function () {
                     var userDataPath = Electron.app.getPath("userData");

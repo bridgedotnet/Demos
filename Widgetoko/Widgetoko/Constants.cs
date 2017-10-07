@@ -6,7 +6,7 @@ namespace Widgetoko
     public static class Constants
     {
         [InlineConst]
-        public const string AppTitle = "Widgetoko: Tweet Catcher";
+        public const string AppTitle = "Widgetoko";
 
         [InlineConst]
         public const string UserSettingsFileName = "UserSettings.json";
