@@ -13,7 +13,7 @@ namespace TwitterElectron.RendererProcess
     }
 
     [External]
-    [Module(Bridge.ModuleType.CommonJS, "twitter", ExportAsNamespace = "Twitter")]
+    [Module(ModuleType.CommonJS, "twitter", ExportAsNamespace = "Twitter")]
     [GlobalMethods]
     public class Twitter
     {

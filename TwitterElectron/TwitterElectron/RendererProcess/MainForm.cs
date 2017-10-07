@@ -59,7 +59,7 @@ namespace TwitterElectron.RendererProcess
 
                 if (_listener != null)
                 {
-                    var captureFilterInput = (HTMLInputElement) document.getElementById("captureFilterInput");
+                    var captureFilterInput = document.getElementById("captureFilterInput").As<HTMLInputElement>();
                     _listener.Filter = captureFilterInput.value;
                     _listener.Start();
                 }
@@ -75,7 +75,7 @@ namespace TwitterElectron.RendererProcess
 
             Electron.ipcRenderer.on(Constants.IPC.ClearCapture, () =>
             {
-                var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
+                var capturedItemsDiv = document.getElementById("capturedItemsDiv").As<HTMLDivElement>();
                 capturedItemsDiv.innerHTML = "";
                 jQuery.select("#placeholder").show();
             });
@@ -110,7 +110,7 @@ namespace TwitterElectron.RendererProcess
                 AddRecord(tweet);
 
                 // Notify:
-                var notificationEnabledCheckbox = (HTMLInputElement)document.getElementById("notificationEnabledCheckbox");
+                var notificationEnabledCheckbox = document.getElementById("notificationEnabledCheckbox").As<HTMLInputElement>();
                 var notificationEnabled = notificationEnabledCheckbox.@checked;
 
                 if (notificationEnabled)
@@ -210,7 +210,7 @@ namespace TwitterElectron.RendererProcess
             div.appendChild(img);
             div.appendChild(tweetContent);
 
-            var capturedItemsDiv = (HTMLDivElement)document.getElementById("capturedItemsDiv");
+            var capturedItemsDiv = document.getElementById("capturedItemsDiv").As<HTMLDivElement>();
 
             if (capturedItemsDiv.children.length >= 20)
             {

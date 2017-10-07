@@ -8,19 +8,50 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
         main: function Main () {
             TwitterElectron.RendererProcess.MainForm.ToggleTheme();
 
-            jQuery(".play").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f1);
+            jQuery(".play").on("click", function (e, args) {
+                Electron.ipcRenderer.send("cmd-start-capture");
+                return null;
+            });
 
-            jQuery(".pause").on("click", $asm.$.TwitterElectron.RendererProcess.MainForm.f2);
+            jQuery(".pause").on("click", function (e, args) {
+                Electron.ipcRenderer.send("cmd-stop-capture");
+                return null;
+            });
 
-            Electron.ipcRenderer.on("cmd-options-updated", $asm.$.TwitterElectron.RendererProcess.MainForm.f3);
+            Electron.ipcRenderer.on("cmd-options-updated", function (ev, cred) {
+                TwitterElectron.RendererProcess.MainForm._credentials = cred;
+            });
 
-            Electron.ipcRenderer.on("cmd-start-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f4);
+            Electron.ipcRenderer.on("cmd-start-capture", function () {
+                jQuery("#placeholder").hide();
+                jQuery(".play").hide();
+                jQuery(".pause").show();
 
-            Electron.ipcRenderer.on("cmd-stop-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f5);
+                TwitterElectron.RendererProcess.MainForm._listener = TwitterElectron.RendererProcess.MainForm.InitListener();
 
-            Electron.ipcRenderer.on("cmd-clear-capture", $asm.$.TwitterElectron.RendererProcess.MainForm.f6);
+                if (TwitterElectron.RendererProcess.MainForm._listener != null) {
+                    var captureFilterInput = document.getElementById("captureFilterInput");
+                    TwitterElectron.RendererProcess.MainForm._listener.Filter = captureFilterInput.value;
+                    TwitterElectron.RendererProcess.MainForm._listener.Start();
+                }
+            });
 
-            Electron.ipcRenderer.on("cmd-toggle-theme", $asm.$.TwitterElectron.RendererProcess.MainForm.f7);
+            Electron.ipcRenderer.on("cmd-stop-capture", function () {
+                jQuery(".pause").hide();
+                jQuery(".play").show();
+
+                TwitterElectron.RendererProcess.MainForm._listener != null ? TwitterElectron.RendererProcess.MainForm._listener.Stop() : null;
+            });
+
+            Electron.ipcRenderer.on("cmd-clear-capture", function () {
+                var capturedItemsDiv = document.getElementById("capturedItemsDiv");
+                capturedItemsDiv.innerHTML = "";
+                jQuery("#placeholder").show();
+            });
+
+            Electron.ipcRenderer.on("cmd-toggle-theme", function (ev) {
+                TwitterElectron.RendererProcess.MainForm.ToggleTheme();
+            });
         },
         statics: {
             fields: {
@@ -47,7 +78,23 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
 
                     var listener = new TwitterElectron.RendererProcess.TwitterListener(TwitterElectron.RendererProcess.MainForm._credentials.ApiKey, TwitterElectron.RendererProcess.MainForm._credentials.ApiSecret, TwitterElectron.RendererProcess.MainForm._credentials.AccessToken, TwitterElectron.RendererProcess.MainForm._credentials.AccessTokenSecret);
 
-                    listener.addOnReceived($asm.$.TwitterElectron.RendererProcess.MainForm.f8);
+                    listener.addOnReceived(function (sender, tweet) {
+                        TwitterElectron.RendererProcess.MainForm.AddRecord(tweet);
+
+                        // Notify:
+                        var notificationEnabledCheckbox = document.getElementById("notificationEnabledCheckbox");
+                        var notificationEnabled = notificationEnabledCheckbox.checked;
+
+                        if (notificationEnabled) {
+                            // Use 20 seconds buffer to not create too many notifications:
+                            if (Bridge.equals(TwitterElectron.RendererProcess.MainForm._lastNotificationDate, null) || (System.DateTime.subdd(System.DateTime.getUtcNow(), System.Nullable.getValue(TwitterElectron.RendererProcess.MainForm._lastNotificationDate))).getTotalSeconds() > 20) {
+                                TwitterElectron.RendererProcess.MainForm._lastNotificationDate = System.DateTime.getUtcNow();
+                                TwitterElectron.RendererProcess.MainForm.CreateNotification(tweet);
+                            }
+                        } else {
+                            TwitterElectron.RendererProcess.MainForm._lastNotificationDate = null;
+                        }
+                    });
 
                     listener.addOnError(function (sender, err) {
                         listener.Stop();
@@ -116,7 +163,7 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                     div.appendChild(img);
                     div.appendChild(tweetContent);
 
-                    var capturedItemsDiv = Bridge.cast(document.getElementById("capturedItemsDiv"), HTMLDivElement);
+                    var capturedItemsDiv = document.getElementById("capturedItemsDiv");
 
                     if (capturedItemsDiv.children.length >= 20) {
                         capturedItemsDiv.removeChild(capturedItemsDiv.children[19]);
@@ -128,66 +175,6 @@ Bridge.assembly("TwitterElectron", function ($asm, globals) {
                         capturedItemsDiv.appendChild(div);
                     }
                 }
-            }
-        }
-    });
-
-    Bridge.ns("TwitterElectron.RendererProcess.MainForm", $asm.$);
-
-    Bridge.apply($asm.$.TwitterElectron.RendererProcess.MainForm, {
-        f1: function (e, args) {
-            Electron.ipcRenderer.send("cmd-start-capture");
-            return null;
-        },
-        f2: function (e, args) {
-            Electron.ipcRenderer.send("cmd-stop-capture");
-            return null;
-        },
-        f3: function (ev, cred) {
-            TwitterElectron.RendererProcess.MainForm._credentials = cred;
-        },
-        f4: function () {
-            jQuery("#placeholder").hide();
-            jQuery(".play").hide();
-            jQuery(".pause").show();
-
-            TwitterElectron.RendererProcess.MainForm._listener = TwitterElectron.RendererProcess.MainForm.InitListener();
-
-            if (TwitterElectron.RendererProcess.MainForm._listener != null) {
-                var captureFilterInput = Bridge.cast(document.getElementById("captureFilterInput"), HTMLInputElement);
-                TwitterElectron.RendererProcess.MainForm._listener.Filter = captureFilterInput.value;
-                TwitterElectron.RendererProcess.MainForm._listener.Start();
-            }
-        },
-        f5: function () {
-            jQuery(".pause").hide();
-            jQuery(".play").show();
-
-            TwitterElectron.RendererProcess.MainForm._listener != null ? TwitterElectron.RendererProcess.MainForm._listener.Stop() : null;
-        },
-        f6: function () {
-            var capturedItemsDiv = Bridge.cast(document.getElementById("capturedItemsDiv"), HTMLDivElement);
-            capturedItemsDiv.innerHTML = "";
-            jQuery("#placeholder").show();
-        },
-        f7: function (ev) {
-            TwitterElectron.RendererProcess.MainForm.ToggleTheme();
-        },
-        f8: function (sender, tweet) {
-            TwitterElectron.RendererProcess.MainForm.AddRecord(tweet);
-
-            // Notify:
-            var notificationEnabledCheckbox = Bridge.cast(document.getElementById("notificationEnabledCheckbox"), HTMLInputElement);
-            var notificationEnabled = notificationEnabledCheckbox.checked;
-
-            if (notificationEnabled) {
-                // Use 20 seconds buffer to not create too many notifications:
-                if (Bridge.equals(TwitterElectron.RendererProcess.MainForm._lastNotificationDate, null) || (System.DateTime.subdd(System.DateTime.getUtcNow(), System.Nullable.getValue(TwitterElectron.RendererProcess.MainForm._lastNotificationDate))).getTotalSeconds() > 20) {
-                    TwitterElectron.RendererProcess.MainForm._lastNotificationDate = System.DateTime.getUtcNow();
-                    TwitterElectron.RendererProcess.MainForm.CreateNotification(tweet);
-                }
-            } else {
-                TwitterElectron.RendererProcess.MainForm._lastNotificationDate = null;
             }
         }
     });

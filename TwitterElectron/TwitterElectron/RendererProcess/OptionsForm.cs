@@ -19,25 +19,25 @@ namespace TwitterElectron.RendererProcess
 
         public static void Main()
         {
-            var okButton = (HTMLButtonElement)document.getElementById("okButton");
-            var cancelButton = (HTMLButtonElement)document.getElementById("cancelButton");
+            var okButton = document.getElementById("okButton");
+            var cancelButton = document.getElementById("cancelButton");
 
             Electron.ipcRenderer.on(Constants.IPC.RestoreOptions, new Action<Event, TwitterCredentials>((ev, cred) =>
             {
-                ((HTMLInputElement) document.getElementById("apiKeyInput")).value = cred?.ApiKey;
-                ((HTMLInputElement) document.getElementById("apiSecretInput")).value = cred?.ApiSecret;
-                ((HTMLInputElement) document.getElementById("accessTokenInput")).value = cred?.AccessToken;
-                ((HTMLInputElement) document.getElementById("accessTokenSecretInput")).value = cred?.AccessTokenSecret;
+                document.getElementById("apiKeyInput").As<HTMLInputElement>().value = cred?.ApiKey;
+                document.getElementById("apiSecretInput").As<HTMLInputElement>().value = cred?.ApiSecret;
+                document.getElementById("accessTokenInput").As<HTMLInputElement>().value = cred?.AccessToken;
+                document.getElementById("accessTokenSecretInput").As<HTMLInputElement>().value = cred?.AccessTokenSecret;
             }));
 
             okButton.addEventListener("click", () => 
             {
                 var cred = new TwitterCredentials
                 {
-                    ApiKey = ((HTMLInputElement) document.getElementById("apiKeyInput")).value,
-                    ApiSecret = ((HTMLInputElement) document.getElementById("apiSecretInput")).value,
-                    AccessToken = ((HTMLInputElement) document.getElementById("accessTokenInput")).value,
-                    AccessTokenSecret = ((HTMLInputElement) document.getElementById("accessTokenSecretInput")).value
+                    ApiKey = document.getElementById("apiKeyInput").As<HTMLInputElement>().value,
+                    ApiSecret = document.getElementById("apiSecretInput").As<HTMLInputElement>().value,
+                    AccessToken = document.getElementById("accessTokenInput").As<HTMLInputElement>().value,
+                    AccessTokenSecret = document.getElementById("accessTokenSecretInput").As<HTMLInputElement>().value
                 };
 
                 Electron.ipcRenderer.send(Constants.IPC.OptionsUpdated, cred);

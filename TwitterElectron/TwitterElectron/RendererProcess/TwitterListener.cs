@@ -27,6 +27,7 @@ namespace TwitterElectron.RendererProcess
         public void Start()
         {
             _stream = _client.stream("statuses/filter", new TwitterStreamConfig { track = Filter });
+
             _stream.onData(tweet =>
             {
                 OnReceived?.Invoke(this, tweet);

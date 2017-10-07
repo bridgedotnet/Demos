@@ -89,12 +89,12 @@ namespace TwitterElectron.MainProcess
 
             Electron.ipcMain.on(Constants.IPC.StartCapture, new Action<Event>(e =>
             {
-                ToggleStartStop(true);
+                App.ToggleStartStop(true);
             }));
 
             Electron.ipcMain.on(Constants.IPC.StopCapture, new Action<Event>(e =>
             {
-                ToggleStartStop(false);
+                App.ToggleStartStop(false);
             }));
         }
 
@@ -146,7 +146,7 @@ namespace TwitterElectron.MainProcess
 
             // Create the browser window.
             var splash = new BrowserWindow(options);
-            LoadWindow(splash, "Forms/SplashScreen.html");
+            App.LoadWindow(splash, "Forms/SplashScreen.html");
 
             return splash;
         }
@@ -162,9 +162,9 @@ namespace TwitterElectron.MainProcess
 
             // Create the browser window.
             Win = new BrowserWindow(options);
-            SetMainMenu();
+            App.SetMainMenu();
 
-            LoadWindow(Win, "Forms/MainForm.html");
+            App.LoadWindow(Win, "Forms/MainForm.html");
 
             Win.on(lit.closed, () =>
             {
@@ -177,7 +177,7 @@ namespace TwitterElectron.MainProcess
             Win.on(lit.minimize, () =>
             {
                 Win.setSkipTaskbar(true);
-                ShowTrayIcon();
+                App.ShowTrayIcon();
             });
         }
 
@@ -186,7 +186,7 @@ namespace TwitterElectron.MainProcess
             var options = ObjectLiteral.Create<BrowserWindowConstructorOptions>();
             options.width = 440;
             options.height = 540;
-            options.title = "Settings";
+            options.title = "Options";
             options.icon = path.join(__dirname, "Assets/Images/app_icon.png");
             options.skipTaskbar = true;
             options.parent = Win;
@@ -199,7 +199,7 @@ namespace TwitterElectron.MainProcess
             // Create the browser window.
             var optionsWin = new BrowserWindow(options);
 
-            LoadWindow(optionsWin, "Forms/OptionsForm.html");
+            App.LoadWindow(optionsWin, "Forms/OptionsForm.html");
             optionsWin.setMenuBarVisibility(false);
 
             return optionsWin;
@@ -250,7 +250,7 @@ namespace TwitterElectron.MainProcess
                         click = delegate
                         {
                             Win.webContents.send(Constants.IPC.StartCapture);
-                            ToggleStartStopMenuItems();
+                            App.ToggleStartStopMenuItems();
                         }
                     },
                     new MenuItemConstructorOptions
@@ -260,7 +260,7 @@ namespace TwitterElectron.MainProcess
                         click = delegate
                         {
                             Win.webContents.send(Constants.IPC.StopCapture);
-                            ToggleStartStopMenuItems();
+                            App.ToggleStartStopMenuItems();
                         }
                     }
                 }
@@ -302,7 +302,7 @@ namespace TwitterElectron.MainProcess
                         accelerator = "F2".As<Accelerator>(),
                         click = (i, w, e) =>
                         {
-                            var optionsWin = CreateOptionsWindow();
+                            var optionsWin = App.CreateOptionsWindow();
                             optionsWin.once(lit.ready_to_show, () =>
                             {
                                 optionsWin.webContents.send(Constants.IPC.RestoreOptions, _settings.Credentials);
@@ -394,7 +394,7 @@ namespace TwitterElectron.MainProcess
                         accelerator = "F5".As<Accelerator>(),
                         click = (i, w, e) =>
                         {
-                            ToggleStartStop(true);
+                            App.ToggleStartStop(true);
                         }
                     },
                     new MenuItemConstructorOptions
@@ -404,7 +404,7 @@ namespace TwitterElectron.MainProcess
                         enabled = false,
                         click = (i, w, e) =>
                         {
-                            ToggleStartStop(false);
+                            App.ToggleStartStop(false);
                         }
                     },
                     new MenuItemConstructorOptions
@@ -488,7 +488,7 @@ Electron: " + process.versions["electron"];
         private static void ToggleStartStop(bool isStart)
         {
             Win.webContents.send(isStart ? Constants.IPC.StartCapture : Constants.IPC.StopCapture);
-            ToggleStartStopMenuItems();
+            App.ToggleStartStopMenuItems();
         }
 
         private static void ToggleStartStopMenuItems()

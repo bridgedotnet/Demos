@@ -45,6 +45,14 @@
 
   "html": {
     "disabled": true
+  },
+
+  "rules": {
+    "anonymousType": "Plain",
+    "arrayIndex": "Plain",
+    "boxing": "Plain",
+    "integer": "Plain",
+    "lambda": "Plain"
   }
 
   // More config options available at
