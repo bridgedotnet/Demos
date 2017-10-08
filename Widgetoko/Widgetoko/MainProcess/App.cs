@@ -183,7 +183,7 @@ namespace Widgetoko.MainProcess
         {
             var options = ObjectLiteral.Create<electron.Electron.BrowserWindowConstructorOptions>();
             options.width = 440;
-            options.height = 540;
+            options.height = 565;
             options.title = "Options";
             options.icon = node.path.join(node.__dirname, "Assets/Images/app_icon_32.png");
             options.skipTaskbar = true;
@@ -196,10 +196,10 @@ namespace Widgetoko.MainProcess
 
             // Create the browser window.
             var optionsWin = new electron.Electron.BrowserWindow(options);
+            SetMainMenuForOptions(optionsWin);
             SetContextMenu(optionsWin);
 
             App.LoadWindow(optionsWin, "Forms/OptionsForm.html");
-            optionsWin.setMenuBarVisibility(false);
 
             return optionsWin;
         }
@@ -386,7 +386,7 @@ namespace Widgetoko.MainProcess
                     },
                     new electron.Electron.MenuItemConstructorOptions
                     {
-                        label = "Toggle Developer Tools",
+                        label = "Toggle DevTools",
                         accelerator = CreateMenuAccelerator("F12"),
                         click = (i, w, e) =>
                         {
@@ -527,6 +527,128 @@ Electron: " + node.process.versions["electron"];
 
             var appMenu = electron.Electron.Menu.buildFromTemplate(new[] { fileMenu, editMenu, captureMenu, viewMenu, helpMenu });
             electron.Electron.Menu.setApplicationMenu(appMenu);
+        }
+
+        private static void SetMainMenuForOptions(electron.Electron.BrowserWindow win)
+        {
+            var fileMenu = new electron.Electron.MenuItemConstructorOptions
+            {
+                label = "File",
+                submenu = new[]
+                {
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        label = "Close",
+                        role = "close"
+                    }
+                }
+            };
+
+            var editMenu = new electron.Electron.MenuItemConstructorOptions
+            {
+                label = "Edit",
+                submenu = new[]
+                {
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "undo",
+                        accelerator = CreateMenuAccelerator("Ctrl+Z")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "redo",
+                        accelerator = CreateMenuAccelerator("Ctrl+Y")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        type = lit.separator
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "cut",
+                        accelerator = CreateMenuAccelerator("Ctrl+X")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "copy",
+                        accelerator = CreateMenuAccelerator("Ctrl+C")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "paste",
+                        accelerator = CreateMenuAccelerator("Ctrl+V")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        type = lit.separator
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "selectall",
+                        accelerator = CreateMenuAccelerator("Ctrl+A")
+                    }
+                }
+            };
+
+            var viewMenu = new electron.Electron.MenuItemConstructorOptions
+            {
+                label = "View",
+                submenu = new[]
+                {
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        label = "Reload",
+                        accelerator = CreateMenuAccelerator("Ctrl+R"),
+                        click = (i, w, e) =>
+                        {
+                            w?.webContents.reload();
+                        }
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        label = "Toggle DevTools",
+                        accelerator = CreateMenuAccelerator("F12"),
+                        click = (i, w, e) =>
+                        {
+                            w?.webContents.toggleDevTools();
+                        }
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        type = lit.separator
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        label = "Theme",
+                        submenu = new []
+                        {
+                            new electron.Electron.MenuItemConstructorOptions
+                            {
+                                type = lit.radio,
+                                label = "Light",
+                                @checked = true,
+                                click = (i, w, e) =>
+                                {
+                                    Win.webContents.send(Constants.IPC.ToggleTheme);
+                                }
+
+                            },
+                            new electron.Electron.MenuItemConstructorOptions
+                            {
+                                type = lit.radio,
+                                label = "Dark",
+                                click = (i, w, e) =>
+                                {
+                                    Win.webContents.send(Constants.IPC.ToggleTheme);
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var optionsMenu = electron.Electron.Menu.buildFromTemplate(new[] { fileMenu, editMenu, viewMenu });
+            win.setMenu(optionsMenu);
         }
 
         private static void SetContextMenu(electron.Electron.BrowserWindow win)
