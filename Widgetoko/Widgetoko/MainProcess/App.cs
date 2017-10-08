@@ -324,6 +324,52 @@ namespace Widgetoko.MainProcess
                 }
             };
 
+            var editMenu = new electron.Electron.MenuItemConstructorOptions
+            {
+                label = "Edit",
+                submenu = new[]
+                {
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "undo",
+                        accelerator = CreateMenuAccelerator("Ctrl+Z")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "redo",
+                        accelerator = CreateMenuAccelerator("Ctrl+Y")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        type = lit.separator
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "cut",
+                        accelerator = CreateMenuAccelerator("Ctrl+X")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "copy",
+                        accelerator = CreateMenuAccelerator("Ctrl+C")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "paste",
+                        accelerator = CreateMenuAccelerator("Ctrl+V")
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        type = lit.separator
+                    },
+                    new electron.Electron.MenuItemConstructorOptions
+                    {
+                        role = "selectall",
+                        accelerator = CreateMenuAccelerator("Ctrl+A")
+                    }
+                }
+            };
+
             var viewMenu = new electron.Electron.MenuItemConstructorOptions
             {
                 label = "View",
@@ -479,7 +525,7 @@ Electron: " + node.process.versions["electron"];
                 }
             };
 
-            var appMenu = electron.Electron.Menu.buildFromTemplate(new[] { fileMenu, captureMenu, viewMenu, helpMenu });
+            var appMenu = electron.Electron.Menu.buildFromTemplate(new[] { fileMenu, editMenu, captureMenu, viewMenu, helpMenu });
             electron.Electron.Menu.setApplicationMenu(appMenu);
         }
 

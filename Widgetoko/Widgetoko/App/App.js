@@ -236,6 +236,8 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                         });
                     } }, { type: "separator" }, { label: "Exit", role: "quit" }], System.Object) };
 
+                    var editMenu = { label: "Edit", submenu: System.Array.init([{ role: "undo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Z") }, { role: "redo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Y") }, { type: "separator" }, { role: "cut", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+X") }, { role: "copy", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+C") }, { role: "paste", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+V") }, { type: "separator" }, { role: "selectall", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+D") }], System.Object) };
+
                     var viewMenu = { label: "View", submenu: System.Array.init([{ label: "Reload", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+R"), click: function (i, w, e) {
                         w != null ? w.webContents.reload() : null;
                     } }, { label: "Toggle Developer Tools", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("F12"), click: function (i, w, e) {
@@ -273,13 +275,13 @@ Bridge.assembly("Widgetoko", function ($asm, globals) {
                         Electron.dialog.showMessageBox(msgBoxOpts);
                     } }], System.Object) };
 
-                    var appMenu = Electron.Menu.buildFromTemplate(System.Array.init([fileMenu, captureMenu, viewMenu, helpMenu], System.Object));
+                    var appMenu = Electron.Menu.buildFromTemplate(System.Array.init([fileMenu, editMenu, captureMenu, viewMenu, helpMenu], System.Object));
                     Electron.Menu.setApplicationMenu(appMenu);
                 },
                 SetContextMenu: function (win) {
                     var selectionMenuTemplate = System.Array.init([{ role: "copy", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+C") }, { type: "separator" }, { role: "selectall", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+A") }], System.Object);
 
-                    var inputMenuTemplate = System.Array.init([{ role: "undo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Z") }, { role: "redo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Y") }, { type: "separator" }, { role: "cut", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+X") }, { role: "copy", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+C") }, { role: "paste", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+V") }, { type: "separator" }, { role: "selectall", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+A") }], System.Object);
+                    var inputMenuTemplate = System.Array.init([{ role: "undo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Z") }, { role: "redo", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+Y") }, { type: "separator" }, { role: "cut", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+X") }, { role: "copy", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+C") }, { role: "paste", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+V") }, { type: "separator" }, { role: "selectall", accelerator: Widgetoko.MainProcess.App.CreateMenuAccelerator("Ctrl+D") }], System.Object);
 
                     var selectionMenu = Electron.Menu.buildFromTemplate(selectionMenuTemplate);
                     var inputMenu = Electron.Menu.buildFromTemplate(inputMenuTemplate);
