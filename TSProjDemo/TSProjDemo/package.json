@@ -1,0 +1,20 @@
+{
+    "name": "tsprojdemo",
+    "version": "1.0.0",
+    "description": "TypeScript demo project using Bridge output.",
+    "main": "",
+    "author": "Object.NET, Inc. <hello@object.net>",
+    "private": true,
+    "scripts": {
+        "start": "tsc && cls && node ./dist/app.js",
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@types/node": "^10.0.8",
+        "readline-sync": "^1.4.9"
+    },
+    "devDependencies": {
+        "prettier": "^1.12.1",
+        "typescript": "^2.8.3"
+    }
+}
