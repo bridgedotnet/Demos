@@ -1,6 +1,6 @@
 ## TypeScript Project Demo
 
-This demo consists of 2 projects - one is a regular [TypeScript project](https://github.com/bridgedotnet/Demos/tree/master/TSProjDemo/TSProjDemo), and the other is [Bridge project](https://github.com/bridgedotnet/Demos/tree/master/TSProjDemo/TSProjDemo.Bridge) containing logic implemented in C# for evaluation of simple math expressions. 
+This demo consists of 2 projects - one is a regular [Node.js TypeScript project](https://github.com/bridgedotnet/Demos/tree/master/TSProjDemo/TSProjDemo), and the other is [Bridge project](https://github.com/bridgedotnet/Demos/tree/master/TSProjDemo/TSProjDemo.Bridge) containing logic implemented in C# for evaluation of simple math expressions. 
 
 Bridge generates TypeScript declarations and JavaScript files and outputs them into the `dist/bridge` folder of the main TypeScript project.
 
