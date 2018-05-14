@@ -6,6 +6,20 @@ Bridge generates TypeScript declarations and JavaScript files and outputs them i
 
 ## Build instructions
 
+### With Bridge CLI
+
+Bridge CLI will automatically build the Bridge project.
+
+1. Make sure [Bridge CLI](https://bridge.net/download/) is installed.
+1. Fork the repository.
+1. Navigate to the TypeScript project folder: `~/Demos/TSProjDemo/TSProjDemo/`
+1. Run `yarn install` to install dependencies.
+1. Run `yarn start-cli` to run the demo.
+
+### No Bridge CLI
+
+If no Bridge CLI installed, the Bridge project should be built manually.
+
 1. Fork the repository.
 1. Open `~/Demos/TSProjDemo/TSProjDemo.sln` and build the solution.
 1. Navigate to the TypeScript project folder: `~/Demos/TSProjDemo/TSProjDemo/`
