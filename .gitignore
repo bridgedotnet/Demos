@@ -244,3 +244,4 @@ VSCode/Demo/.build/lib/Demo.dll
 VSCode/Demo/bridge/*
 *.userprefs
 Widgetoko/Widgetoko/App/Widgetoko-darwin-x64/
+/TSProjDemo/TSProjDemo/dist

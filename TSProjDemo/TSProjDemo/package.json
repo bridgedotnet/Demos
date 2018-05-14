@@ -7,7 +7,12 @@
     "private": true,
     "scripts": {
         "start": "tsc && cls && node ./dist/app.js",
-        "build": "tsc"
+        "build": "tsc",
+
+        "start-cli": "yarn clear-bin && yarn build-cli && yarn start",
+        "build-cli":
+            "bridge build -f \"../TSProjDemo.Bridge\" -c \"Debug\" -P \"AnyCPU\" -r",
+        "clear-bin": "RD /S /Q \"../TSProjDemo.Bridge/bin\""
     },
     "dependencies": {
         "@types/node": "^10.0.8",
