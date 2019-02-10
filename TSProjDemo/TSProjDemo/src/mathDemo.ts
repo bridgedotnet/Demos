@@ -1,6 +1,6 @@
 ///<reference path="../dist/bridge/TSProjDemo.Bridge.d.ts" />
 
-import * as readline from "readline";
+import * as rl from "readline-sync";
 
 export class MathDemo {
     Run(): void {
@@ -15,8 +15,6 @@ export class MathDemo {
         const evaluator = new TSProjDemo.Bridge.Evaluator();
 
         let expr: string;
-        const rl = require("readline-sync");
-
         while ((expr = rl.question("Math Expression: ")).length > 0) {
             try {
                 // Evaluate:

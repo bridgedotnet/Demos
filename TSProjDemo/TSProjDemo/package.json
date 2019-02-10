@@ -8,10 +8,8 @@
     "scripts": {
         "start": "tsc && cls && node ./dist/app.js",
         "build": "tsc",
-
         "start-cli": "yarn clear-bin && yarn build-cli && yarn start",
-        "build-cli":
-            "bridge build -f \"../TSProjDemo.Bridge\" -c \"Debug\" -P \"AnyCPU\" -r",
+        "build-cli": "bridge build -f \"../TSProjDemo.Bridge\" -c \"Debug\" -P \"AnyCPU\" -r",
         "clear-bin": "RD /S /Q \"../TSProjDemo.Bridge/bin\""
     },
     "dependencies": {
@@ -19,6 +17,7 @@
         "readline-sync": "^1.4.9"
     },
     "devDependencies": {
+        "@types/readline-sync": "^1.4.3",
         "prettier": "^1.12.1",
         "typescript": "^2.8.3"
     }
