@@ -35,7 +35,7 @@
 
   // Generate TypeScript Definition (.d.ts) files.
   // Default is false.
-  "generateTypeScript": true,
+  "generateTypeScript": false,
 
   // Delete everything from the output folder
   // Default is false
